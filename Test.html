@@ -9,242 +9,513 @@
       text-align: center;
       padding: 20px;
       font-size: 26px;
+      background: #f7fafc;
     }
-
+    .main-row {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin: 0 auto 10px auto;
+      width: 100%;
+      max-width: 1200px;
+    }
     .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 390px;
+      max-width: 390px;
+      height: 600px;
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+      padding: 0 0 10px 0;
+    }
+    .controls-scroll {
+      overflow-y: auto;
+      width: 100%;
+      padding: 0 20px;
+      flex: 1 1 auto;
+    }
+    .section-header {
+      font-size: 22px;
+      font-weight: bold;
+      color: #007bff;
+      margin: 18px 0 6px 0;
+      text-align: center;
+      width: 100%;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 2px;
+    }
+    .section-btn, .play-all-btn {
+      font-size: 20px;
+      padding: 12px 24px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: none;
+      background: black;
+      color: #fff;
+      cursor: pointer;
+      width: 50%;
+      transition: background 0.2s;
+    }
+    .section-btn:hover, .play-all-btn:hover {
+      background: #0056b3;
+    }
+    .video-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+      width: 90%;
+      text-align: left;
+    }
+    .video-list li {
+      font-size: 18px;
+      margin: 4px 0;
+      padding: 4px 0;
+      border-bottom: 1px dotted #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .video-serial {
+      font-weight: bold;
+      color: #888;
+      margin-right: 8px;
+      min-width: 28px;
+      text-align: right;
+      display: inline-block;
+    }
+    .video-label {
+      flex: 1;
+    }
+    .video-loop {
+      color: #007bff;
+      font-size: 16px;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+    .player-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 390px;
+      max-width: 640px;
+      height: 600px;
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 0 0 10px 0;
+    }
+    #player {
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+      min-width: 320px;
+      min-height: 360px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 72px;
-      flex-wrap: wrap;
-      margin-bottom: 10px; /* closer to tooltip */
+      flex: 1 1 auto;
     }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    select {
-      font-size: 16px;
-      padding: 5px;
-      width: 280px;
-    }
-
-    #player {
-      margin: 20px auto;
-    }
-
-    /* Tooltip centered below entire controls container */
     #tooltipText {
-      font-size: 14px;
+      font-size: 16px;
       color: #555;
       font-style: italic;
       max-width: 640px;
-      margin: 0 auto;
-      min-height: 20px; /* reserve space so page doesn't jump */
+      margin: 15px auto 10px auto;
+      min-height: 20px;
       text-align: center;
+    }
+    p {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #333;
+      letter-spacing: 1px;
+    }
+    #currentLoop, #remainingLoop {
+      font-weight: bold;
+      color: #007bff;
+    }
+    .section-select {
+      font-size: 20px;
+      padding: 8px 12px;
+      margin: 18px 0 10px 0;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      width: 90%;
+      max-width: 340px;
+      background: #f7fafc;
+      color: #333;
+    }
+    @media (max-width: 1100px) {
+      .main-row {
+        flex-direction: column;
+        align-items: center;
+      }
+      .controls, .player-col, #player {
+        max-width: 100%;
+        min-width: 0;
+        height: auto;
+      }
+      .controls, .player-col {
+        height: auto;
+        min-width: 0;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-row {
+        flex-direction: column;
+        gap: 24px;
+      }
+      .controls, .player-col, #player {
+        max-width: 100%;
+      }
+      #tooltipText {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
   <h1>DUA AND DARUD PLAYER</h1>
-
-  <!-- Controls -->
-  <div class="controls">
-    <div class="control-group">
-      <label for="videoSelect">SELECT VIDEO</label>
-      <select id="videoSelect" onchange="loadVideoConfig(); showTooltip();">
-        <option value="" data-tooltip="">-- Select a Video --</option>
-        <option value="3roc-z0C5yY,0,25" data-tooltip="This video plays from 0 to 25 seconds of video ID 3roc-z0C5yY.">0s–25s | 3roc-z0C5yY</option>
-        <option value="PuMyG7POO4U,0,3" data-tooltip="লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহ 11 TIMES">লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহ</option>
-        <option value="14uh3215Vls,0,30" data-tooltip="দরুদ শরীফ recitation for blessings.">দরুদ শরীফ</option>
-
-        <option disabled>— ইস্তেগফার —</option>
-        <option value="VNoq93-17Ho,2,22" data-tooltip="আস্তাগফিরুল্লাহ for seeking forgiveness.">আস্তাগফিরুল্লাহ</option>
-        <option value="3b2NujLLSpw,6,43" data-tooltip="সাইয়েদুল ইস্তেগফার recitation for repentance.">সাইয়েদুল ইস্তেগফার</option>
-
-        <option disabled>— রিজিক —</option>
-        <option value="Bjs_rI-cGh4,0,3.5" data-tooltip="সুবহানাল্লাহি ওয়া বিহামদিহী for praise and gratitude.">সুবহানাল্লাহি ওয়া বিহামদিহী</option>
-        <option value="SEh3c0Va5qk,5,8.5" data-tooltip="আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক prayer for blessings.">আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক</option>
-        <option value="d-AzKo4dOoc,0,11" data-tooltip="সূরা আল-বাকারা থেকে দুআ (2:201).">সূরা আল-বাকারা থেকে দুআ (2:201)</option>
-        <option value="r-pn59nB5RQ,0,7" data-tooltip="হযরত মুসার দুআ (কুরআন 28:24).">হযরত মুসার দুআ (কুরআন 28:24)</option>
-        <option value="H1UVp0XlhBs,5.1,11" data-tooltip="সম্পদ ও হেদায়েতের জন্য দুআ prayer for wealth and guidance.">সম্পদ ও হেদায়েতের জন্য দুআ</option>
-        <option value="K6BWL4gfCB8,4.1,9.8" data-tooltip="আল্লাহুম্মা ইন্নি আস'আলুকা prayer supplication.">আল্লাহুম্মা ইন্নি আস'আলুকা</option>
-
-        <option disabled>— সব সমস্যা সমাধানে —</option>
-        <option value="maggkOnU6JY,0,9" data-tooltip="আলহামদু লিল্লা হিল্লাজি আফানি - gratitude prayer.">আলহামদু লিল্লা হিল্লাজি আফানি</option>
-
-        <option disabled>— OTHER —</option>
-        <option value="zy3xIbbK6eE,5,130" data-tooltip="সূরা বাকারার শেষ দুই আয়াত - last two verses of Surah Baqarah.">সূরা বাকারার শেষ দুই আয়াত</option>
-        <option value="aPbwuL9-C7A,0,24" data-tooltip="Short 24 seconds clip.">0s–24s | aPbwuL9-C7A</option>
-
-        <option disabled>— OBAY —</option>
-        <option value="KCpucEqWHgI,0,18" data-tooltip="সূরা আল ফুরকান : ৭৪ আয়াত.">সূরা আল ফুরকান : ৭৪ আয়াত</option>
-        <option value="TAXr0OvvFd0,14.5,24" data-tooltip="সূরা ত্বা-হা : ৩৯ আয়াত.">সূরা ত্বা-হা : ৩৯ আয়াত</option>
-        <option value="vzNIHXjRgn4,163,165.1" data-tooltip="ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা - Quranic verse.">ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা</option>
-        <option value="Rs_g65sSGqk,28,29" data-tooltip="ইয়া ওয়াদুদু (313) - invocation.">ইয়া ওয়াদুদু (313)</option>
-        <option value="wMka1xyhV_w,21,22" data-tooltip="ইয়া লাতিফু (133) - invocation.">ইয়া লাতিফু (133)</option>
-        <option value="DNgrz8oYHcI,6.5,9" data-tooltip="হাসবুনাল্লাহু ওয়া নি’ মাল ওয়াকিল prayer.">হাসবুনাল্লাহু ওয়া নি’ মাল ওয়াকিল</option>
+  <div class="main-row">
+    <div class="controls">
+      <button class="play-all-btn" onclick="playAllSections()">Play All Sections</button>
+      <select class="section-select" id="sectionDropdown" onchange="showSelectedSection()">
+        <!-- Options will be generated by JS -->
       </select>
+      <div class="controls-scroll" id="sectionControls"></div>
     </div>
-
-    <div class="control-group">
-      <label for="loopCountSelect">SELECT TIME OF PLAY</label>
-      <select id="loopCountSelect" onchange="updateLoopCount()">
-        <option value="1">১ বার</option>
-        <option value="3">৩ বার</option>
-        <option value="5">৫ বার</option>
-        <option value="7">৭ বার</option>
-        <option value="11">১১ বার</option>
-        <option value="21">২১ বার</option>
-        <option value="50">50 বার</option>
-        <option value="100">১০০ বার</option>
-        <option value="313">313 বার</option>
-      </select>
+    <div class="player-col">
+      <div id="player"></div>
+      <div id="tooltipText"></div>
+      <p>
+        PLAYED: <span id="currentLoop">0</span> |
+        REMAIN: <span id="remainingLoop">0</span>
+      </p>
     </div>
   </div>
-
-  <!-- Tooltip centered below all controls -->
-  <div id="tooltipText"></div>
-
-  <!-- YouTube player -->
-  <div id="player"></div>
-
-  <!-- Loop status -->
-  <p>
-    Played: <span id="currentLoop">0</span> |
-    Remaining: <span id="remainingLoop">0</span>
-  </p>
-
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
+    // All your sections and videos here, with loop values set as requested
+    const videoSections = [
+      {
+        name: "প্রতিদিন",
+        videos: [
+          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 7 },
+          { id: "_P75cWrTGPs", start: 124.2, end: 131.8, label: "আলহামদুলিল্লাহ", tooltip: "প্রতিদিন 3 বার", loop: 3 },
+          { id: "FFefhd3C7jc", start: 86.3, end: 92, label: "বিসমিল্লাহিল্লাজি লা- য়াজুর্রু", tooltip: "প্রতিদিন 3 বার", loop: 3 },
+          { id: "3NjYi7mCtDs", start: 34.5, end: 39, label: "সুবহানাল্লাহি ওয়া বিহামদিহী", tooltip: "প্রতিদিন ১০০ বার | আস্তাগফিরুল্লাহ ১০০ বার", loop: 100 },
+          { id: "3NjYi7mCtDs", start: 39, end: 40, label: "আস্তাগফিরুল্লাহ", tooltip: "আস্তাগফিরুল্লাহ ১০০ বার", loop: 100 },
+          { id: "paplOoJGGxg", start: 1, end: 10, label: "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
+          { id: "fOPmnFezp5w", start: 14.9, end: 16, label: "ইয়া জাল জালালি ওয়াল ইকরাম", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
+          { id: "uv3VXLVK6FQ", start: 10, end: 30, label: "আল-ইখলাস", tooltip: "প্রতিদিন 10 বার", loop: 10 },
+          { id: "Ar8COmg9hWE", start: 145.4, end: 147, label: "লা ইলাহা ইল্লাল্লাহ", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
+          { id: "aTPiHKiJ5Xg", start: 2.3, end: 8.7, label: " লাহুল মুলকু", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
+          { id: "HcY-e7-lBBQ", start: 9.7, end: 29, label: "১০ লক্ষ নেকি পাওয়ার দোয়া", tooltip: "প্রতিদিন ১০ বার", loop: 11 },
+          { id: "5R06LRdUCSE", start: 12, end: 1966, label: " সূরা কাহফ", tooltip: "প্রতিদিন ১ বার", loop: 1 },
+        ]
+      },
+      {
+        name: "AFTER NAMAJ",
+        videos: [
+          { id: "L30c6Axa06A", start: 0, end: 51, label: "Surah Al-Fatiha", tooltip: "Surah Al-Fatiha", loop: 1 },
+          { id: "dfZYTEgfwDc", start: 0, end: 30, label: "Ayatul Kursi", tooltip: "Ayatul Kursi", loop: 1 },
+          { id: "8t-Jwm72UD4", start: 0, end: 129, label: "SURAH AL-IMRAN", tooltip: "SURAH AL-IMRAN", loop: 1 },
+          { id: "Xx85iIXcQNs", start: 5, end: 6, label: "আল্লাহু আকবার", tooltip: " ১ বার ", loop: 1 },
+          { id: "Xx85iIXcQNs", start: 7.7, end: 9, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।", loop: 3 },
+          { id: "paplOoJGGxg", start: 1, end: 10, label: "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার", tooltip: "প্রতিদিন ১০০ বার", loop: 33 },
+          { id: "Xx85iIXcQNs", start: 19, end: 25.2, label: "ADD", tooltip: "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি", loop: 1 },
+          { id: "cemBjVIDoFs", start: 27.8, end: 34.4, label: "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ", tooltip: "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ", loop: 40 },
+          { id: "97TteyKVyiE", start: 0, end: 12, label: "আল্লাহু লাতিফুম্ বি-ইবাদিহি ইয়ারজুকু মাইয়্যাশায়ু, ওয়া হুয়াল কাভিয়্যুল আজিজ", tooltip: "আল্লাহ তাঁর বান্দাদের প্রতি দয়ালু। তিনি যাকে ইচ্ছা, রিযিক দান করেন। তিনি প্রবল, পরাক্রমশালী। (সুরা শুরা : আয়াত ১৯)", loop: 70 },
+          { id: "U_5o4JEINfQ", start: 11.8, end: 17, label: "দোয়া ইউনুস", tooltip: "প্রতিদিন 40 বার", loop: 40 },
+          { id: "z03wnWxvGeI", start: 0, end: 14, label: "রদিতুবিল্লাহি রব্বাও ওয়া বিল ইসলামি দিনাও ওয়া বি মুহাম্মাদিন নাবিয়্যাও ওয়া রাসূলা।", tooltip: "আমি আল্লাহকে প্রতিপালক হিসাবে, ইসলামকে দ্বীন হিসাবে এবং মুহাম্মাদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লামকে নবী ও রাসূল হিসাবে পেয়ে খুশি হয়েছি। ", loop: 3 },
+        ]
+      },
+      {
+        name: "ইস্তেগফার",
+        videos: [
+          { id: "3b2NujLLSpw", start: 6, end: 43, label: "সাইয়েদুল ইস্তেগফার", tooltip: "আল্লাহুম্মা আংতা রাব্বি লা ইলাহা ইল্লা আংতা খালাক্বতানি ওয়া আনা আবদুকা ওয়া আনা আলা আহ্দিকা ওয়া ওয়াদিকা মাসতা তায়াতু, আউজু বিকা মিন শাররি মা ছনাতু, আবুউ লাকা বিনিমাতিকা আলাইয়া, ওয়া আবুউ লাকা বিজাম্বি; ফাগফির লি, ফা ইন্নাহু লা ইয়াগফিরুজ-জুনুবা ইল্লা আংতা।", loop: 10 },
+          { id: "Fbm63isVYmY", start: 23.4, end: 30, label: "আস্তাগফিরুল্লাহ হাল্লাজি", tooltip: "আস্তাগফিরুল্লাহ হাল্লাজি লা ইলাহা ইল্লা হুয়াল হাইয়ুল কাইয়ুম ওয়াতুবি ইলাইহি।", loop: 100 },
+          { id: "F8J09kBMsJU", start: 0, end: 7, label: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ", tooltip: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ", loop: 100 },
+          { id: "VNoq93-17Ho", start: 2, end: 22, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।", loop: 10 },
+          { id: "V4WF16FhLcg", start: 3.8, end: 6, label: "রাব্বির ফিরলি জুনুবি", tooltip: "রাব্বির ফিরলি জুনুবি প্রতিদিন 21 বার", loop: 21 },
+          { id: "U_5o4JEINfQ", start: 11.8, end: 17, label: "দোয়া ইউনুস", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
+          { id: "UFMf485VTiI", start: 45, end: 48.2, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন ১০০ বার", loop: 100 },
+          { id: "aPbwuL9-C7A", start: 0, end: 22, label: "ইস্তেগফার 03", tooltip: "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি", loop: 7 }
+        ]
+      },
+      {
+        name: "রিজিক",
+        videos: [
+          { id: "SEh3c0Va5qk", start: 5, end: 8.5, label: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক", tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক", loop: 21 },
+          { id: "d-AzKo4dOoc", start: 0, end: 11, label: "সূরা আল-বাকারা থেকে দুআ (2:201)", tooltip: "সূরা আল-বাকারা থেকে দুআ (2:201).", loop: 21 },
+          { id: "uv3VXLVK6FQ", start: 10, end: 30, label: "আল-ইখলাস", tooltip: "প্রতিদিন 3 বার with Salam", loop: 3 },
+          { id: "r-pn59nB5RQ", start: 0, end: 7, label: "হযরত মুসার দুআ (কুরআন 28:24)", tooltip: "হযরত মুসার দুআ (কুরআন 28:24).", loop: 21 },
+          { id: "H1UVp0XlhBs", start: 5.1, end: 11, label: "সম্পদ ও হেদায়েতের জন্য দুআ", tooltip: "সম্পদ ও হেদায়েতের জন্য দুআ", loop: 21 },
+          { id: "K6BWL4gfCB8", start: 4.1, end: 9.8, label: "আল্লাহুম্মা ইন্নি আস'আলুকা", tooltip: "আল্লাহুম্মা ইন্নি আস'আলুকা ", loop: 21 },
+          { id: "SNuoTZTeGMM", start: 676.2, end: 693, label: "কাদিয়াল হাজত", tooltip: "কাদিয়াল হাজত ", loop: 21 },
+          { id: "fX2SO9OpSXA", start: 14, end: 27.8, label: "ঋণ মুক্তির দোয়া - 01", tooltip: "ঋণ মুক্তির দোয়া - Mornig and Evening", loop: 21 },
+          { id: "xGTdWJQhOhw", start: 151.4, end: 167, label: "ঋণ মুক্তির দোয়া - 02", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 21 },
+          { id: "UkbiXPvZPpw", start: 12.8, end: 16.2, label: "ঋণ মুক্তির দোয়া - 03", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 21 },
+          { id: "UkbiXPvZPpw", start: 0, end: 398, label: "Surah Al-Waqiah", tooltip: "Surah Al-Waqiah", loop: 1 },
+        ]
+      },
+      {
+        name: "সব সমস্যা সমাধানে",
+        videos: [
+          { id: "2ePe6dTkoGg", start: 30.4, end: 39.2, label: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স", tooltip: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স", loop: 3 },
+          { id: "maggkOnU6JY", start: 0, end: 9, label: "আলহামদু লিল্লা হিল্লাজি আফানি", tooltip: "আলহামদু লিল্লা হিল্লাজি আফানি ", loop: 3 },
+          { id: "QA6jYhCXYyM", start: 0, end: 23, label: "ইসমে আজম", tooltip: "ইসমে আজম", loop: 21 },
+          { id: "ueu7UtauHVc", start: 0, end: 66, label: "সূরা ফাতিহা", tooltip: "সূরা ফাতিহা", loop: 7 },
+          { id: "ueu7UtauHVc", start: 0, end: 66, label: "সূরা দুহা", tooltip: "সূরা ফাতিহা", loop: 7 },
+          { id: "zy3xIbbK6eE", start: 5, end: 130, label: "সূরা বাকারার শেষ দুই আয়াত", tooltip: "সূরা বাকারার শেষ দুই আয়াত", loop: 21 }
+        ]
+      },
+      {
+        name: "দোয়া কবুল হওয়ার আমল",
+        videos: [
+          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 100 },
+          { id: "v45_ITHAgdY", start: 47.5, end: 51, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 499 বার", loop: 499 },
+          { id: "UFMf485VTiI", start: 45, end: 48.2, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 1 বার", loop: 1 },
+          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 100 },
+        ]
+      },
+      {
+        name: "OTHERS",
+        videos: [
+          { id: "R8MyXEsY7gY", start: 11.2, end: 23, label: "মানসিক চাপ, বিষণ্ণতা এবং উদ্বেগে পড়ার জন্য দুআ", tooltip: "মানসিক চাপ, বিষণ্ণতা এবং উদ্বেগে পড়ার জন্য দুআ", loop: 3 },
+          { id: "IQtvaAVEg8k", start: 0, end: 9.1, label: "হারাম করার ইচ্ছার বিরুদ্ধে দুআ", tooltip: "হারাম করার ইচ্ছার বিরুদ্ধে দুআ", loop: 3 },
+        ]
+      },
+      {
+        name: "OBAY",
+        videos: [
+          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 7 },
+          { id: "KCpucEqWHgI", start: 0, end: 18, label: "সূরা আল ফুরকান : ৭৪ আয়াত", tooltip: "সূরা আল ফুরকান : ৭৪ আয়াত.", loop: 21 },
+          { id: "TAXr0OvvFd0", start: 14.5, end: 24, label: "সূরা ত্বা-হা : ৩৯ আয়াত", tooltip: "সূরা ত্বা-হা : ৩৯ আয়াত.", loop: 21 },
+          { id: "vzNIHXjRgn4", start: 163, end: 165.1, label: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা", tooltip: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা", loop: 11 },
+          { id: "0vhiEaMU2Rc", start: 193, end: 204, label: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি", tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি আশহাদু আন্নাকা আনতাল্লাহ,লা ইলাহা ইল্লা আনতাল আহাদুস সামাদ আল্লাজী লাম ইয়ালিদ ওয়ালাম ইউলাদ, ওয়ালাম ইয়া কুল্লাহু কুফুওয়ান আহাদ।", loop: 11 },
+          { id: "Rs_g65sSGqk", start: 28, end: 29, label: "ইয়া ওয়াদুদু (313)", tooltip: "ইয়া ওয়াদুদু", loop: 313 },
+          { id: "wMka1xyhV_w", start: 20.5, end: 21.4, label: "ইয়া লাতিফু (133)", tooltip: "ইয়া লাতিফু", loop: 133 },
+          { id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি’ মাল ওয়াকিল", tooltip: "হাসবুনাল্লাহু ওয়া নি’ মাল ওয়াকিল prayer.", loop: 100 },
+          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 7 }
+        ]
+      }
+    ];
 
+    // Dynamically generate dropdown options
+    function generateDropdown() {
+      const dropdown = document.getElementById('sectionDropdown');
+      dropdown.innerHTML = '';
+      videoSections.forEach((section, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = section.name;
+        dropdown.appendChild(opt);
+      });
+    }
+
+    // Generate section content
+    function showSelectedSection() {
+      const controlsDiv = document.getElementById('sectionControls');
+      const sectionIdx = parseInt(document.getElementById('sectionDropdown').value, 10);
+      const section = videoSections[sectionIdx];
+      controlsDiv.innerHTML = '';
+
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.textContent = section.name;
+      controlsDiv.appendChild(header);
+
+      // Video list
+      const ul = document.createElement('ul');
+      ul.className = 'video-list';
+      section.videos.forEach((video, vIdx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="video-serial">${vIdx + 1}.</span>
+                        <span class="video-label">${video.label}</span>
+                        <span class="video-loop">x${video.loop}</span>`;
+        ul.appendChild(li);
+      });
+      controlsDiv.appendChild(ul);
+
+      // Play button
+      const btn = document.createElement('button');
+      btn.className = 'section-btn';
+      btn.textContent = `Play : ${section.name}`;
+      btn.onclick = () => playSection(sectionIdx);
+      controlsDiv.appendChild(btn);
+    }
+
+    // YouTube Player logic
     let player;
+    let playerReady = false;
     let currentLoopCount = 0;
-    let currentMaxLoops = 0;
+    let currentMaxLoops = 1;
     let currentStartTime = 0;
     let currentEndTime = 0;
     let currentVideoId = '';
     let loopInterval = null;
 
+    // Playlist control
+    let currentSectionVideos = [];
+    let playlistIndex = 0;
+
+    // For Play All Sections
+    let allSectionsMode = false;
+    let allSectionsIndex = 0;
+
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
-        height: '360',
-        width: '640',
+        height: '100%',
+        width: '100%',
         videoId: '',
         playerVars: {
           modestbranding: 1,
           rel: 0,
-          autoplay: 1
+          autoplay: 0 // Don't autoplay until user clicks
         },
         events: {
-          'onReady': () => {},
+          'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
         }
       });
     }
 
-    function loadVideoConfig() {
-      const select = document.getElementById('videoSelect');
-      const config = select.value;
-      if (!config) {
-        clearTooltip();
+    function onPlayerReady() {
+      playerReady = true;
+    }
+
+    function playSection(sectionIdx) {
+      allSectionsMode = false;
+      currentSectionVideos = videoSections[sectionIdx].videos;
+      playlistIndex = 0;
+      playNextInSection();
+    }
+
+    function playNextInSection() {
+      if (playlistIndex >= currentSectionVideos.length) {
+        // If in allSectionsMode, go to next section
+        if (allSectionsMode) {
+          allSectionsIndex++;
+          if (allSectionsIndex < videoSections.length) {
+            currentSectionVideos = videoSections[allSectionsIndex].videos;
+            playlistIndex = 0;
+            playNextInSection();
+            showSelectedSectionByIndex(allSectionsIndex);
+            return;
+          }
+        }
+        // All videos finished, pause the player
+        if (player && typeof player.pauseVideo === "function") {
+          player.pauseVideo();
+        }
+        updateDisplay(0, 0);
+        document.getElementById('tooltipText').textContent = '';
+        allSectionsMode = false;
         return;
       }
-
-      const [videoId, start, end] = config.split(',');
-      const selectedLoopCount = parseInt(document.getElementById('loopCountSelect').value);
-
-      currentVideoId = videoId;
-      currentStartTime = parseFloat(start);
-      currentEndTime = parseFloat(end);
-      currentMaxLoops = selectedLoopCount;
+      const item = currentSectionVideos[playlistIndex];
+      currentVideoId = item.id;
+      currentStartTime = item.start;
+      currentEndTime = item.end;
       currentLoopCount = 0;
-
-      updateDisplay();
+      currentMaxLoops = item.loop || 1;
+      updateDisplay(0, currentMaxLoops);
 
       player.loadVideoById({
         videoId: currentVideoId,
-        startSeconds: currentStartTime,
-        endSeconds: currentEndTime
+        startSeconds: currentStartTime
       });
 
-      showTooltip();
+      // Show tooltip for current video
+      document.getElementById('tooltipText').textContent = item.tooltip || '';
+      // Try to play (required for some browsers)
+      setTimeout(() => {
+        if (typeof player.playVideo === "function") player.playVideo();
+      }, 500);
     }
 
-    function updateLoopCount() {
-      const selectedLoopCount = parseInt(document.getElementById('loopCountSelect').value);
-      currentMaxLoops = selectedLoopCount;
-      currentLoopCount = 0;
-
-      updateDisplay();
-
-      if (currentVideoId) {
-        player.loadVideoById({
-          videoId: currentVideoId,
-          startSeconds: currentStartTime,
-          endSeconds: currentEndTime
-        });
-      }
-    }
-
-    function updateDisplay() {
-      document.getElementById("currentLoop").textContent = currentLoopCount;
-      document.getElementById("remainingLoop").textContent = currentMaxLoops - currentLoopCount;
+    function updateDisplay(played, remain) {
+      document.getElementById("currentLoop").textContent = played;
+      document.getElementById("remainingLoop").textContent = remain;
     }
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
         startLoopCheck();
+      } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+        clearLoopInterval();
       }
     }
 
     function startLoopCheck() {
-      if (loopInterval) clearInterval(loopInterval);
+      clearLoopInterval();
 
       loopInterval = setInterval(() => {
+        if (!player || typeof player.getCurrentTime !== "function") return;
         const currentTime = player.getCurrentTime();
+        let effectiveEndTime = currentEndTime || player.getDuration();
 
-        if (currentTime >= currentEndTime) {
+        if (currentTime >= effectiveEndTime) {
           currentLoopCount++;
-          updateDisplay();
+          updateDisplay(currentLoopCount, currentMaxLoops - currentLoopCount);
 
           if (currentLoopCount < currentMaxLoops) {
             player.seekTo(currentStartTime);
+            player.playVideo();
           } else {
-            player.pauseVideo();
+            clearLoopInterval();
+            playlistIndex++;
+            playNextInSection();
           }
-
-          clearInterval(loopInterval);
-          loopInterval = null;
         }
       }, 200);
     }
 
-    function showTooltip() {
-      const select = document.getElementById('videoSelect');
-      const tooltipDiv = document.getElementById('tooltipText');
-      const selectedOption = select.options[select.selectedIndex];
-      const tooltip = selectedOption.getAttribute('data-tooltip') || '';
-      tooltipDiv.textContent = tooltip;
+    function clearLoopInterval() {
+      if (loopInterval) {
+        clearInterval(loopInterval);
+        loopInterval = null;
+      }
     }
 
-    function clearTooltip() {
-      document.getElementById('tooltipText').textContent = '';
+    // Play all sections, one after another
+    function playAllSections() {
+      if (!playerReady) {
+        alert("Player is not ready yet. Please wait a moment and try again.");
+        return;
+      }
+      allSectionsMode = true;
+      allSectionsIndex = 0;
+      currentSectionVideos = videoSections[allSectionsIndex].videos;
+      playlistIndex = 0;
+      playNextInSection();
+      showSelectedSectionByIndex(allSectionsIndex);
     }
 
-    // Initialize tooltip on page load
+    // Helper to update dropdown and section view when auto-playing all sections
+    function showSelectedSectionByIndex(idx) {
+      document.getElementById('sectionDropdown').value = idx;
+      showSelectedSection();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      showTooltip();
+      generateDropdown();
+      showSelectedSection();
+      updateDisplay(0, 0);
     });
   </script>
 </body>
