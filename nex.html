@@ -45,21 +45,21 @@
       margin-bottom: 8px;
     }    
     .play-all-btn {
-    font-size: 20px;
-    padding: 4px 20px;
-    border-radius: 8px;
-    border: none;
-    background: black;
-    color: #fff;
-    cursor: pointer;
-    width: 46%;
-    min-width: 120px;
-    max-width: 220px;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+      font-size: 20px;
+      padding: 4px 20px;
+      border-radius: 8px;
+      border: none;
+      background: black;
+      color: #fff;
+      cursor: pointer;
+      width: 46%;
+      min-width: 120px;
+      max-width: 220px;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     .play-all-btn:hover {
       background: #0056b3;
@@ -184,6 +184,10 @@
       margin-bottom: 10px;
       color: #333;
       letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
     #currentLoop, #remainingLoop {
       font-weight: bold;
@@ -194,6 +198,25 @@
       color: #d9534f;
       font-weight: bold;
       margin-left: 10px;
+    }
+    .skip-btn {
+      font-size: 18px;
+      padding: 4px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #f7fafc;
+      color: #007bff;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: background 0.2s, color 0.2s;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .skip-btn:hover {
+      background: #007bff;
+      color: #fff;
     }
     .section-select {
       font-size: 20px;
@@ -241,6 +264,10 @@
         margin-left: 0;
         margin-top: 5px;
       }
+      .skip-btn {
+        margin-left: 0;
+        margin-top: 5px;
+      }
     }
   </style>
 </head>
@@ -266,12 +293,13 @@
         PLAYED: <span id="currentLoop">0</span> |
         REMAIN: <span id="remainingLoop">0</span>
         <span id="sectionTimer"></span>
+        <button class="skip-btn" onclick="skipCurrentContent()" title="Skip to next ▶️">⏭️ Skip</button>
       </p>
     </div>
   </div>
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // Paste your full videoSections array here!
+    // ... (Paste your full videoSections array here, as in your last post) ...
     // For demo, here's a short sample. Replace with your full array.
    const videoSections = [
       {
@@ -387,7 +415,7 @@
       }
     ];
 
-      function generateDropdown() {
+    function generateDropdown() {
       const dropdown = document.getElementById('sectionDropdown');
       dropdown.innerHTML = '';
       videoSections.forEach((section, idx) => {
@@ -695,6 +723,17 @@
     }
     function resumeTimers() {
       timersPaused = false;
+    }
+
+    // Skip button logic
+    function skipCurrentContent() {
+      // If currently playing, skip to next video
+      if (player && typeof player.pauseVideo === "function") {
+        player.pauseVideo();
+      }
+      clearLoopInterval();
+      playlistIndex++;
+      playNextInSection();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
