@@ -307,14 +307,12 @@
   </div>
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // ... (Paste your full videoSections array here, as in your last post) ...
-    // For demo, here's a short sample. Replace with your full array.
-   const videoSections = [
+    const videoSections = [
       {
         name: "প্রতিদিন",
         videos: [
           { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 7 },
-          { id: "HfNiDn9u4Z4", start: 22, end: 35, label: "Al-Mu'minun (97-98)", tooltip: "Wa qur rabbi a’uzu bika min hamazatisy syayatin, Wa a’uzu bika rabbi ay yahdurun", loop: 7 },
+          { id: "HfNiDn9u4Z4", start: 22, end: 35, label: "Al-Mu'minun (97-98)", tooltip: "Wa qur rabbi a'uzu bika min hamazatisy syayatin, Wa a'uzu bika rabbi ay yahdurun", loop: 7 },
           { id: "_P75cWrTGPs", start: 124.2, end: 131.8, label: "আলহামদুলিল্লাহ", tooltip: "প্রতিদিন 3 বার", loop: 3 },
           { id: "BxNUCjRT6cc", start: 30, end: 33.5, label: "Best One Word Dua (SAW)", tooltip: "প্রতিদিন 3 বার", loop: 3 },
           { id: "FFefhd3C7jc", start: 86.3, end: 92, label: "বিসমিল্লাহিল্লাজি লা- য়াজুর্রু", tooltip: "প্রতিদিন 3 বার", loop: 3 },
@@ -336,13 +334,13 @@
         name: "AFTER NAMAJ",
         videos: [
           { id: "dGYQBskQBRw", start: 15, end: 21.8, label: "আল্লাহুম্মা আইন্নি", tooltip: "আল্লাহুম্মা আইন্নি আলা জিকরিকা ওয়া শুকরিকা ওয়া হুসনি ইবাদাতিকা", loop: 7 },
-          { id: "Xx85iIXcQNs", start: 7.7, end: 9, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।", loop: 3 },
-          { id: "Xx85iIXcQNs", start: 5, end: 6, label: "আল্লাহু আকবার", tooltip: " ১ বার ", loop: 1 },
-          { id: "LuCTs4eTNtQ", start: 0, end: 12, label: "Allahumma Antas Salam", tooltip: "Allahumma Antas Salam", loop: 1 },
-          // { id: "paplOoJGGxg", start: 1, end: 10, label: "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার", tooltip: "প্রতিদিন ১০০ বার", loop: 33 },
+          // { id: "b8GKbzll4bM", start: 0, end: 4.5, label: "Cover All", tooltip: "Cover All", loop: 7 },
           { id: "L30c6Axa06A", start: 0, end: 51, label: "Surah Al-Fatiha", tooltip: "Surah Al-Fatiha", loop: 1 },
           { id: "dfZYTEgfwDc", start: 0, end: 30, label: "Ayatul Kursi", tooltip: "Ayatul Kursi", loop: 1 },
           { id: "8t-Jwm72UD4", start: 0, end: 129, label: "SURAH AL-IMRAN", tooltip: "SURAH AL-IMRAN", loop: 1 },
+          { id: "Xx85iIXcQNs", start: 5, end: 6, label: "আল্লাহু আকবার", tooltip: " ১ বার ", loop: 1 },
+          { id: "Xx85iIXcQNs", start: 7.7, end: 9, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।", loop: 3 },
+          { id: "paplOoJGGxg", start: 1, end: 10, label: "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার", tooltip: "প্রতিদিন ১০০ বার", loop: 33 },
           { id: "Xx85iIXcQNs", start: 19, end: 25.2, label: "ADD", tooltip: "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি", loop: 1 },
           { id: "cemBjVIDoFs", start: 27.8, end: 34.4, label: "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ", tooltip: "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ", loop: 40 },
           { id: "97TteyKVyiE", start: 0, end: 12, label: "আল্লাহু লাতিফুম্ বি-ইবাদিহি ইয়ারজুকু মাইয়্যাশায়ু, ওয়া হুয়াল কাভিয়্যুল আজিজ", tooltip: "আল্লাহ তাঁর বান্দাদের প্রতি দয়ালু। তিনি যাকে ইচ্ছা, রিযিক দান করেন। তিনি প্রবল, পরাক্রমশালী। (সুরা শুরা : আয়াত ১৯)", loop: 70 },
@@ -369,7 +367,7 @@
           { id: "SEh3c0Va5qk", start: 5, end: 8.5, label: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক", tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক", loop: 7 },
           { id: "d-AzKo4dOoc", start: 0, end: 11, label: "সূরা আল-বাকারা থেকে দুআ (2:201)", tooltip: "সূরা আল-বাকারা থেকে দুআ (2:201).", loop: 7 },
           { id: "uv3VXLVK6FQ", start: 10, end: 30, label: "আল-ইখলাস", tooltip: "প্রতিদিন 3 বার with Salam", loop: 3 },
-          { id: "p_oJIawS42w", start: 0, end: 7, label: "হযরত মুসার দুআ (কুরআন 28:24)", tooltip: "হযরত মুসার দুআ (কুরআন 28:24).", loop: 7 },
+          { id: "r-p_oJIawS42w", start: 0, end: 7, label: "হযরত মুসার দুআ (কুরআন 28:24)", tooltip: "হযরত মুসার দুআ (কুরআন 28:24).", loop: 7 },
           { id: "H1UVp0XlhBs", start: 5.1, end: 11, label: "সম্পদ ও হেদায়েতের জন্য দুআ", tooltip: "সম্পদ ও হেদায়েতের জন্য দুআ", loop: 7 },
           { id: "K6BWL4gfCB8", start: 4.1, end: 9.8, label: "আল্লাহুম্মা ইন্নি আস'আলুকা", tooltip: "আল্লাহুম্মা ইন্নি আস'আলুকা ", loop: 21 },
           { id: "SNuoTZTeGMM", start: 676.2, end: 693, label: "কাদিয়াল হাজত", tooltip: "কাদিয়াল হাজত ", loop: 7 },
@@ -377,7 +375,6 @@
           { id: "xGTdWJQhOhw", start: 151.4, end: 167, label: "ঋণ মুক্তির দোয়া - 02", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
           { id: "UkbiXPvZPpw", start: 12.8, end: 16.2, label: "ঋণ মুক্তির দোয়া - 03", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
           { id: "JOHf1hU1EbM", start: 263.4, end: 286.8, label: "ঋণ মুক্তির দোয়া - 04", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
-          // { id: "JOHf1hU1EbM", start: 263.4, end: 286.8, label: "ঋণ মুক্তির দোয়া - 04", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
           { id: "gS3G6DK3ffo", start: 15, end: 28, label: "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা", tooltip: "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা, ওয়াত তুকা, ওয়াল আফাফা ওয়াল গিনা", loop: 7 },
           { id: "4srFuYLGmhU", start: 26.2, end: 34, label: "আল্লাহুম্মাগফিরলি জাম্বি", tooltip: "আল্লাহুম্মাগফিরলি জাম্বি ওয়া ওয়াসসি'লি ফি দারি ওয়া বারিকলি ফি রিজক্বি।", loop: 7 },
           { id: "Rwp1d-eRP1Q", start: 0, end: 40, label: "সুরা কুরাইশ", tooltip: "সুরা কুরাইশ", loop: 1 },
@@ -394,7 +391,7 @@
           { id: "0vhiEaMU2Rc", start: 193, end: 204, label: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি", tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি আশহাদু আন্নাকা আনতাল্লাহ,লা ইলাহা ইল্লা আনতাল আহাদুস সামাদ আল্লাজী লাম ইয়ালিদ ওয়ালাম ইয়ুলাদ, ওয়ালাম ইয়া কুল্লাহু কুফুওয়ান আহাদ।", loop: 11 },
           { id: "Rs_g65sSGqk", start: 28, end: 29, label: "ইয়া ওয়াদুদু (313)", tooltip: "ইয়া ওয়াদুদু", loop: 313 },
           { id: "wMka1xyhV_w", start: 20.5, end: 21.4, label: "ইয়া লাতিফু (133)", tooltip: "ইয়া লাতিফু", loop: 133 },
-          { id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি’ মাল ওয়াকিল", tooltip: "হাসবুনাল্লাহু ওয়া নি’ মাল ওয়াকিল prayer.", loop: 100 },
+          { id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল", tooltip: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল prayer.", loop: 100 },
           { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 7 }
         ]
       },
@@ -416,7 +413,6 @@
           { id: "v45_ITHAgdY", start: 47.5, end: 51, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 499 বার", loop: 499 },
           { id: "UFMf485VTiI", start: 45, end: 48.2, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 1 বার", loop: 1 },
           { id: "6HPXBy9kLBA", start: 6, end: 11.8, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 100 },
-          // { id: "6HPXBy9kLBA", start: 6, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 100 },
         ]
       },
       {
@@ -550,15 +546,19 @@
             allSectionsMode = false;
           }
         }
+        
+        // Pause player when all videos are done
         if (player && typeof player.pauseVideo === "function") {
           player.pauseVideo();
         }
+        
         updateDisplay(0, 0);
         resetSectionTimer(-1);
         updateAllSectionsTimer();
         document.getElementById('tooltipText').textContent = '';
         return;
       }
+      
       const item = currentSectionVideos[playlistIndex];
       currentVideoId = item.id;
       currentStartTime = item.start;
@@ -575,9 +575,8 @@
       }
 
       let sectionIdx = allSectionsMode ? allSectionsIndex : parseInt(document.getElementById('sectionDropdown').value, 10);
-      if (currentLoopCount === 0 && playlistIndex === 0) {
-        startSectionTimer(sectionIdx, playlistIndex, currentLoopCount);
-      }
+      startSectionTimer(sectionIdx, playlistIndex, currentLoopCount);
+      updateAllSectionsTimer();
 
       player.loadVideoById({
         videoId: currentVideoId,
@@ -585,8 +584,12 @@
       });
 
       document.getElementById('tooltipText').textContent = item.tooltip || '';
+      
+      // Auto-play after loading
       setTimeout(() => {
-        if (typeof player.playVideo === "function") player.playVideo();
+        if (typeof player.playVideo === "function") {
+          player.playVideo();
+        }
       }, 500);
     }
 
@@ -605,9 +608,22 @@
         pauseTimers();
         clearLoopInterval();
       } else if (event.data === YT.PlayerState.ENDED) {
-        timersPaused = false;
-        resumeTimers();
+        timersPaused = true;
+        pauseTimers();
         clearLoopInterval();
+        
+        // Auto-advance to next video when current video ends
+        currentLoopCount++;
+        updateDisplay(currentLoopCount, currentMaxLoops - currentLoopCount);
+        
+        if (currentLoopCount < currentMaxLoops) {
+          player.seekTo(currentStartTime);
+          player.playVideo();
+        } else {
+          clearLoopInterval();
+          playlistIndex++;
+          playNextInSection();
+        }
       }
     }
 
@@ -669,11 +685,15 @@
       if (sectionTimerSeconds > 0) {
         timerInterval = setInterval(() => {
           if (!timersPaused) {
-            sectionTimerSeconds--;
+            sectionTimerSeconds -= 0.1;
             updateSectionTimerDisplay();
-            if (sectionTimerSeconds <= 0) clearInterval(timerInterval);
+            if (sectionTimerSeconds <= 0) {
+              clearInterval(timerInterval);
+              sectionTimerSeconds = 0;
+              updateSectionTimerDisplay();
+            }
           }
-        }, 1000);
+        }, 100); // Update every 100ms for millisecond precision
       }
     }
 
@@ -689,15 +709,15 @@
       let totalSeconds = 0;
       if (section.videos[currentVideoIdx]) {
         let v = section.videos[currentVideoIdx];
-        let duration = Math.max(1, (v.end - v.start));
+        let duration = v.end - v.start;
         totalSeconds += duration * (v.loop - currentLoop);
       }
       for (let i = currentVideoIdx + 1; i < section.videos.length; i++) {
         let v = section.videos[i];
-        let duration = Math.max(1, (v.end - v.start));
+        let duration = v.end - v.start;
         totalSeconds += duration * v.loop;
       }
-      return Math.floor(totalSeconds);
+      return totalSeconds;
     }
 
     function updateSectionTimerDisplay() {
@@ -713,11 +733,15 @@
       if (allSectionsTimerSeconds > 0) {
         allSectionsTimerInterval = setInterval(() => {
           if (!timersPaused) {
-            allSectionsTimerSeconds--;
+            allSectionsTimerSeconds -= 0.1;
             updateAllSectionsTimerDisplay();
-            if (allSectionsTimerSeconds <= 0) clearInterval(allSectionsTimerInterval);
+            if (allSectionsTimerSeconds <= 0) {
+              clearInterval(allSectionsTimerInterval);
+              allSectionsTimerSeconds = 0;
+              updateAllSectionsTimerDisplay();
+            }
           }
-        }, 1000);
+        }, 100); // Update every 100ms for millisecond precision
       }
     }
 
@@ -725,6 +749,19 @@
       clearInterval(allSectionsTimerInterval);
       allSectionsTimerSeconds = calcAllSectionsSeconds();
       updateAllSectionsTimerDisplay();
+      if (allSectionsTimerSeconds > 0) {
+        allSectionsTimerInterval = setInterval(() => {
+          if (!timersPaused) {
+            allSectionsTimerSeconds -= 0.1;
+            updateAllSectionsTimerDisplay();
+            if (allSectionsTimerSeconds <= 0) {
+              clearInterval(allSectionsTimerInterval);
+              allSectionsTimerSeconds = 0;
+              updateAllSectionsTimerDisplay();
+            }
+          }
+        }, 100); // Update every 100ms for millisecond precision
+      }
     }
 
     function calcAllSectionsSeconds() {
@@ -732,11 +769,11 @@
       for (let s = 0; s < videoSections.length; s++) {
         for (let v = 0; v < videoSections[s].videos.length; v++) {
           let vid = videoSections[s].videos[v];
-          let duration = Math.max(1, (vid.end - vid.start));
+          let duration = vid.end - vid.start;
           total += duration * vid.loop;
         }
       }
-      return Math.floor(total);
+      return total;
     }
 
     function updateAllSectionsTimerDisplay() {
@@ -745,10 +782,12 @@
     }
 
     function formatTime(sec) {
+      // Format time with millisecond precision (showing one decimal place)
       let h = Math.floor(sec / 3600);
       let m = Math.floor((sec % 3600) / 60);
-      let s = Math.floor(sec % 60);
-      return (h > 0 ? h + 'h ' : '') + (m > 0 ? m + 'm ' : (h > 0 ? '0m ' : '')) + s + 's';
+      let s = sec % 60;
+      let sFormatted = s.toFixed(1); // Show one decimal place for milliseconds
+      return (h > 0 ? h + 'h ' : '') + (m > 0 ? m + 'm ' : (h > 0 ? '0m ' : '')) + sFormatted + 's';
     }
 
     // Pause/resume timers
