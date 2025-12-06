@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DUA AND DARUD PLAYER</title>
   <style>
     body {
@@ -10,6 +11,7 @@
       padding: 20px;
       font-size: 26px;
       background: #f7fafc;
+      margin: 0;
     }
     .main-row {
       display: flex;
@@ -132,6 +134,17 @@
       border-left: 4px solid #007bff;
       padding-left: 10px;
     }
+    .video-list li.subcategory {
+      font-weight: bold;
+      text-align: center;
+      background-color: #f0f8ff;
+      border-left: none;
+      padding: 8px 0;
+      margin: 10px 0;
+      border-radius: 6px;
+      border-bottom: none;
+      justify-content: center;
+    }
     .video-serial {
       font-weight: bold;
       color: #888;
@@ -196,6 +209,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
     #currentLoop, #remainingLoop {
       font-weight: bold;
@@ -276,6 +290,32 @@
         margin-left: 0;
         margin-top: 5px;
       }
+      .controls {
+        min-width: 100%;
+        max-width: 100%;
+      }
+      .player-col {
+        min-width: 100%;
+        max-width: 100%;
+      }
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .video-list li {
+        font-size: 16px;
+      }
+      .section-header {
+        font-size: 20px;
+      }
+      .play-all-btn {
+        font-size: 18px;
+      }
+      .section-select {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -316,6 +356,7 @@
           { id: "_P75cWrTGPs", start: 124.2, end: 131.8, label: "আলহামদুলিল্লাহ", tooltip: "প্রতিদিন 3 বার", loop: 3 },
           { id: "BxNUCjRT6cc", start: 30, end: 33.5, label: "Best One Word Dua (SAW)", tooltip: "প্রতিদিন 3 বার", loop: 3 },
           { id: "FFefhd3C7jc", start: 86.3, end: 92, label: "বিসমিল্লাহিল্লাজি লা- য়াজুর্রু", tooltip: "প্রতিদিন 3 বার", loop: 3 },
+          { isSubcategory: true, label: "বদ নজর" },
           { id: "73LSGdGcTYM", start: 0, end: 6.2, label: "বদ নজর থেকে বাঁচার দোয়া", tooltip: "প্রতিদিন 3 বার", loop: 3 },
           { id: "T_B2wjaMcZs", start: 0, end: 6, label: "শত্রুর ক্ষতি থেকে বাঁচার আমল", tooltip: "প্রতিদিন 3 বার", loop: 3 },
           { id: "jNPhGaAcpSk", start: 0, end: 90, label: "সূরা দুহা", tooltip: "সূরা দুহা", loop: 1 },
@@ -340,7 +381,6 @@
           { id: "Xx85iIXcQNs", start: 7.7, end: 9, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।", loop: 3 },
           { id: "Xx85iIXcQNs", start: 5, end: 6, label: "আল্লাহু আকবার", tooltip: " ১ বার ", loop: 1 },
           { id: "LuCTs4eTNtQ", start: 0, end: 12, label: "Allahumma Antas Salam", tooltip: "Allahumma Antas Salam", loop: 1 },
-          // { id: "paplOoJGGxg", start: 1, end: 10, label: "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার", tooltip: "প্রতিদিন ১০০ বার", loop: 33 },
           { id: "L30c6Axa06A", start: 0, end: 51, label: "Surah Al-Fatiha", tooltip: "Surah Al-Fatiha", loop: 1 },
           { id: "dfZYTEgfwDc", start: 0, end: 30, label: "Ayatul Kursi", tooltip: "Ayatul Kursi", loop: 1 },
           { id: "8t-Jwm72UD4", start: 0, end: 129, label: "SURAH AL-IMRAN", tooltip: "SURAH AL-IMRAN", loop: 1 },
@@ -374,6 +414,7 @@
           { id: "H1UVp0XlhBs", start: 5.1, end: 11, label: "সম্পদ ও হেদায়েতের জন্য দুআ", tooltip: "সম্পদ ও হেদায়েতের জন্য দুআ", loop: 7 },
           { id: "K6BWL4gfCB8", start: 4.1, end: 9.8, label: "আল্লাহুম্মা ইন্নি আস'আলুকা", tooltip: "আল্লাহুম্মা ইন্নি আস'আলুকা ", loop: 21 },
           { id: "SNuoTZTeGMM", start: 676.2, end: 693, label: "কাদিয়াল হাজত", tooltip: "কাদিয়াল হাজত ", loop: 7 },
+          { isSubcategory: true, label: "ঋণ মুক্তির দোয়া" },
           { id: "fX2SO9OpSXA", start: 14, end: 27.8, label: "ঋণ মুক্তির দোয়া - 01", tooltip: "ঋণ মুক্তির দোয়া - Mornig and Evening", loop: 7 },
           { id: "0xGfznLD-RA", start: 1, end: 7.3, label: "ঋণ মুক্তির দোয়া - 02", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
           { id: "UkbiXPvZPpw", start: 12.8, end: 16.2, label: "ঋণ মুক্তির দোয়া - 03", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
@@ -463,12 +504,23 @@
 
       const ul = document.createElement('ul');
       ul.className = 'video-list';
+      
+      // Keep track of actual video count (excluding subcategories)
+      let videoCount = 0;
+      
       section.videos.forEach((video, vIdx) => {
         const li = document.createElement('li');
         li.id = `section-${sectionIdx}-video-${vIdx}`;
-        li.innerHTML = `<span class="video-serial">${vIdx + 1}.</span>
-                        <span class="video-label">${video.label}</span>
-                        <span class="video-loop">x${video.loop}</span>`;
+        
+        if (video.isSubcategory) {
+          li.className = 'subcategory';
+          li.innerHTML = `<span class="video-label">${video.label}</span>`;
+        } else {
+          videoCount++;
+          li.innerHTML = `<span class="video-serial">${videoCount}.</span>
+                          <span class="video-label">${video.label}</span>
+                          <span class="video-loop">x${video.loop}</span>`;
+        }
         ul.appendChild(li);
       });
       controlsDiv.appendChild(ul);
@@ -538,6 +590,11 @@
       const prevHighlighted = document.querySelector('.current-video');
       if (prevHighlighted) {
         prevHighlighted.classList.remove('current-video');
+      }
+
+      // Skip subcategories
+      while (playlistIndex < currentSectionVideos.length && currentSectionVideos[playlistIndex].isSubcategory) {
+        playlistIndex++;
       }
 
       if (playlistIndex >= currentSectionVideos.length) {
@@ -715,15 +772,17 @@
       if (sectionIdx < 0 || sectionIdx >= videoSections.length) return 0;
       const section = videoSections[sectionIdx];
       let totalSeconds = 0;
-      if (section.videos[currentVideoIdx]) {
+      if (section.videos[currentVideoIdx] && !section.videos[currentVideoIdx].isSubcategory) {
         let v = section.videos[currentVideoIdx];
         let duration = v.end - v.start;
         totalSeconds += duration * (v.loop - currentLoop);
       }
       for (let i = currentVideoIdx + 1; i < section.videos.length; i++) {
         let v = section.videos[i];
-        let duration = v.end - v.start;
-        totalSeconds += duration * v.loop;
+        if (!v.isSubcategory) {
+          let duration = v.end - v.start;
+          totalSeconds += duration * v.loop;
+        }
       }
       return totalSeconds;
     }
@@ -777,8 +836,10 @@
       for (let s = 0; s < videoSections.length; s++) {
         for (let v = 0; v < videoSections[s].videos.length; v++) {
           let vid = videoSections[s].videos[v];
-          let duration = vid.end - vid.start;
-          total += duration * vid.loop;
+          if (!vid.isSubcategory) {
+            let duration = vid.end - vid.start;
+            total += duration * vid.loop;
+          }
         }
       }
       return total;
