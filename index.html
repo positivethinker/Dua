@@ -894,16 +894,16 @@
       updateSectionTimerDisplay();
       if (sectionTimerSeconds > 0) {
         timerInterval = setInterval(() => {
-          if (!timersPaused) {
-            sectionTimerSeconds -= 0.1;
-            updateSectionTimerDisplay();
-            if (sectionTimerSeconds <= 0) {
-              clearInterval(timerInterval);
-              sectionTimerSeconds = 0;
-              updateSectionTimerDisplay();
-            }
-          }
-        }, 100); // Update every 100ms for millisecond precision
+  if (!timersPaused) {
+    sectionTimerSeconds--;
+    updateSectionTimerDisplay();
+    if (sectionTimerSeconds <= 0) {
+      clearInterval(timerInterval);
+      sectionTimerSeconds = 0;
+      updateSectionTimerDisplay();
+    }
+  }
+}, 1000); // Update every second
       }
     }
 
@@ -914,23 +914,38 @@
     }
 
     function calcSectionSeconds(sectionIdx, currentVideoIdx, currentLoop) {
-      if (sectionIdx < 0 || sectionIdx >= videoSections.length) return 0;
-      const section = videoSections[sectionIdx];
-      let totalSeconds = 0;
-      if (section.videos[currentVideoIdx] && !section.videos[currentVideoIdx].isSubcategory) {
-        let v = section.videos[currentVideoIdx];
-        let duration = v.end - v.start;
-        totalSeconds += duration * (v.loop - currentLoop);
-      }
-      for (let i = currentVideoIdx + 1; i < section.videos.length; i++) {
-        let v = section.videos[i];
-        if (!v.isSubcategory) {
-          let duration = v.end - v.start;
-          totalSeconds += duration * v.loop;
-        }
-      }
-      return totalSeconds;
+  if (sectionIdx < 0 || sectionIdx >= videoSections.length) return 0;
+  const section = videoSections[sectionIdx];
+  let totalSeconds = 0;
+  
+  // Account for current position in current video
+  if (section.videos[currentVideoIdx] && !section.videos[currentVideoIdx].isSubcategory) {
+    let v = section.videos[currentVideoIdx];
+    let remainingLoops = v.loop - currentLoop;
+    
+    // Get current position in video if playing
+    let currentPosition = 0;
+    if (player && typeof player.getCurrentTime === "function" && 
+        currentVideoId === v.id) {
+      currentPosition = player.getCurrentTime() - v.start;
     }
+    
+    // Calculate remaining time for current video
+    let duration = v.end - v.start;
+    let remainingDuration = duration - currentPosition;
+    totalSeconds += remainingDuration + (duration * (remainingLoops - 1));
+  }
+  
+  // Calculate time for remaining videos
+  for (let i = currentVideoIdx + 1; i < section.videos.length; i++) {
+    let v = section.videos[i];
+    if (!v.isSubcategory) {
+      let duration = v.end - v.start;
+      totalSeconds += duration * v.loop;
+    }
+  }
+  return totalSeconds;
+}
 
     function updateSectionTimerDisplay() {
       const timerSpan = document.getElementById('sectionTimer');
@@ -943,17 +958,17 @@
       allSectionsTimerSeconds = calcAllSectionsSeconds();
       updateAllSectionsTimerDisplay();
       if (allSectionsTimerSeconds > 0) {
-        allSectionsTimerInterval = setInterval(() => {
-          if (!timersPaused) {
-            allSectionsTimerSeconds -= 0.1;
-            updateAllSectionsTimerDisplay();
-            if (allSectionsTimerSeconds <= 0) {
-              clearInterval(allSectionsTimerInterval);
-              allSectionsTimerSeconds = 0;
-              updateAllSectionsTimerDisplay();
-            }
-          }
-        }, 100); // Update every 100ms for millisecond precision
+      allSectionsTimerInterval = setInterval(() => {
+  if (!timersPaused) {
+    allSectionsTimerSeconds--;
+    updateAllSectionsTimerDisplay();
+    if (allSectionsTimerSeconds <= 0) {
+      clearInterval(allSectionsTimerInterval);
+      allSectionsTimerSeconds = 0;
+      updateAllSectionsTimerDisplay();
+    }
+  }
+}, 1000); // Update every second
       }
     }
 
@@ -963,46 +978,66 @@
       updateAllSectionsTimerDisplay();
       if (allSectionsTimerSeconds > 0) {
         allSectionsTimerInterval = setInterval(() => {
-          if (!timersPaused) {
-            allSectionsTimerSeconds -= 0.1;
-            updateAllSectionsTimerDisplay();
-            if (allSectionsTimerSeconds <= 0) {
-              clearInterval(allSectionsTimerInterval);
-              allSectionsTimerSeconds = 0;
-              updateAllSectionsTimerDisplay();
-            }
-          }
-        }, 100); // Update every 100ms for millisecond precision
+  if (!timersPaused) {
+    allSectionsTimerSeconds--;
+    updateAllSectionsTimerDisplay();
+    if (allSectionsTimerSeconds <= 0) {
+      clearInterval(allSectionsTimerInterval);
+      allSectionsTimerSeconds = 0;
+      updateAllSectionsTimerDisplay();
+    }
+  }
+}, 1000); // Update every second
       }
     }
 
-    function calcAllSectionsSeconds() {
-      let total = 0;
-      for (let s = 0; s < videoSections.length; s++) {
-        for (let v = 0; v < videoSections[s].videos.length; v++) {
-          let vid = videoSections[s].videos[v];
-          if (!vid.isSubcategory) {
-            let duration = vid.end - vid.start;
-            total += duration * vid.loop;
-          }
+  function calcAllSectionsSeconds() {
+  let total = 0;
+  
+  // If in allSectionsMode, calculate based on current position
+  if (allSectionsMode) {
+    // Add remaining time for current section
+    total += calcSectionSeconds(allSectionsIndex, playlistIndex, currentLoopCount);
+    
+    // Add full time for remaining sections
+    for (let s = allSectionsIndex + 1; s < videoSections.length; s++) {
+      for (let v = 0; v < videoSections[s].videos.length; v++) {
+        let vid = videoSections[s].videos[v];
+        if (!vid.isSubcategory) {
+          let duration = vid.end - vid.start;
+          total += duration * vid.loop;
         }
       }
-      return total;
     }
+  } else {
+    // Calculate full time for all sections
+    for (let s = 0; s < videoSections.length; s++) {
+      for (let v = 0; v < videoSections[s].videos.length; v++) {
+        let vid = videoSections[s].videos[v];
+        if (!vid.isSubcategory) {
+          let duration = vid.end - vid.start;
+          total += duration * vid.loop;
+        }
+      }
+    }
+  }
+  return total;
+}
 
     function updateAllSectionsTimerDisplay() {
       const timerSpan = document.getElementById('allSectionsTimer');
       timerSpan.textContent = allSectionsTimerSeconds > 0 ? `⏳ ${formatTime(allSectionsTimerSeconds)}` : '';
     }
 
-    function formatTime(sec) {
-      // Format time with millisecond precision (showing one decimal place)
-      let h = Math.floor(sec / 3600);
-      let m = Math.floor((sec % 3600) / 60);
-      let s = sec % 60;
-      let sFormatted = s.toFixed(1); // Show one decimal place for milliseconds
-      return (h > 0 ? h + 'h ' : '') + (m > 0 ? m + 'm ' : (h > 0 ? '0m ' : '')) + sFormatted + 's';
-    }
+function formatTime(sec) {
+  let h = Math.floor(sec / 3600);
+  let m = Math.floor((sec % 3600) / 60);
+  let s = Math.floor(sec % 60); // Use Math.floor to remove decimal
+  
+  return (h > 0 ? h + 'h ' : '') + 
+         (m > 0 ? m + 'm ' : (h > 0 ? '0m ' : '')) + 
+         s + 's';
+}
 
     // Pause/resume timers
     function pauseTimers() {
