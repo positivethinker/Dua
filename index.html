@@ -1,850 +1,1789 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DUA AND DARUD PLAYER</title>
-  <style>
-    body {
-      font-family: Chivo, sans-serif;
-      text-align: center;
-      padding: 20px;
-      font-size: 26px;
-      background: #f7fafc;
-      margin: 0;
-    }
-    .main-row {
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin: 0 auto 10px auto;
-      width: 100%;
-      max-width: 1200px;
-    }
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 390px;
-      max-width: 390px;
-      height: 600px;
-      max-height: 90vh;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      overflow: hidden;
-      padding: 0 0 10px 0;
-    }
-    .controls-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      gap: 16px;
-      margin-top: 18px;
-      margin-bottom: 8px;
-    }    
-    .play-all-btn {
-      font-size: 20px;
-      padding: 4px 20px;
-      border-radius: 8px;
-      border: none;
-      background: black;
-      color: #fff;
-      cursor: pointer;
-      width: 46%;
-      min-width: 120px;
-      max-width: 220px;
-      transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .play-all-btn:hover {
-      background: #0056b3;
-    }
-    #allSectionsTimer {
-      font-size: 18px;
-      color: #d9534f;
-      font-weight: bold;
-      margin-left: 0;
-      min-width: 110px;
-      text-align: left;
-      background: #f7fafc;
-      border-radius: 6px;
-      padding: 4px 10px;
-      border: 1px solid #eee;
-      display: inline-block;
-    }
-    .controls-scroll {
-      overflow-y: auto;
-      width: 100%;
-      padding: 0 20px;
-      flex: 1 1 auto;
-    }
-    .section-header {
-      font-size: 22px;
-      font-weight: bold;
-      color: #007bff;
-      margin: 18px 0 6px 0;
-      text-align: center;
-      width: 100%;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 2px;
-    }
-    .section-btn {
-      font-size: 12px;
-      padding: 4px 20px;
-      margin: 12px 0;
-      border-radius: 8px;
-      border: none;
-      background: black;
-      color: #fff;
-      cursor: pointer;
-      width: 60%;
-      transition: background 0.2s;
-    }
-    .section-btn:hover {
-      background: #0056b3;
-    }
-    .video-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 10px 0;
-      margin-left: 20px;
-      width: 90%;
-      text-align: left;
-    }
-    .subcategory-serial {
-      font-weight: bold;
-      color: #666;
-      margin-right: 8px;
-      min-width: 28px;
-      text-align: right;
-      display: inline-block;
-    }
-    
-    .video-list li {
-      font-size: 14px;
-      margin: 4px 0;
-      padding: 4px 0;
-      border-bottom: 1px dotted #ddd;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background-color 0.3s;
-    }
-    .video-list li.current-video {
-      background-color: #e6f7ff;
-      font-weight: bold;
-      border-left: 4px solid #007bff;
-      padding-left: 10px;
-    }
-    .video-list li.subcategory {
-      font-size: 16px;
-      font-weight: bold;
-      color: #3d321f;
-      text-align: left;
-      background-color: #f0f8ff;
-      border-left: none;
-      padding: 8px 0;
-      margin: 10px 0;
-      border-radius: 6px;
-      border-bottom: none;
-      justify-content: center;
-    }
-    .video-serial {
-      font-weight: bold;
-      color: #888;
-      margin-right: 8px;
-      min-width: 28px;
-      text-align: right;
-      display: inline-block;
-    }
-    .video-label {
-      flex: 1;
-    }
-    .video-loop {
-      color: #007bff;
-      font-size: 16px;
-      margin-left: 10px;
-      font-weight: bold;
-    }
-    .player-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-width: 390px;
-      max-width: 640px;
-      height: 600px;
-      max-height: 90vh;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      padding: 0 0 10px 0;
-    }
-    #player {
-      margin: 0 auto;
-      width: 100%;
-      height: 100%;
-      min-width: 320px;
-      min-height: 360px;
-      aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex: 1 1 auto;
-    }
-    #tooltipText {
-      font-size: 16px;
-      color: #555;
-      font-style: italic;
-      max-width: 640px;
-      margin: 15px auto 10px auto;
-      min-height: 20px;
-      text-align: center;
-    }
-    p {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #333;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    #currentLoop, #remainingLoop {
-      font-weight: bold;
-      color: #007bff;
-    }
-    #sectionTimer {
-      font-size: 18px;
-      color: #d9534f;
-      font-weight: bold;
-      margin-left: 10px;
-    }
-    .skip-btn {
-      font-size: 12px;
-      padding: 4px 16px;
-      border-radius: 8px;
-      border: none;
-      background: #03ecfc;
-      color: black;
-      cursor: pointer;
-      margin-left: 8px;
-      transition: background 0.2s, color 0.2s;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .skip-btn:hover {
-      background: #007bff;
-      color: #fff;
-    }
-    .section-select {
-      font-size: 20px;
-      padding: 8px 12px;
-      margin: 18px 0 10px 0;
-      border-radius: 8px;
-      border: 1px solid #bbb;
-      width: 90%;
-      max-width: 340px;
-      background: #f7fafc;
-      color: #333;
-    }
-    @media (max-width: 1100px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DUA AND DARUD PLAYER</title>
+    <style>
+      body {
+        font-family: Chivo, sans-serif;
+        text-align: center;
+        padding: 20px;
+        font-size: 26px;
+        background: #f7fafc;
+        margin: 0;
+      }
       .main-row {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin: 0 auto 10px auto;
+        width: 100%;
+        max-width: 1200px;
+      }
+      .controls {
+        display: flex;
         flex-direction: column;
         align-items: center;
-      }
-      .controls, .player-col, #player {
-        max-width: 100%;
-        min-width: 0;
-        height: auto;
-      }
-      .controls, .player-col {
-        height: auto;
-        min-width: 0;
+        min-width: 390px;
+        max-width: 390px;
+        height: 600px;
+        max-height: 90vh;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        padding: 0 0 10px 0;
       }
       .controls-top-row {
-        flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 16px;
+        margin-top: 18px;
+        margin-bottom: 8px;
+      }
+      .play-all-btn {
+        font-size: 20px;
+        padding: 4px 20px;
+        border-radius: 8px;
+        border: none;
+        background: black;
+        color: #fff;
+        cursor: pointer;
+        width: 46%;
+        min-width: 120px;
+        max-width: 220px;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         gap: 8px;
       }
-    }
-    @media (max-width: 600px) {
-      .main-row {
-        flex-direction: column;
-        gap: 24px;
+      .play-all-btn:hover {
+        background: #0056b3;
       }
-      .controls, .player-col, #player {
-        max-width: 100%;
+      #allSectionsTimer {
+        font-size: 18px;
+        color: #d9534f;
+        font-weight: bold;
+        margin-left: 0;
+        min-width: 110px;
+        text-align: left;
+        background: #f7fafc;
+        border-radius: 6px;
+        padding: 4px 10px;
+        border: 1px solid #eee;
+        display: inline-block;
+      }
+      .controls-scroll {
+        overflow-y: auto;
+        width: 100%;
+        padding: 0 20px;
+        flex: 1 1 auto;
+      }
+      .section-header {
+        font-size: 22px;
+        font-weight: bold;
+        color: #007bff;
+        margin: 18px 0 6px 0;
+        text-align: center;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 2px;
+      }
+      .section-btn {
+        font-size: 12px;
+        padding: 4px 20px;
+        margin: 12px 0;
+        border-radius: 8px;
+        border: none;
+        background: black;
+        color: #fff;
+        cursor: pointer;
+        width: 60%;
+        transition: background 0.2s;
+      }
+      .section-btn:hover {
+        background: #0056b3;
+      }
+      .video-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+        margin-left: 20px;
+        width: 90%;
+        text-align: left;
+      }
+      .subcategory-serial {
+        font-weight: bold;
+        color: #666;
+        margin-right: 8px;
+        min-width: 28px;
+        text-align: right;
+        display: inline-block;
+      }
+
+      .video-list li {
+        font-size: 14px;
+        margin: 4px 0;
+        padding: 4px 0;
+        border-bottom: 1px dotted #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s;
+      }
+      .video-list li.current-video {
+        background-color: #e6f7ff;
+        font-weight: bold;
+        border-left: 4px solid #007bff;
+        padding-left: 10px;
+      }
+      .video-list li.subcategory {
+        font-size: 16px;
+        font-weight: bold;
+        color: #3d321f;
+        text-align: left;
+        background-color: #f0f8ff;
+        border-left: none;
+        padding: 8px 0;
+        margin: 10px 0;
+        border-radius: 6px;
+        border-bottom: none;
+        justify-content: center;
+      }
+      .video-serial {
+        font-weight: bold;
+        color: #888;
+        margin-right: 8px;
+        min-width: 28px;
+        text-align: right;
+        display: inline-block;
+      }
+      .video-label {
+        flex: 1;
+      }
+      .video-loop {
+        color: #007bff;
+        font-size: 16px;
+        margin-left: 10px;
+        font-weight: bold;
+      }
+      .player-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-width: 390px;
+        max-width: 640px;
+        height: 600px;
+        max-height: 90vh;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 0 0 10px 0;
+      }
+      #player {
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        min-width: 320px;
+        min-height: 360px;
+        aspect-ratio: 16 / 9;
+        background: #000;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1 1 auto;
       }
       #tooltipText {
         font-size: 16px;
+        color: #555;
+        font-style: italic;
+        max-width: 640px;
+        margin: 15px auto 10px auto;
+        min-height: 20px;
+        text-align: center;
       }
-      #sectionTimer, #allSectionsTimer {
-        display: block;
-        margin-left: 0;
-        margin-top: 5px;
+      p {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #333;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      #currentLoop,
+      #remainingLoop {
+        font-weight: bold;
+        color: #007bff;
+      }
+      #sectionTimer {
+        font-size: 18px;
+        color: #d9534f;
+        font-weight: bold;
+        margin-left: 10px;
       }
       .skip-btn {
-        margin-left: 0;
-        margin-top: 5px;
+        font-size: 12px;
+        padding: 4px 16px;
+        border-radius: 8px;
+        border: none;
+        background: #03ecfc;
+        color: black;
+        cursor: pointer;
+        margin-left: 8px;
+        transition: background 0.2s, color 0.2s;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 4px;
       }
-      .controls {
-        min-width: 100%;
-        max-width: 100%;
-      }
-      .player-col {
-        min-width: 100%;
-        max-width: 100%;
-      }
-      body {
-        padding: 10px;
-      }
-      h1 {
-        font-size: 24px;
-      }
-      .video-list li {
-        font-size: 16px;
-      }
-      .section-header {
-        font-size: 20px;
-      }
-      .play-all-btn {
-        font-size: 18px;
+      .skip-btn:hover {
+        background: #007bff;
+        color: #fff;
       }
       .section-select {
-        font-size: 18px;
+        font-size: 20px;
+        padding: 8px 12px;
+        margin: 18px 0 10px 0;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        width: 90%;
+        max-width: 340px;
+        background: #f7fafc;
+        color: #333;
       }
-    }
-  </style>
-</head>
-<body>
-  <h1>DUA AND DARUD PLAYER</h1>
-  <div class="main-row">
-    <div class="controls">
-      <div class="controls-top-row">
-        <button class="play-all-btn" onclick="playAllSections()">
-          ▶️ Play All 
-        </button>
-        <span id="allSectionsTimer"></span>
+      @media (max-width: 1100px) {
+        .main-row {
+          flex-direction: column;
+          align-items: center;
+        }
+        .controls,
+        .player-col,
+        #player {
+          max-width: 100%;
+          min-width: 0;
+          height: auto;
+        }
+        .controls,
+        .player-col {
+          height: auto;
+          min-width: 0;
+        }
+        .controls-top-row {
+          flex-direction: column;
+          gap: 8px;
+        }
+      }
+      @media (max-width: 600px) {
+        .main-row {
+          flex-direction: column;
+          gap: 24px;
+        }
+        .controls,
+        .player-col,
+        #player {
+          max-width: 100%;
+        }
+        #tooltipText {
+          font-size: 16px;
+        }
+        #sectionTimer,
+        #allSectionsTimer {
+          display: block;
+          margin-left: 0;
+          margin-top: 5px;
+        }
+        .skip-btn {
+          margin-left: 0;
+          margin-top: 5px;
+        }
+        .controls {
+          min-width: 100%;
+          max-width: 100%;
+        }
+        .player-col {
+          min-width: 100%;
+          max-width: 100%;
+        }
+        body {
+          padding: 10px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+        .video-list li {
+          font-size: 16px;
+        }
+        .section-header {
+          font-size: 20px;
+        }
+        .play-all-btn {
+          font-size: 18px;
+        }
+        .section-select {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DUA AND DARUD PLAYER</h1>
+    <div class="main-row">
+      <div class="controls">
+        <div class="controls-top-row">
+          <button class="play-all-btn" onclick="playAllSections()">
+            ▶️ Play All
+          </button>
+          <span id="allSectionsTimer"></span>
+        </div>
+        <select
+          class="section-select"
+          id="sectionDropdown"
+          onchange="showSelectedSection()"
+        >
+          <!-- Options will be generated by JS -->
+        </select>
+        <div class="controls-scroll" id="sectionControls"></div>
       </div>
-      <select class="section-select" id="sectionDropdown" onchange="showSelectedSection()">
-        <!-- Options will be generated by JS -->
-      </select>
-      <div class="controls-scroll" id="sectionControls"></div>
+      <div class="player-col">
+        <p>
+          PLAYED: <span id="currentLoop">0</span> | REMAIN:
+          <span id="remainingLoop">0</span>
+          <span id="sectionTimer"></span>
+          <button
+            class="skip-btn"
+            onclick="skipCurrentContent()"
+            title="Skip to next ▶️"
+          >
+            ⏭️ Skip
+          </button>
+        </p>
+        <div id="tooltipText"></div>
+        <div id="player"></div>
+      </div>
     </div>
-    <div class="player-col">
-      <p>
-        PLAYED: <span id="currentLoop">0</span> |
-        REMAIN: <span id="remainingLoop">0</span>
-        <span id="sectionTimer"></span>
-        <button class="skip-btn" onclick="skipCurrentContent()" title="Skip to next ▶️">⏭️ Skip</button>
-      </p>
-      <div id="tooltipText"></div>
-      <div id="player"></div>
-    </div>
-  </div>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script>
-    const videoSections = [
-      {
-        name: "প্রতিদিন",
-        videos: [
-          { isSubcategory: true, label: "ঘুম থেকে উঠার পর" },
-          { id: "_P75cWrTGPs", start: 124.2, end: 131.8, label: "আলহামদুলিল্লাহ", tooltip: "প্রতিদিন 3 বার", loop: 3 },
-          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 7 },
-          // { isSubcategory: true, label: "শয়তানের কুমন্ত্রণা থেকে বাঁচার" },
-          { id: "jNPhGaAcpSk", start: 0, end: 90, label: "সূরা দুহা", tooltip: "সূরা দুহা", loop: 1 },
-          { id: "uv3VXLVK6FQ", start: 10, end: 30, label: "আল-ইখলাস", tooltip: "প্রতিদিন 10 বার", loop: 3 },
-          { isSubcategory: true, label: "মুসা (আ:) শেখানো বিশেষ কালিমা" },
-          // SOURCE : https://www.youtube.com/watch?v=zVifzaW7R1s
-          { id: "OE7kKmmINhQ", start: 0, end: 239, label: "লা ইলাহা ইল্লাল্লাহ", tooltip: "প্রতিদিন ১০০ বার", loop: 1 },
-          { id: "cxYnDb_kmHo", start: 4, end: 7, label: "আল্লাহুম্মাকফিনীহিম বিমা শি-তা", tooltip: "প্রতিদিন 10 বার : হে আল্লাহ আমাকে তাদের থেকে রক্ষা করুন যেভাবে আপনি চান।", loop: 10 },
-          { id: "p5ry7uLeoCY", start: 19, end: 23.4, label: "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
-          { id: "aTPiHKiJ5Xg", start: 2.3, end: 8.7, label: " লাহুল মুলকু", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
-          { id: "HcY-e7-lBBQ", start: 9.7, end: 29, label: "১০ লক্ষ নেকি পাওয়ার দোয়া", tooltip: "প্রতিদিন ১০ বার", loop: 7 },
-          { id: "uO5VHphOZzQ", start: 0, end: 856.8, label: "যাদুকরের প্রতি অভিশাপ", tooltip: "প্রতিদিন ১ বার", loop: 1 },
-          { id: "5R06LRdUCSE", start: 12, end: 1966, label: " সূরা কাহফ", tooltip: "প্রতিদিন ১ বার", loop: 1 },
-          { isSubcategory: true, label: "পিতামাতার জন্য দুআ" },
-          // SOURCE : https://www.youtube.com/watch?v=KxtIah0s6q4
-          { id: "cHG2JO4xHC4", start: 5.5, end: 11, label: "সূরা বনি ইসরাইল - ২৪ নং আয়াত", tooltip: "হে আমার রব! তাদের প্ৰতি দয়া করুন যেভাবে শৈশবে তারা আমাকে প্রতিপালন করেছিলেন। - ৩ বার", loop: 3 }, 
-          { id: "7tXv0tYNJe8", start: 0, end: 12, label: "সূরা ইব্রাহিম - ৪১ নং আয়াত", tooltip: "রাব্বানাগফিরলী ওয়া লিওয়ালিদাইয়া ওয়ালিলমু'মিনীনা ইয়াওমা ইয়াকূমুল হিছা-ব। : হে আমাদের প্রতিপালক! যেদিন হিসাব অনুষ্ঠিত হবে, সেদিন আমাকে, আমার পিতামাতাকে এবং সকল মুমিনকে ক্ষমা করুন। - ৩ বার", loop: 3 }
-        ]
-      },
-      {
-        name: "নামাজের আগে ও পরে আমল",
-        videos: [
-          { isSubcategory: true, label: "নামাজের আগে আমল" },
-          { isSubcategory: true, label: "দুই সিজদাহের মাঝে আমল" },
-          { id: "dGYQBskQBRw", start: 15, end: 21.8, label: "আল্লাহুম্মা আইন্নি", tooltip: "আল্লাহুম্মা আইন্নি আলা জিকরিকা ওয়া শুকরিকা ওয়া হুসনি ইবাদাতিকা", loop: 1 },
-          { isSubcategory: true, label: "নামাজের পরে আমল" },
-          { id: "z_tt3DzYd2k", start: 2, end: 6.4, label: "আল্লাহুয়াকবার", tooltip: "আল্লাহ সর্বশ্রেষ্ঠ", loop: 1 },
-          { id: "Xx85iIXcQNs", start: 7.7, end: 9, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর কাছে ক্ষমা প্রার্থনা করছি - তিনবার", loop: 3 },
-          { id: "iqbYidkZPas", start: 0, end: 152, label: "Three powerful zikkr", tooltip: "SubhanAllah, Alhamdulillah, AllahuAkbar 33 times", loop: 1 },
-          { id: "Xx85iIXcQNs", start: 18.8, end: 25, label: "লা ইলাহা ইল্লাল্লাহ", tooltip: "La ilaha illAllahu", loop: 1 },
-          { id: "LuCTs4eTNtQ", start: 0, end: 12, label: "আল্লাহুম্মা আনতাস সালাম", tooltip: "আল্লাহুম্মা আনতাস সালাম ওয়া মিনকাস সালাম তাবারকতা ইয়া জালজালালি ওয়াল ইকরাম : হে আল্লাহ, তুমি শান্তির কর্তা এবং তোমার কাছ থেকেই শান্তি আসে। তুমি বরকতময়, হে মহিমা ও সম্মানের মালিক। [হিসনুল মুসলিম: ৬৬]", loop: 1 },
-          { id: "DkipClSGLKY", start: 0, end: 10, label: "শিরক থেকে আশ্রয় প্রার্থনা", tooltip: " আল্লাহুম্মা ইন্নি আউজুবিকা আন উশরিকা বিকা ওয়া আনা আ’লামু, ওয়া আস্তাগফিরুকা লিমা লা আ’লামু - হে আল্লাহ! আমি সজ্ঞানে আপনার সাথে শিরক করা থেকে আপনার কাছে আশ্রয় চাই এবং যা আমার অজ্ঞাত, তার জন্যও আপনার কাছে ক্ষমা চাই", loop: 1 },
-          { id: "0_R94CDcanI", start: 0, end: 7, label: "ইবাদতে সাহায্যের জন্য দুআ", tooltip: "Allahumma A'inni Ala Zikrika Wa Shukrika", loop: 1 },
-          { id: "L30c6Axa06A", start: 0, end: 51, label: "সূরা ফাতিহা", tooltip: "নিজের রুকইয়া - সূরা ফাতিহা ৩ বার করে মোট ৯ বার শরীরে ফু দেয় । ৩ দিন আমল করা । ", loop: 1 },
-          { id: "uv3VXLVK6FQ", start: 10, end: 30, label: "আল-ইখলাস", tooltip: "প্রতিদিন 10 বার", loop: 3 },
-          { id: "rVPOXjlg0Qw", start: 22, end: 96, label: "সূরা ফালাক, সূরা নাস", tooltip: "সূরা ফালাক, সূরা নাস", loop: 1 },
-          { id: "Xx85iIXcQNs", start: 19, end: 25.2, label: "ADD", tooltip: "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি", loop: 1 },
-          { isSubcategory: true, label: "প্রয়োজন পূরণের পরীক্ষিত আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=CoKyZXLNAtg
-          { id: "dfZYTEgfwDc", start: 0, end: 30, label: "আয়তুল কুরসী", tooltip: "Ayatul Kursi", loop: 1 },
-          { id: "8t-Jwm72UD4", start: 0, end: 129, label: "SURAH AL-IMRAN", tooltip: "SURAH AL-IMRAN", loop: 1 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির জন্য" },
-          { id: "SEh3c0Va5qk", start: 5, end: 8.5, label: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক", tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক", loop: 1 },
-          { isSubcategory: true, label: "ফরজরের নামাজের সুন্নতের পর" }, 
-          //Source : https://www.youtube.com/watch?v=4vWvEFKNsLY || JAMATE - FAZAR
-          { id: "3NjYi7mCtDs", start: 34.5, end: 39, label: "সুবহানাল্লাহি ওয়া বিহামদিহী", tooltip: "প্রতিদিন ১০০ বার | আস্তাগফিরুল্লাহ ১০০ বার", loop: 100 },
-          { id: "3NjYi7mCtDs", start: 39, end: 40, label: "আস্তাগফিরুল্লাহ", tooltip: "আস্তাগফিরুল্লাহ ১০০ বার", loop: 100 },
-          //Source : https://www.youtube.com/watch?v=cemBjVIDoFs&t=27s
-          { id: "cemBjVIDoFs", start: 27.8, end: 34.4, label: "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ", tooltip: "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ", loop: 40 },
-          { isSubcategory: true, label: "ফরজরের নামাজের পর" }, 
-          // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI || 14:00 Min
-          { id: "Sta_p-oB_d4", start: 0, end: 14, label: "বিসমিল্লাহির রাহমানির রাহিম", tooltip: "প্রতিদিন ১৯ বার", loop: 19 },
-          //Source : https://www.youtube.com/watch?v=SNuoTZTeGMM&t=678s
-          { id: "fOPmnFezp5w", start: 14.9, end: 16, label: "সূরা আর রহমান - আয়াত নং ৭৮", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
-          { id: "U_5o4JEINfQ", start: 11.8, end: 17, label: "দোয়া ইউনুস", tooltip: "প্রতিদিন 40 বার", loop: 40 },
-          // Source : https://www.youtube.com/watch?v=xL-w_hPOR1Q
-          { id: "97TteyKVyiE", start: 0, end: 12, label: "সুরা শুরা : আয়াত ১৯", tooltip: "আল্লাহু লাতিফুম্ বি-ইবাদিহি ইয়ারজুকু মাইয়্যাশায়ু, ওয়া হুয়াল কাভিয়্যুল আজিজ : আল্লাহ তাঁর বান্দাদের প্রতি দয়ালু। তিনি যাকে ইচ্ছা, রিযিক দান করেন। তিনি প্রবল, পরাক্রমশালী।", loop: 70 },
-          { id: "dfZYTEgfwDc", start: 0, end: 30, label: "আয়তুল কুরসী", tooltip: "Ayatul Kursi", loop: 1 },
-          { id: "Q--H5uqHP5s", start: 0, end: 763, label: "সূরা ইয়াসিন", tooltip: "সূরা ইয়াসিন - Any Goal", loop: 1 },
-          // { id: "Q--H5uqHP5s", start: 0, end: 763, label: "সূরা ইয়াসিন", tooltip: "সূরা ইয়াসিন - Any Goal", loop: 1 },
-          { isSubcategory: true, label: "স্মরণশক্তি বৃদ্ধির দোয়া" },
-          // Source : https://www.youtube.com/watch?v=nnqhGW6ZX8k
-          { id: "hEjXkTP4XKg", start: 243, end: 260, label: "সূরা ত্বাহা: ২৫-২৮ নং আয়াত (সকাল-সন্ধ্যা)", tooltip: "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১১ বার", loop: 11 },
-          { isSubcategory: true, label: "শেষ - সকাল-সন্ধ্যার দোয়া " }, 
-          { id: "z03wnWxvGeI", start: 0, end: 14, label: "রদিতুবিল্লাহি রব্বাও ওয়া বিল ইসলামি দিনাও ওয়া বি মুহাম্মাদিন নাবিয়্যাও ওয়া রাসূলা।", tooltip: "আমি আল্লাহকে প্রতিপালক হিসাবে, ইসলামকে দ্বীন হিসাবে এবং মুহাম্মাদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লামকে নবী ও রাসূল হিসাবে পেয়ে খুশি হয়েছি। ", loop: 3 },
-        ]
-      },
-      {
-        name: "রাতে ঘুমানোর আগে ও পরে আমল",
-        videos: [
-          { isSubcategory: true, label: "রাতে ঘুমানোর আগে আমল" },
-          { isSubcategory: true, label: " তাহাজ্জুদের সমপরিমাণ সওয়াবের আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=Gf65O27XHD0
-          { id: "zy3xIbbK6eE", start: 5, end: 130, label: "সূরা বাকারার শেষ দুই আয়াত", tooltip: "সূরা বাকারার শেষ দুই আয়াত", loop: 1 },
-          { isSubcategory: true, label: "নবীজিকে স্বপ্নে দেখার আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=7OZ39NZjlL4
-          { id: "7OZ39NZjlL4", start: 122.5, end: 150, label: "আল্লাহুম্মা ইন্নী আসআলুকা বিযালালি ওয়াজহিকাল", tooltip: "ওযু করে ডান পাশে শুয়ে | আল্লাহুম্মা ইন্নী আসআলুকা বিযালালি ওয়াজহিকাল কারীমি আন তুরীয়ানী ওয়াজহা নবীয়্যিকা মুহাম্মাদিন ﷺ আও আন তাজমা‘া বাইনী ওয়াবাইনা-হু ইয়াওমাল কিয়ামতি ফিদ দারাজাতিল উলা। আমীন। ওয়ালা তুফাররিক বাইনী ওয়াবাইনা-হু বিরাহমাতিকা ইয়া আরহামার রাহিমীন। - ৩ বার", loop: 3 }, 
-          { id: "UiBdT9Otf3I", start: 0, end: 24, label: "সূরা কাউসার", tooltip: "১০০ বার ", loop: 100 }, 
-          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 10 },
-         ]
-      },
-      {
-        name: "ইস্তেগফার : 3:00 AM",
-        videos: [
-          { id: "J7r4QEeKTgU", start: 1, end: 17, label: "সূরা আরাফ - ২৩ নং আয়াত", tooltip: "আদম আঃ এর দোয়া আল্লাহ যেভাবে কবুল করেছেন - রাব্বানা যালামনা আনফুসানা অইল্লাম তাগফির লানা অতারহামনা লানাকুনান্না মিনাল খা-সিরীন", loop: 3 },
-          { id: "3b2NujLLSpw", start: 6, end: 43, label: "সাইয়েদুল ইস্তেগফার", tooltip: "আল্লাহুম্মা আংতা রাব্বি লা ইলাহা ইল্লা আংতা খালাক্বতানি ওয়া আনা আবদুকা ওয়া আনা আলা আহ্দিকা ওয়া ওয়াদিকা মাসতা তায়াতু, আউজু বিকা মিন শাররি মা ছনাতু, আবুউ লাকা বিনিমাতিকা আলাইয়া, ওয়া আবুউ লাকা বিজাম্বি; ফাগফির লি, ফা ইন্নাহু লা ইয়াগফিরুজ-জুনুবা ইল্লা আংতা।", loop: 1 },
-          { id: "Fbm63isVYmY", start: 23.4, end: 30, label: "আস্তাগফিরুল্লাহ হাল্লাজি", tooltip: "আস্তাগফিরুল্লাহ হাল্লাজি লা ইলাহা ইল্লা হুয়াল হাইয়ুল কাইয়ুম ওয়াতুবি ইলাইহি।", loop: 100 },
-          { id: "F8J09kBMsJU", start: 0, end: 7, label: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ", tooltip: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ", loop: 100 },
-          { id: "VNoq93-17Ho", start: 2, end: 22, label: "আস্তাগফিরুল্লাহ", tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।", loop: 10 },
-          { id: "V4WF16FhLcg", start: 3.8, end: 6, label: "রাব্বির ফিরলি জুনুবি", tooltip: "রাব্বির ফিরলি জুনুবি প্রতিদিন 21 বার", loop: 21 },
-          { id: "U_5o4JEINfQ", start: 11.8, end: 17, label: "দোয়া ইউনুস", tooltip: "প্রতিদিন ১০০ বার", loop: 100 },
-          { id: "UFMf485VTiI", start: 45, end: 48.2, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন ১০০ বার", loop: 100 },
-          { id: "aPbwuL9-C7A", start: 0, end: 22, label: "ইস্তেগফার 03", tooltip: "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি", loop: 1 }
-        ]
-      },
-      {
-        name: "রিজিক বৃদ্ধির আমল",
-        videos: [
-          { isSubcategory: true, label: "রিজিক আমল" },
-          // Source : https://www.youtube.com/watch?v=MxlFGnZ0AsQ
-          { id: "d-AzKo4dOoc", start: 0, end: 11, label: "সূরা আল-বাকারা থেকে দুআ", tooltip: "সূরা আল-বাকারা থেকে দুআ (2:201).", loop: 3 },
-          { id: "uv3VXLVK6FQ", start: 10, end: 30, label: "আল-ইখলাস", tooltip: "প্রতিদিন 3 বার with Salam", loop: 3 },
-          { id: "uW3SecCAI-Y", start: 8, end: 19, label: "হযরত মুসার দুআ (কুরআন 28:24)", tooltip: "Al-Qasas ayat 24", loop: 3 },
-          { id: "K6BWL4gfCB8", start: 4.1, end: 9.8, label: "আল্লাহুম্মা ইন্নি আস'আলুকা", tooltip: "আল্লাহুম্মা ইন্নি আস'আলুকা ", loop: 3 },
-          { id: "SNuoTZTeGMM", start: 676.2, end: 693, label: "কাদিয়াল হাজত - Quit Place", tooltip: "কাদিয়াল হাজত ", loop: 3 },
-          { isSubcategory: true, label: "ঋণ মুক্তির দোয়া" },
-          { id: "0xGfznLD-RA", start: 1, end: 7.3, label: "ঋণ মুক্তির দোয়া - 02", tooltip: "আল্লাহুম্মাক ফিনি বি হালালিকা আন হারামিকা, ওয়া আগনিনি বিফাদলিকা আম্মান সিওয়াক। ", loop: 7 },
-          { id: "UkbiXPvZPpw", start: 12.8, end: 16.2, label: "ঋণ মুক্তির দোয়া - 03", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
-          { id: "JOHf1hU1EbM", start: 263.4, end: 286.8, label: "ঋণ মুক্তির দোয়া - 04", tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ", loop: 7 },
-          { id: "gS3G6DK3ffo", start: 15, end: 28, label: "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা", tooltip: "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা, ওয়াত তুকা, ওয়াল আফাফা ওয়াল গিনা", loop: 7 },
-          { id: "Rwp1d-eRP1Q", start: 0, end: 40, label: "সুরা কুরাইশ", tooltip: "সুরা কুরাইশ", loop: 1 },
-          { id: "zy3xIbbK6eE", start: 5, end: 130, label: "সূরা বাকারার শেষ দুই আয়াত", tooltip: "সূরা বাকারার শেষ দুই আয়াত", loop: 3 },
-          { isSubcategory: true, label: "সূরা বনী-ইসরাঈল ১১১ আয়াত" },
-          // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI | 8:00 MIN
-          { id: "SNfVuxCnHm8", start: 0, end: 25, label: "ওয়া কুলিল হামদুলিল্লা-হিল্লাযী", tooltip: "ওয়া কুলিল হামদুলিল্লা-হিল্লাযী লাম ইয়াততাখিয ওয়ালাদান ওয়া লাম ইয়াকুন লাহু শারীকুন ফিল মুলকি ওয়া লাম ইয়াকুন লাহু ওয়ালীইয়ুম মিনায যুল্লি ওয়া কাব্বিরহু তাকবীরান : বল, ‘সমস্ত প্রশংসা আল্লাহরই, যিনি সন্তান গ্রহণ করেননি, তাঁর সার্বভৌমত্বে কোন অংশীদার নেই এবং যিনি দুর্দশাগ্রস্ত হন না; যে কারণে তাঁর অভিভাবকের প্রয়োজন হতে পারে।’ আর সসম্ভ্রমে তাঁর মাহাত্ম্য ঘোষণা কর।", loop: 3 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
-          // Source : https://www.youtube.com/watch?v=f_HwvcU-u3c
-          { id: "f_HwvcU-u3c", start: 81, end: 103.6, label: "DARUR SORIF", tooltip: "DARUR SORIF - 11 TIMES ( MAIN CONDITION : OJU & QUIT PLACE & Then Dua)", loop: 11 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 01", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 02", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 03", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 04", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 05", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 06", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 07", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 08", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 09", tooltip: "YA MUGNI - 1111 TIMES", loop: 111 },
-          { id: "f_HwvcU-u3c", start: 116, end: 117, label: "YA MUGNI - 10", tooltip: "YA MUGNI - 1111 TIMES", loop: 112 },
-          { id: "f_HwvcU-u3c", start: 81, end: 103.6, label: "DARUR SORIF", tooltip: "DARUR SORIF - 11 TIMES ( END & THEN PRAY FOR RIZIK)", loop: 11 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=aum1O9yREYc
-          { id: "v45_ITHAgdY", start: 47.5, end: 51, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ", tooltip: " প্রতিদিন 100 বার", loop: 100 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=8efkr3Cnf_c
-          { id: "8efkr3Cnf_c", start: 146.5, end: 153.5, label: "ওয়া তাওয়াক্কাল 'আলাল হাইয়্যিল্লাযী", tooltip: "ওয়া তাওয়াক্কাল 'আলাল হাইয়্যিল্লাযী লা ইয়ামূত, ওয়াল হামদুলিল্লাহিল্লাযী লাম ইয়াত্তাখিয্‌ ওয়ালাদা| অর্থ হলো: আর আপনি সেই চিরঞ্জীবের উপর ভরসা করুন, যিনি কখনও মরবেন না, এবং বলুন: সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি | ১৫ দিন - ৭ বার করে পড়া।", loop: 7 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
-          // SOURCE : https://www.youtube.com/watch?v=2VyQxAlVVTw
-          { id: "2VyQxAlVVTw", start: 119.5, end: 130.5, label: "আল্ল-হুম্মা সল্লি ‘আলা মু‘হাম্মাদিন", tooltip: "আল্ল-হুম্মা সল্লি ‘আলা মু‘হাম্মাদিন ‘আবদিকা ওয়া রাসু-লিক, ওয়া সল্লি ‘আলাল মুঅ্মিনি-না ওয়াল মুঅ্মিনা-ত, ওয়াল মুসলিমি-না ওয়াল মুসলিমা-ত", loop: 100 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
-          // SOURCE : https://www.youtube.com/watch?v=11pz4dd4I4M
-          { id: "fX2SO9OpSXA", start: 14, end: 27.8, label: "আল্লাহুম্মা ইন্নি আউজু বিকা মিনাল হাম্মি", tooltip: "আল্লাহুম্মা ইন্নি আউজু বিকা মিনাল হাম্মি ওয়াল হাযানি, ওয়াল আজজি ওয়াল কাসালি, ওয়াল বুখলি ওয়াল জুবনি, ওয়া দালা'ইদ-দাইনি ওয়া গালাবতির রিজাল | হে আল্লাহ! আমি আপনার আশ্রয় চাই দুঃশ্চিন্তা ও দুঃখ থেকে, অক্ষমতা ও অলসতা থেকে, কৃপণতা ও ভীরুতা থেকে, ঋণের ভার ও মানুষের দমন-পীড়ন থেকে। ওযু করে ২ রাকাত নামাজ পরে জায়নামাজে ৭০ বার পাঠ করবেন ৪০ দিন ।", loop: 70 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
-          // SOURCE : https://www.youtube.com/watch?v=_u9T_c_qVGk
-          { id: "_u9T_c_qVGk", start: 119.8, end: 134.6, label: "আল্লাহুম্মা আনতা খালাকতানি", tooltip: "আল্লাহুম্মা আনতা খালাকতানি, ওয়া আনতা তাহদিনি,ওয়া আনতা তুতইমুনি, ওয়া আনতা তাসকিনি,ওয়া আনতা তুমিতুনি, ওয়া আনতা তুহিয়িনি। ৭ বার পাঠ করবেন ।", loop: 7 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
-          // SOURCE : https://www.youtube.com/watch?v=dHCzWKy2a0o
-          { id: "dHCzWKy2a0o", start: 44, end: 50.8, label: "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি", tooltip: "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি লা ইলাহা ইল্লাল্লাহু আল্লাহু আল্লাহু আকবার", loop: 7 },
-          { id: "dGYQBskQBRw", start: 15, end: 21.8, label: "আল্লাহুম্মাগ ফিরলি", tooltip: "আল্লাহুম্মাগ ফিরলি আল্লাহুম্মা মারহামনি আল্লাহুম্মা রযুকনি", loop: 7 },
-          { isSubcategory: true, label: " স্বয়ং নবীজি (সা:) করতেন (সকাল-সন্ধ্যা)" },
-          // SOURCE : https://www.youtube.com/watch?v=8qEEWH0_TSc | Say More
-          { id: "8qEEWH0_TSc", start: 124.5, end: 132, label: "আল্লাহুম্মাগফিরলি জাম্বি", tooltip: "আল্লাহুম্মাগফিরলি জাম্বি ওয়া ওয়াসসি'লি ফি দারি ওয়া বারিকলি ফি রিজক্বি।", loop: 3 },
-          { isSubcategory: true, label: "রিজিক আমল (ফজরের ও আসরের পর)" },
-          // Source : https://www.youtube.com/watch?v=0Uc1WVNaWDU
-          { id: "0Uc1WVNaWDU", start: 108.5, end: 117.4, label: "ইয়া জালজালালি ওয়াল ইকরাম", tooltip: "ফজরের নামাজের পর এবং আসরের নামাজের পর 100 Times: ইয়া জালজালালি ওয়াল ইকরাম : হে আল্লাহ, তুমি শান্তির কর্তা এবং তোমার কাছ থেকেই শান্তি আসে। তুমি বরকতময়, হে মহিমা ও সম্মানের মালিক। [হিসনুল মুসলিম: ৬৬]", loop: 25 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (মাগরিব পর)" },
-          // SOURCE : https://www.youtube.com/watch?v=rVsOYwB0i64
-          { id: "N78PGdl2-Wo", start: 0, end: 398, label: "সূরা ওয়াকিয়া", tooltip: "সূরা ওয়াকিয়া - মাগরিব নামাজের পর পড়া", loop: 1 },
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (ঘুমানোর আগে)" },
-          // SOURCE : https://www.youtube.com/watch?v=PyoxwfCeKMs
-          { id: "HOBTLKIfkmE", start: 61, end: 99.5, label: "রিজিক বৃদ্ধির সর্বশ্রেষ্ঠ আমল (কাবার ইমাম)", tooltip: "প্রতিদিন 3 বার with Salam", loop: 3 },          
-          { isSubcategory: true, label: "রিজিক বৃদ্ধির ৫টি আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=jW2_PMhjVzY
-          { id: "jW2_PMhjVzY", start: 360.2, end: 378, label: "রিজিক বৃদ্ধির ৫টি আমল", tooltip: "প্রতিদিন 1 বার", loop: 1 },          
-        ]
-      },
-      {
-        name: "OBAY",
-        videos: [
-          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 3 },
-          { id: "KCpucEqWHgI", start: 0, end: 18, label: "সূরা আল ফুরকান : ৭৪ আয়াত", tooltip: "সূরা আল ফুরকান : ৭৪ আয়াত.", loop: 21 },
-          // SOurce : https://www.youtube.com/watch?v=PCB0W8n2leA
-          { id: "TAXr0OvvFd0", start: 14.5, end: 24, label: "সূরা ত্বা-হা : ৩৯ আয়াত", tooltip: " কোনো মিষ্টি যত জিনিসে ৩ বার পরে ফু দেওয়া। তারপর উনাদের নাম উল্লেখ করা", loop: 3 },
-          { id: "vzNIHXjRgn4", start: 163, end: 165.1, label: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা", tooltip: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা", loop: 11 },
-          { id: "0vhiEaMU2Rc", start: 193, end: 204, label: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি", tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি আশহাদু আন্নাকা আনতাল্লাহ,লা ইলাহা ইল্লা আনতাল আহাদুস সামাদ আল্লাজী লাম ইয়ালিদ ওয়ালাম ইয়ুলাদ, ওয়ালাম ইয়া কুল্লাহু কুফুওয়ান আহাদ।", loop: 11 },
-          { id: "Rs_g65sSGqk", start: 28, end: 29, label: "ইয়া ওয়াদুদু (313)", tooltip: "ইয়া ওয়াদুদু", loop: 313 },
-          { id: "wMka1xyhV_w", start: 20.5, end: 21.4, label: "ইয়া লাতিফু (133)", tooltip: "ইয়া লাতিফু", loop: 133 },
-          { id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল", tooltip: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল prayer", loop: 100 },
-          { id: "14uh3215Vls", start: 0, end: 30, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 3 },
-        ]
-      },
-      {
-        name: "সব সমস্যা সমাধানে",
-        videos: [
-          { id: "2ePe6dTkoGg", start: 30.4, end: 39.2, label: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স", tooltip: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স", loop: 3 },
-          { id: "maggkOnU6JY", start: 0, end: 9, label: "আলহামদু লিল্লা হিল্লাজি আফানি", tooltip: "আলহামদু লিল্লা হিল্লাজি আফানি ", loop: 3 },
-          { id: "QA6jYhCXYyM", start: 0, end: 23, label: "ইসমে আজম", tooltip: "ইসমে আজম", loop: 21 },
-          { id: "ueu7UtauHVc", start: 0, end: 66, label: "সূরা ফাতিহা", tooltip: "সূরা ফাতিহা", loop: 7 },
-          { id: "ueu7UtauHVc", start: 0, end: 66, label: "সূরা দুহা", tooltip: "সূরা ফাতিহা", loop: 7 },
-          { id: "zy3xIbbK6eE", start: 5, end: 130, label: "সূরা বাকারার শেষ দুই আয়াত", tooltip: "সূরা বাকারার শেষ দুই আয়াত", loop: 21 },
-          { isSubcategory: true, label: "আমল - 01" },
-          // SOURCE : https://www.youtube.com/watch?v=2gVjd3HMsxI || 5:40 MIN || 
-          { id: "nPi9zcXdcKs", start: 18.2, end: 24, label: "সূরা আল ইমরান - ১৭৩ নং আয়াত", tooltip: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল : আল্লাহ আমাদের জন্য যথেষ্ট, এবং তিনিই সর্বোত্তম কার্যনির্বাহী", loop: 1000 },
-          { isSubcategory: true, label: "আমল - 02" },
-          // SOURCE : https://www.youtube.com/watch?v=DNSOBS65SD8
-          { id: "DNSOBS65SD8", start: 192.6, end: 195, label: "ইয়া আরহামার রাহিমিন", tooltip: "২ রাকাত নফল নামাজ পড়ার পরে। ইয়া আরহামার রাহিমিন", loop: 3 },
-          { isSubcategory: true, label: "১৪ টি সিজদার আয়াতের আমল - 01 " },
-          // SOURCE : https://www.youtube.com/watch?v=24tQ6NtSJ74
-          { id: "a4tNKigy-4s", start: 0, end: 19, label: "সূরা আরাফ - ২০৬ নং আয়াত", tooltip: "সূরা আরাফ - ২০৬ নং আয়াত", loop: 1 },
-          { id: "a4tNKigy-4s", start: 0, end: 17, label: "সূরা আর-রদ্ - ১৫ নং আয়াত", tooltip: "সূরা আরাফ - ২০৬ নং আয়াত", loop: 1 },
-        ]
-      },
-      {
-        name: "দোয়া কবুল হওয়ার আমল",
-        videos: [
-          { id: "6HPXBy9kLBA", start: 6, end: 11.8, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 100 },
-          { id: "v45_ITHAgdY", start: 47.5, end: 51, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 499 বার", loop: 499 },
-          { id: "UFMf485VTiI", start: 45, end: 48.2, label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম", tooltip: "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 1 বার", loop: 1 },
-          { id: "6HPXBy9kLBA", start: 6, end: 11.8, label: "দরুদ শরীফ", tooltip: "দরুদ শরীফ", loop: 100 },
-          { isSubcategory: true, label: "সূরা আল-জুমুআহ ৪৬ নং আয়াতের আমল " },
-          // SOURCE : https://www.youtube.com/watch?v=ZA9lDa6QrpQ
-          { id: "Vvm3uEmlqVs", start: 0, end: 18, label: "কুল্লিলা-হুম্মা ফা-তিরাছ ছামা-ওয়া-তি", tooltip: "দোয়া করার আগে পড়ুন : কুল্লিলা-হুম্মা ফা-তিরাছ ছামা-ওয়া-তি ওয়াল আরদি‘আ-লিমাল গাইবি ওয়াশশাহা-দাতি আনতা তাহকুমুবাইনা ‘ইবা-দিকা ফী মা-কা-নূফীহি ইয়াখতালিফূন।", loop: 3 },
-          // SOURCE : https://www.youtube.com/watch?v=yWRSWMLI05o
-          //{ id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল", tooltip: "১০০০ বার পড়ার পর দুআ করা।", loop: 1000 },
-        ]
-      },
-      {
-        name: "OTHERS",
-        videos: [
-          { id: "R8MyXEsY7gY", start: 11.2, end: 23, label: "মানসিক চাপ, বিষণ্ণতা এবং উদ্বেগে পড়ার জন্য দুআ", tooltip: "মানসিক চাপ, বিষণ্ণতা এবং উদ্বেগে পড়ার জন্য দুআ", loop: 3 },
-          { id: "IQtvaAVEg8k", start: 0, end: 9.1, label: "হারাম করার ইচ্ছার বিরুদ্ধে দুআ", tooltip: "হারাম করার ইচ্ছার বিরুদ্ধে দুআ", loop: 3 },
-          { id: "OHhcuL4eGbA", start: 26, end: 30, label: "See & Read for Sick Person", tooltip: "Read for the Sick Person", loop: 7 },
-          { isSubcategory: true, label: "বদ নজর থেকে বাঁচার আমল" },
-          // SOURCE : https://www.youtube.com/watch?v=5VjlfxCIFno
-          { id: "73LSGdGcTYM", start: 0, end: 6.2, label: "বদ নজর থেকে বাঁচার দোয়া", tooltip: "প্রতিদিন 3 বার", loop: 3 },
-          // SOURCE : https://www.youtube.com/watch?v=Y7iSAqQvZFc
-          { id: "rVPOXjlg0Qw", start: 22, end: 96, label: "সূরা ফালাক ও নাসের আমল (সকাল-সন্ধ্যা)", tooltip: "হাতে ও বুকে ফু দিয়ে শরীর বন্ধ করা (সকাল-সন্ধ্যা) ", loop: 3 },
-          // SOURCE : https://www.youtube.com/watch?v=o6GkFn7HLZk | 3:34 Min
-          { id: "L30c6Axa06A", start: 0, end: 51, label: "সূরা ফাতিহার আমল (সকাল-সন্ধ্যা)", tooltip: "নিজের রুকইয়া - সূরা ফাতিহা ৩ বার করে মোট ৯ বার শরীরে ফু দেয় । ৩ দিন আমল করা । ", loop: 3 },
-          { isSubcategory: true, label: "শয়তান | বিপদ থেকে বাঁচার আমল" },
-          { id: "FFefhd3C7jc", start: 86.3, end: 92, label: "বিপদমুক্ত থাকার দোয়া", tooltip: "বিসমিল্লাহিল্লাজি লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়ালা ফিস সামা-ই ওয়া হুয়াস সামিউল আলিম : আল্লাহর নামে, যার নামের বরকতে আকাশ ও মাটির কোনো কিছুই কোনো অনিষ্ট করতে পারে না। তিনি সর্বশ্রোতা, সর্বজ্ঞানী - 3 বার", loop: 3 },
-          { id: "fNj4DeOqRvc", start: 0, end: 17, label: "সূরা আল-মুমিনুন ৯৭ ও ৯৮ নং আয়াত - শয়তান", tooltip: "ওয়া কুল রাব্বি আউযু বিকা মিন হামাযাতিশ শায়াতিন।, ওয়া আউযু বিকা রাব্বি আইয়্যাহদুরুন। : হে আমার পালনকর্তা, আমি তোমার কাছে আশ্রয় প্রার্থনা করছি শয়তানের কুমন্ত্রণা থেকে,  আর আমি আপনার নিকট আশ্রয় প্রার্থনা করছি যেন তারা (শয়তান) আমার কাছে আসতে না পারে।", loop: 3 },
-          { id: "BxNUCjRT6cc", start: 30, end: 33.5, label: "যেকোন বিপদ থেকে বাঁচার দুআ", tooltip: "প্রতিদিন 3 বার", loop: 3 },
-          { isSubcategory: true, label: "শত্রু থেকে বাঁচার আমল" },
-          // Source : https://www.youtube.com/watch?v=Pm819brsxi4
-          { id: "Pm819brsxi4", start: 42, end: 48.8, label: "আল্লাহুম্মা ইন্না নাঝ'আলুকা", tooltip: "আল্লাহুম্মা ইন্না নাঝ'আলুকা ফী নুহুরিহিম ওয়া না'উজুবিকা মিন শুরুরিহিম। অর্থ: হে আল্লাহ! আমরা তোমাকে তাদের সামনে রাখছি এবং তাদের অনিষ্টতা থেকে তোমার কাছে আশ্রয় চাই।", loop: 3 },
-          { id: "nPi9zcXdcKs", start: 18.2, end: 24, label: "সূরা আল ইমরান - ১৭৩ নং আয়াত", tooltip: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল : আল্লাহ আমাদের জন্য যথেষ্ট, এবং তিনিই সর্বোত্তম কার্যনির্বাহী", loop: 3 },
-          // Source : https://www.youtube.com/watch?v=5624bmeRbC8
-          { id: "T_B2wjaMcZs", start: 0, end: 6, label: "সূরা হিজর আয়াত নং : ৯৫ - শত্রু", tooltip: "  ইন্না-কাফাইনা-কাল মুছতাহঝিঈন - প্রতিদিন 70 বার", loop: 70 },
-          { isSubcategory: true, label: "অবাধ্য সন্তান বাধ্য হওয়ার আমল" },
-          // Source : https://www.youtube.com/watch?v=9wJ3S2RpXWY
-          { id: "SNfVuxCnHm8", start: 0, end: 25, label: "সূরা বনী-ইসরাঈল - ১১১ নং আয়াত", tooltip: "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১ বার", loop: 1 },
-          { isSubcategory: true, label: " জান্নাতে প্রবেশের আমল " },
-          // SOURCE : https://www.youtube.com/watch?v=HcfjT5Rtzl0
-          { id: "HcfjT5Rtzl0", start: 166, end: 178, label: "হযরত আবু বকর (আ:) - এর চারটি আমল ", tooltip: "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১ বার", loop: 1 },
-          { isSubcategory: true, label: "নেককার জীবনসঙ্গী পাওয়ার আমল " },
-          // SOURCE : https://www.youtube.com/watch?v=ox8Lulch3h8
-          // { id: "cHG2JO4xHC4", start: 5.5, end: 11, label: "সূরা বনি ইসরাইল - ২৪ নং আয়াত", tooltip: "সূরা বনি ইসরাইল - ২৪ নং আয়াত - ৩ বার", loop: 3 }, 
-          
-        ]
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+      const videoSections = [
+        {
+          name: "প্রতিদিন",
+          videos: [
+            { isSubcategory: true, label: "ঘুম থেকে উঠার পর" },
+            {
+              id: "_P75cWrTGPs",
+              start: 124.2,
+              end: 131.8,
+              label: "আলহামদুলিল্লাহ",
+              tooltip: "প্রতিদিন 3 বার",
+              loop: 3,
+            },
+            {
+              id: "14uh3215Vls",
+              start: 0,
+              end: 30,
+              label: "দরুদ শরীফ",
+              tooltip: "দরুদ শরীফ",
+              loop: 7,
+            },
+            // { isSubcategory: true, label: "শয়তানের কুমন্ত্রণা থেকে বাঁচার" },
+            {
+              id: "jNPhGaAcpSk",
+              start: 0,
+              end: 90,
+              label: "সূরা দুহা",
+              tooltip: "সূরা দুহা",
+              loop: 1,
+            },
+            {
+              id: "uv3VXLVK6FQ",
+              start: 10,
+              end: 30,
+              label: "আল-ইখলাস",
+              tooltip: "প্রতিদিন 10 বার",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "মুসা (আ:) শেখানো বিশেষ কালিমা" },
+            // SOURCE : https://www.youtube.com/watch?v=zVifzaW7R1s
+            {
+              id: "OE7kKmmINhQ",
+              start: 0,
+              end: 239,
+              label: "লা ইলাহা ইল্লাল্লাহ",
+              tooltip: "প্রতিদিন ১০০ বার",
+              loop: 1,
+            },
+            {
+              id: "cxYnDb_kmHo",
+              start: 4,
+              end: 7,
+              label: "আল্লাহুম্মাকফিনীহিম বিমা শি-তা",
+              tooltip:
+                "প্রতিদিন 10 বার : হে আল্লাহ আমাকে তাদের থেকে রক্ষা করুন যেভাবে আপনি চান।",
+              loop: 10,
+            },
+            {
+              id: "p5ry7uLeoCY",
+              start: 19,
+              end: 23.4,
+              label:
+                "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার",
+              tooltip: "প্রতিদিন ১০০ বার",
+              loop: 100,
+            },
+            {
+              id: "aTPiHKiJ5Xg",
+              start: 2.3,
+              end: 8.7,
+              label: " লাহুল মুলকু",
+              tooltip: "প্রতিদিন ১০০ বার",
+              loop: 100,
+            },
+            {
+              id: "HcY-e7-lBBQ",
+              start: 9.7,
+              end: 29,
+              label: "১০ লক্ষ নেকি পাওয়ার দোয়া",
+              tooltip: "প্রতিদিন ১০ বার",
+              loop: 7,
+            },
+            {
+              id: "uO5VHphOZzQ",
+              start: 0,
+              end: 856.8,
+              label: "যাদুকরের প্রতি অভিশাপ",
+              tooltip: "প্রতিদিন ১ বার",
+              loop: 1,
+            },
+            {
+              id: "5R06LRdUCSE",
+              start: 12,
+              end: 1966,
+              label: " সূরা কাহফ",
+              tooltip: "প্রতিদিন ১ বার",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "পিতামাতার জন্য দুআ" },
+            // SOURCE : https://www.youtube.com/watch?v=KxtIah0s6q4
+            {
+              id: "cHG2JO4xHC4",
+              start: 5.5,
+              end: 11,
+              label: "সূরা বনি ইসরাইল - ২৪ নং আয়াত",
+              tooltip:
+                "হে আমার রব! তাদের প্ৰতি দয়া করুন যেভাবে শৈশবে তারা আমাকে প্রতিপালন করেছিলেন। - ৩ বার",
+              loop: 3,
+            },
+            {
+              id: "7tXv0tYNJe8",
+              start: 0,
+              end: 12,
+              label: "সূরা ইব্রাহিম - ৪১ নং আয়াত",
+              tooltip:
+                "রাব্বানাগফিরলী ওয়া লিওয়ালিদাইয়া ওয়ালিলমু'মিনীনা ইয়াওমা ইয়াকূমুল হিছা-ব। : হে আমাদের প্রতিপালক! যেদিন হিসাব অনুষ্ঠিত হবে, সেদিন আমাকে, আমার পিতামাতাকে এবং সকল মুমিনকে ক্ষমা করুন। - ৩ বার",
+              loop: 3,
+            },
+          ],
+        },
+        {
+          name: "নামাজের আগে ও পরে আমল",
+          videos: [
+            { isSubcategory: true, label: "নামাজের আগে আমল" },
+            { isSubcategory: true, label: "দুই সিজদাহের মাঝে আমল" },
+            {
+              id: "dGYQBskQBRw",
+              start: 15,
+              end: 21.8,
+              label: "আল্লাহুম্মা আইন্নি",
+              tooltip:
+                "আল্লাহুম্মা আইন্নি আলা জিকরিকা ওয়া শুকরিকা ওয়া হুসনি ইবাদাতিকা",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "নামাজের পরে আমল" },
+            {
+              id: "z_tt3DzYd2k",
+              start: 2,
+              end: 6.4,
+              label: "আল্লাহুয়াকবার",
+              tooltip: "আল্লাহ সর্বশ্রেষ্ঠ",
+              loop: 1,
+            },
+            {
+              id: "Xx85iIXcQNs",
+              start: 7.7,
+              end: 9,
+              label: "আস্তাগফিরুল্লাহ",
+              tooltip: "আমি আল্লাহর কাছে ক্ষমা প্রার্থনা করছি - তিনবার",
+              loop: 3,
+            },
+            {
+              id: "iqbYidkZPas",
+              start: 0,
+              end: 152,
+              label: "Three powerful zikkr",
+              tooltip: "SubhanAllah, Alhamdulillah, AllahuAkbar 33 times",
+              loop: 1,
+            },
+            {
+              id: "Xx85iIXcQNs",
+              start: 18.8,
+              end: 25,
+              label: "লা ইলাহা ইল্লাল্লাহ",
+              tooltip: "La ilaha illAllahu",
+              loop: 1,
+            },
+            {
+              id: "LuCTs4eTNtQ",
+              start: 0,
+              end: 12,
+              label: "আল্লাহুম্মা আনতাস সালাম",
+              tooltip:
+                "আল্লাহুম্মা আনতাস সালাম ওয়া মিনকাস সালাম তাবারকতা ইয়া জালজালালি ওয়াল ইকরাম : হে আল্লাহ, তুমি শান্তির কর্তা এবং তোমার কাছ থেকেই শান্তি আসে। তুমি বরকতময়, হে মহিমা ও সম্মানের মালিক। [হিসনুল মুসলিম: ৬৬]",
+              loop: 1,
+            },
+            {
+              id: "DkipClSGLKY",
+              start: 0,
+              end: 10,
+              label: "শিরক থেকে আশ্রয় প্রার্থনা",
+              tooltip:
+                " আল্লাহুম্মা ইন্নি আউজুবিকা আন উশরিকা বিকা ওয়া আনা আ’লামু, ওয়া আস্তাগফিরুকা লিমা লা আ’লামু - হে আল্লাহ! আমি সজ্ঞানে আপনার সাথে শিরক করা থেকে আপনার কাছে আশ্রয় চাই এবং যা আমার অজ্ঞাত, তার জন্যও আপনার কাছে ক্ষমা চাই",
+              loop: 1,
+            },
+            {
+              id: "0_R94CDcanI",
+              start: 0,
+              end: 7,
+              label: "ইবাদতে সাহায্যের জন্য দুআ",
+              tooltip: "Allahumma A'inni Ala Zikrika Wa Shukrika",
+              loop: 1,
+            },
+            {
+              id: "L30c6Axa06A",
+              start: 0,
+              end: 51,
+              label: "সূরা ফাতিহা",
+              tooltip:
+                "নিজের রুকইয়া - সূরা ফাতিহা ৩ বার করে মোট ৯ বার শরীরে ফু দেয় । ৩ দিন আমল করা । ",
+              loop: 1,
+            },
+            {
+              id: "uv3VXLVK6FQ",
+              start: 10,
+              end: 30,
+              label: "আল-ইখলাস",
+              tooltip: "প্রতিদিন 10 বার",
+              loop: 3,
+            },
+            {
+              id: "rVPOXjlg0Qw",
+              start: 22,
+              end: 96,
+              label: "সূরা ফালাক, সূরা নাস",
+              tooltip: "সূরা ফালাক, সূরা নাস",
+              loop: 1,
+            },
+            {
+              id: "Xx85iIXcQNs",
+              start: 19,
+              end: 25.2,
+              label: "ADD",
+              tooltip:
+                "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "প্রয়োজন পূরণের পরীক্ষিত আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=CoKyZXLNAtg
+            {
+              id: "dfZYTEgfwDc",
+              start: 0,
+              end: 30,
+              label: "আয়তুল কুরসী",
+              tooltip: "Ayatul Kursi",
+              loop: 1,
+            },
+            {
+              id: "8t-Jwm72UD4",
+              start: 0,
+              end: 129,
+              label: "SURAH AL-IMRAN",
+              tooltip: "SURAH AL-IMRAN",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির জন্য" },
+            {
+              id: "SEh3c0Va5qk",
+              start: 5,
+              end: 8.5,
+              label: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক",
+              tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "ফরজরের নামাজের সুন্নতের পর" },
+            //Source : https://www.youtube.com/watch?v=4vWvEFKNsLY || JAMATE - FAZAR
+            {
+              id: "3NjYi7mCtDs",
+              start: 34.5,
+              end: 39,
+              label: "সুবহানাল্লাহি ওয়া বিহামদিহী",
+              tooltip: "প্রতিদিন ১০০ বার | আস্তাগফিরুল্লাহ ১০০ বার",
+              loop: 100,
+            },
+            {
+              id: "3NjYi7mCtDs",
+              start: 39,
+              end: 40,
+              label: "আস্তাগফিরুল্লাহ",
+              tooltip: "আস্তাগফিরুল্লাহ ১০০ বার",
+              loop: 100,
+            },
+            //Source : https://www.youtube.com/watch?v=cemBjVIDoFs&t=27s
+            {
+              id: "cemBjVIDoFs",
+              start: 27.8,
+              end: 34.4,
+              label:
+                "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ",
+              tooltip:
+                "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ",
+              loop: 40,
+            },
+            { isSubcategory: true, label: "ফরজরের নামাজের পর" },
+            // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI || 14:00 Min
+            {
+              id: "Sta_p-oB_d4",
+              start: 0,
+              end: 14,
+              label: "বিসমিল্লাহির রাহমানির রাহিম",
+              tooltip: "প্রতিদিন ১৯ বার",
+              loop: 19,
+            },
+            //Source : https://www.youtube.com/watch?v=SNuoTZTeGMM&t=678s
+            {
+              id: "fOPmnFezp5w",
+              start: 14.9,
+              end: 16,
+              label: "সূরা আর রহমান - আয়াত নং ৭৮",
+              tooltip: "প্রতিদিন ১০০ বার",
+              loop: 100,
+            },
+            {
+              id: "U_5o4JEINfQ",
+              start: 11.8,
+              end: 17,
+              label: "দোয়া ইউনুস",
+              tooltip: "প্রতিদিন 40 বার",
+              loop: 40,
+            },
+            // Source : https://www.youtube.com/watch?v=xL-w_hPOR1Q
+            {
+              id: "97TteyKVyiE",
+              start: 0,
+              end: 12,
+              label: "সুরা শুরা : আয়াত ১৯",
+              tooltip:
+                "আল্লাহু লাতিফুম্ বি-ইবাদিহি ইয়ারজুকু মাইয়্যাশায়ু, ওয়া হুয়াল কাভিয়্যুল আজিজ : আল্লাহ তাঁর বান্দাদের প্রতি দয়ালু। তিনি যাকে ইচ্ছা, রিযিক দান করেন। তিনি প্রবল, পরাক্রমশালী।",
+              loop: 70,
+            },
+            {
+              id: "dfZYTEgfwDc",
+              start: 0,
+              end: 30,
+              label: "আয়তুল কুরসী",
+              tooltip: "Ayatul Kursi",
+              loop: 1,
+            },
+            {
+              id: "Q--H5uqHP5s",
+              start: 0,
+              end: 763,
+              label: "সূরা ইয়াসিন",
+              tooltip: "সূরা ইয়াসিন - Any Goal",
+              loop: 1,
+            },
+            // { id: "Q--H5uqHP5s", start: 0, end: 763, label: "সূরা ইয়াসিন", tooltip: "সূরা ইয়াসিন - Any Goal", loop: 1 },
+            { isSubcategory: true, label: "স্মরণশক্তি বৃদ্ধির দোয়া" },
+            // Source : https://www.youtube.com/watch?v=nnqhGW6ZX8k
+            {
+              id: "hEjXkTP4XKg",
+              start: 243,
+              end: 260,
+              label: "সূরা ত্বাহা: ২৫-২৮ নং আয়াত (সকাল-সন্ধ্যা)",
+              tooltip:
+                "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১১ বার",
+              loop: 11,
+            },
+            { isSubcategory: true, label: "শেষ - সকাল-সন্ধ্যার দোয়া " },
+            {
+              id: "z03wnWxvGeI",
+              start: 0,
+              end: 14,
+              label:
+                "রদিতুবিল্লাহি রব্বাও ওয়া বিল ইসলামি দিনাও ওয়া বি মুহাম্মাদিন নাবিয়্যাও ওয়া রাসূলা।",
+              tooltip:
+                "আমি আল্লাহকে প্রতিপালক হিসাবে, ইসলামকে দ্বীন হিসাবে এবং মুহাম্মাদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লামকে নবী ও রাসূল হিসাবে পেয়ে খুশি হয়েছি। ",
+              loop: 3,
+            },
+          ],
+        },
+        {
+          name: "রাতে ঘুমানোর আগে ও পরে আমল",
+          videos: [
+            { isSubcategory: true, label: "রাতে ঘুমানোর আগে আমল" },
+            { isSubcategory: true, label: " তাহাজ্জুদের সমপরিমাণ সওয়াবের আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=Gf65O27XHD0
+            {
+              id: "zy3xIbbK6eE",
+              start: 5,
+              end: 130,
+              label: "সূরা বাকারার শেষ দুই আয়াত",
+              tooltip: "সূরা বাকারার শেষ দুই আয়াত",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "নবীজিকে স্বপ্নে দেখার আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=7OZ39NZjlL4
+            {
+              id: "7OZ39NZjlL4",
+              start: 122.5,
+              end: 150,
+              label: "আল্লাহুম্মা ইন্নী আসআলুকা বিযালালি ওয়াজহিকাল",
+              tooltip:
+                "ওযু করে ডান পাশে শুয়ে | আল্লাহুম্মা ইন্নী আসআলুকা বিযালালি ওয়াজহিকাল কারীমি আন তুরীয়ানী ওয়াজহা নবীয়্যিকা মুহাম্মাদিন ﷺ আও আন তাজমা‘া বাইনী ওয়াবাইনা-হু ইয়াওমাল কিয়ামতি ফিদ দারাজাতিল উলা। আমীন। ওয়ালা তুফাররিক বাইনী ওয়াবাইনা-হু বিরাহমাতিকা ইয়া আরহামার রাহিমীন। - ৩ বার",
+              loop: 3,
+            },
+            {
+              id: "UiBdT9Otf3I",
+              start: 0,
+              end: 24,
+              label: "সূরা কাউসার",
+              tooltip: "১০০ বার ",
+              loop: 100,
+            },
+            {
+              id: "14uh3215Vls",
+              start: 0,
+              end: 30,
+              label: "দরুদ শরীফ",
+              tooltip: "দরুদ শরীফ",
+              loop: 10,
+            },
+          ],
+        },
+        {
+          name: "ইস্তেগফার : 3:00 AM",
+          videos: [
+            {
+              id: "J7r4QEeKTgU",
+              start: 1,
+              end: 17,
+              label: "সূরা আরাফ - ২৩ নং আয়াত",
+              tooltip:
+                "আদম আঃ এর দোয়া আল্লাহ যেভাবে কবুল করেছেন - রাব্বানা যালামনা আনফুসানা অইল্লাম তাগফির লানা অতারহামনা লানাকুনান্না মিনাল খা-সিরীন",
+              loop: 3,
+            },
+            {
+              id: "3b2NujLLSpw",
+              start: 6,
+              end: 43,
+              label: "সাইয়েদুল ইস্তেগফার",
+              tooltip:
+                "আল্লাহুম্মা আংতা রাব্বি লা ইলাহা ইল্লা আংতা খালাক্বতানি ওয়া আনা আবদুকা ওয়া আনা আলা আহ্দিকা ওয়া ওয়াদিকা মাসতা তায়াতু, আউজু বিকা মিন শাররি মা ছনাতু, আবুউ লাকা বিনিমাতিকা আলাইয়া, ওয়া আবুউ লাকা বিজাম্বি; ফাগফির লি, ফা ইন্নাহু লা ইয়াগফিরুজ-জুনুবা ইল্লা আংতা।",
+              loop: 1,
+            },
+            {
+              id: "Fbm63isVYmY",
+              start: 23.4,
+              end: 30,
+              label: "আস্তাগফিরুল্লাহ হাল্লাজি",
+              tooltip:
+                "আস্তাগফিরুল্লাহ হাল্লাজি লা ইলাহা ইল্লা হুয়াল হাইয়ুল কাইয়ুম ওয়াতুবি ইলাইহি।",
+              loop: 100,
+            },
+            {
+              id: "F8J09kBMsJU",
+              start: 0,
+              end: 7,
+              label: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ",
+              tooltip: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ",
+              loop: 100,
+            },
+            {
+              id: "VNoq93-17Ho",
+              start: 2,
+              end: 22,
+              label: "আস্তাগফিরুল্লাহ",
+              tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।",
+              loop: 10,
+            },
+            {
+              id: "V4WF16FhLcg",
+              start: 3.8,
+              end: 6,
+              label: "রাব্বির ফিরলি জুনুবি",
+              tooltip: "রাব্বির ফিরলি জুনুবি প্রতিদিন 21 বার",
+              loop: 21,
+            },
+            {
+              id: "U_5o4JEINfQ",
+              start: 11.8,
+              end: 17,
+              label: "দোয়া ইউনুস",
+              tooltip: "প্রতিদিন ১০০ বার",
+              loop: 100,
+            },
+            {
+              id: "UFMf485VTiI",
+              start: 45,
+              end: 48.2,
+              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম",
+              tooltip:
+                "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন ১০০ বার",
+              loop: 100,
+            },
+            {
+              id: "aPbwuL9-C7A",
+              start: 0,
+              end: 22,
+              label: "ইস্তেগফার 03",
+              tooltip:
+                "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি",
+              loop: 1,
+            },
+          ],
+        },
+        {
+          name: "রিজিক বৃদ্ধির আমল",
+          videos: [
+            { isSubcategory: true, label: "রিজিক আমল" },
+            // Source : https://www.youtube.com/watch?v=MxlFGnZ0AsQ
+            {
+              id: "d-AzKo4dOoc",
+              start: 0,
+              end: 11,
+              label: "সূরা আল-বাকারা থেকে দুআ",
+              tooltip: "সূরা আল-বাকারা থেকে দুআ (2:201).",
+              loop: 3,
+            },
+            {
+              id: "uv3VXLVK6FQ",
+              start: 10,
+              end: 30,
+              label: "আল-ইখলাস",
+              tooltip: "প্রতিদিন 3 বার with Salam",
+              loop: 3,
+            },
+            {
+              id: "uW3SecCAI-Y",
+              start: 8,
+              end: 19,
+              label: "হযরত মুসার দুআ (কুরআন 28:24)",
+              tooltip: "Al-Qasas ayat 24",
+              loop: 3,
+            },
+            {
+              id: "K6BWL4gfCB8",
+              start: 4.1,
+              end: 9.8,
+              label: "আল্লাহুম্মা ইন্নি আস'আলুকা",
+              tooltip: "আল্লাহুম্মা ইন্নি আস'আলুকা ",
+              loop: 3,
+            },
+            {
+              id: "SNuoTZTeGMM",
+              start: 676.2,
+              end: 693,
+              label: "কাদিয়াল হাজত - Quit Place",
+              tooltip: "কাদিয়াল হাজত ",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "ঋণ মুক্তির দোয়া" },
+            {
+              id: "0xGfznLD-RA",
+              start: 1,
+              end: 7.3,
+              label: "ঋণ মুক্তির দোয়া - 02",
+              tooltip:
+                "আল্লাহুম্মাক ফিনি বি হালালিকা আন হারামিকা, ওয়া আগনিনি বিফাদলিকা আম্মান সিওয়াক। ",
+              loop: 7,
+            },
+            {
+              id: "UkbiXPvZPpw",
+              start: 12.8,
+              end: 16.2,
+              label: "ঋণ মুক্তির দোয়া - 03",
+              tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ",
+              loop: 7,
+            },
+            {
+              id: "JOHf1hU1EbM",
+              start: 263.4,
+              end: 286.8,
+              label: "ঋণ মুক্তির দোয়া - 04",
+              tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ",
+              loop: 7,
+            },
+            {
+              id: "gS3G6DK3ffo",
+              start: 15,
+              end: 28,
+              label: "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা",
+              tooltip:
+                "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা, ওয়াত তুকা, ওয়াল আফাফা ওয়াল গিনা",
+              loop: 7,
+            },
+            {
+              id: "Rwp1d-eRP1Q",
+              start: 0,
+              end: 40,
+              label: "সুরা কুরাইশ",
+              tooltip: "সুরা কুরাইশ",
+              loop: 1,
+            },
+            {
+              id: "zy3xIbbK6eE",
+              start: 5,
+              end: 130,
+              label: "সূরা বাকারার শেষ দুই আয়াত",
+              tooltip: "সূরা বাকারার শেষ দুই আয়াত",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "সূরা বনী-ইসরাঈল ১১১ আয়াত" },
+            // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI | 8:00 MIN
+            {
+              id: "SNfVuxCnHm8",
+              start: 0,
+              end: 25,
+              label: "ওয়া কুলিল হামদুলিল্লা-হিল্লাযী",
+              tooltip:
+                "ওয়া কুলিল হামদুলিল্লা-হিল্লাযী লাম ইয়াততাখিয ওয়ালাদান ওয়া লাম ইয়াকুন লাহু শারীকুন ফিল মুলকি ওয়া লাম ইয়াকুন লাহু ওয়ালীইয়ুম মিনায যুল্লি ওয়া কাব্বিরহু তাকবীরান : বল, ‘সমস্ত প্রশংসা আল্লাহরই, যিনি সন্তান গ্রহণ করেননি, তাঁর সার্বভৌমত্বে কোন অংশীদার নেই এবং যিনি দুর্দশাগ্রস্ত হন না; যে কারণে তাঁর অভিভাবকের প্রয়োজন হতে পারে।’ আর সসম্ভ্রমে তাঁর মাহাত্ম্য ঘোষণা কর।",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
+            // Source : https://www.youtube.com/watch?v=f_HwvcU-u3c
+            {
+              id: "f_HwvcU-u3c",
+              start: 81,
+              end: 103.6,
+              label: "DARUR SORIF",
+              tooltip:
+                "DARUR SORIF - 11 TIMES ( MAIN CONDITION : OJU & QUIT PLACE & Then Dua)",
+              loop: 11,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 01",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 02",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 03",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 04",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 05",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 06",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 07",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 08",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 09",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 111,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 116,
+              end: 117,
+              label: "YA MUGNI - 10",
+              tooltip: "YA MUGNI - 1111 TIMES",
+              loop: 112,
+            },
+            {
+              id: "f_HwvcU-u3c",
+              start: 81,
+              end: 103.6,
+              label: "DARUR SORIF",
+              tooltip: "DARUR SORIF - 11 TIMES ( END & THEN PRAY FOR RIZIK)",
+              loop: 11,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=aum1O9yREYc
+            {
+              id: "v45_ITHAgdY",
+              start: 47.5,
+              end: 51,
+              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ",
+              tooltip: " প্রতিদিন 100 বার",
+              loop: 100,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=8efkr3Cnf_c
+            {
+              id: "8efkr3Cnf_c",
+              start: 146.5,
+              end: 153.5,
+              label: "ওয়া তাওয়াক্কাল 'আলাল হাইয়্যিল্লাযী",
+              tooltip:
+                "ওয়া তাওয়াক্কাল 'আলাল হাইয়্যিল্লাযী লা ইয়ামূত, ওয়াল হামদুলিল্লাহিল্লাযী লাম ইয়াত্তাখিয্‌ ওয়ালাদা| অর্থ হলো: আর আপনি সেই চিরঞ্জীবের উপর ভরসা করুন, যিনি কখনও মরবেন না, এবং বলুন: সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি | ১৫ দিন - ৭ বার করে পড়া।",
+              loop: 7,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
+            // SOURCE : https://www.youtube.com/watch?v=2VyQxAlVVTw
+            {
+              id: "2VyQxAlVVTw",
+              start: 119.5,
+              end: 130.5,
+              label: "আল্ল-হুম্মা সল্লি ‘আলা মু‘হাম্মাদিন",
+              tooltip:
+                "আল্ল-হুম্মা সল্লি ‘আলা মু‘হাম্মাদিন ‘আবদিকা ওয়া রাসু-লিক, ওয়া সল্লি ‘আলাল মুঅ্মিনি-না ওয়াল মুঅ্মিনা-ত, ওয়াল মুসলিমি-না ওয়াল মুসলিমা-ত",
+              loop: 100,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
+            // SOURCE : https://www.youtube.com/watch?v=11pz4dd4I4M
+            {
+              id: "fX2SO9OpSXA",
+              start: 14,
+              end: 27.8,
+              label: "আল্লাহুম্মা ইন্নি আউজু বিকা মিনাল হাম্মি",
+              tooltip:
+                "আল্লাহুম্মা ইন্নি আউজু বিকা মিনাল হাম্মি ওয়াল হাযানি, ওয়াল আজজি ওয়াল কাসালি, ওয়াল বুখলি ওয়াল জুবনি, ওয়া দালা'ইদ-দাইনি ওয়া গালাবতির রিজাল | হে আল্লাহ! আমি আপনার আশ্রয় চাই দুঃশ্চিন্তা ও দুঃখ থেকে, অক্ষমতা ও অলসতা থেকে, কৃপণতা ও ভীরুতা থেকে, ঋণের ভার ও মানুষের দমন-পীড়ন থেকে। ওযু করে ২ রাকাত নামাজ পরে জায়নামাজে ৭০ বার পাঠ করবেন ৪০ দিন ।",
+              loop: 70,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
+            // SOURCE : https://www.youtube.com/watch?v=_u9T_c_qVGk
+            {
+              id: "_u9T_c_qVGk",
+              start: 119.8,
+              end: 134.6,
+              label: "আল্লাহুম্মা আনতা খালাকতানি",
+              tooltip:
+                "আল্লাহুম্মা আনতা খালাকতানি, ওয়া আনতা তাহদিনি,ওয়া আনতা তুতইমুনি, ওয়া আনতা তাসকিনি,ওয়া আনতা তুমিতুনি, ওয়া আনতা তুহিয়িনি। ৭ বার পাঠ করবেন ।",
+              loop: 7,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (সকাল-সন্ধ্যা)" },
+            // SOURCE : https://www.youtube.com/watch?v=dHCzWKy2a0o
+            {
+              id: "dHCzWKy2a0o",
+              start: 44,
+              end: 50.8,
+              label: "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি",
+              tooltip:
+                "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি লা ইলাহা ইল্লাল্লাহু আল্লাহু আল্লাহু আকবার",
+              loop: 7,
+            },
+            {
+              id: "dGYQBskQBRw",
+              start: 15,
+              end: 21.8,
+              label: "আল্লাহুম্মাগ ফিরলি",
+              tooltip:
+                "আল্লাহুম্মাগ ফিরলি আল্লাহুম্মা মারহামনি আল্লাহুম্মা রযুকনি",
+              loop: 7,
+            },
+            {
+              isSubcategory: true,
+              label: " স্বয়ং নবীজি (সা:) করতেন (সকাল-সন্ধ্যা)",
+            },
+            // SOURCE : https://www.youtube.com/watch?v=8qEEWH0_TSc | Say More
+            {
+              id: "8qEEWH0_TSc",
+              start: 124.5,
+              end: 132,
+              label: "আল্লাহুম্মাগফিরলি জাম্বি",
+              tooltip:
+                "আল্লাহুম্মাগফিরলি জাম্বি ওয়া ওয়াসসি'লি ফি দারি ওয়া বারিকলি ফি রিজক্বি।",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "রিজিক আমল (ফজরের ও আসরের পর)" },
+            // Source : https://www.youtube.com/watch?v=0Uc1WVNaWDU
+            {
+              id: "0Uc1WVNaWDU",
+              start: 108.5,
+              end: 117.4,
+              label: "ইয়া জালজালালি ওয়াল ইকরাম",
+              tooltip:
+                "ফজরের নামাজের পর এবং আসরের নামাজের পর 100 Times: ইয়া জালজালালি ওয়াল ইকরাম : হে আল্লাহ, তুমি শান্তির কর্তা এবং তোমার কাছ থেকেই শান্তি আসে। তুমি বরকতময়, হে মহিমা ও সম্মানের মালিক। [হিসনুল মুসলিম: ৬৬]",
+              loop: 25,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (মাগরিব পর)" },
+            // SOURCE : https://www.youtube.com/watch?v=rVsOYwB0i64
+            {
+              id: "N78PGdl2-Wo",
+              start: 0,
+              end: 398,
+              label: "সূরা ওয়াকিয়া",
+              tooltip: "সূরা ওয়াকিয়া - মাগরিব নামাজের পর পড়া",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (ঘুমানোর আগে)" },
+            // SOURCE : https://www.youtube.com/watch?v=PyoxwfCeKMs
+            {
+              id: "HOBTLKIfkmE",
+              start: 61,
+              end: 99.5,
+              label: "রিজিক বৃদ্ধির সর্বশ্রেষ্ঠ আমল (কাবার ইমাম)",
+              tooltip: "প্রতিদিন 3 বার with Salam",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "রিজিক বৃদ্ধির ৫টি আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=jW2_PMhjVzY
+            {
+              id: "jW2_PMhjVzY",
+              start: 360.2,
+              end: 378,
+              label: "রিজিক বৃদ্ধির ৫টি আমল",
+              tooltip: "প্রতিদিন 1 বার",
+              loop: 1,
+            },
+          ],
+        },
+        {
+          name: "OBAY",
+          videos: [
+            {
+              id: "14uh3215Vls",
+              start: 0,
+              end: 30,
+              label: "দরুদ শরীফ",
+              tooltip: "দরুদ শরীফ",
+              loop: 3,
+            },
+            {
+              id: "KCpucEqWHgI",
+              start: 0,
+              end: 18,
+              label: "সূরা আল ফুরকান : ৭৪ আয়াত",
+              tooltip: "সূরা আল ফুরকান : ৭৪ আয়াত.",
+              loop: 21,
+            },
+            // SOurce : https://www.youtube.com/watch?v=PCB0W8n2leA
+            {
+              id: "TAXr0OvvFd0",
+              start: 14.5,
+              end: 24,
+              label: "সূরা ত্বা-হা : ৩৯ আয়াত",
+              tooltip:
+                " কোনো মিষ্টি যত জিনিসে ৩ বার পরে ফু দেওয়া। তারপর উনাদের নাম উল্লেখ করা",
+              loop: 3,
+            },
+            {
+              id: "vzNIHXjRgn4",
+              start: 163,
+              end: 165.1,
+              label: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা",
+              tooltip: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা",
+              loop: 11,
+            },
+            {
+              id: "0vhiEaMU2Rc",
+              start: 193,
+              end: 204,
+              label: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি",
+              tooltip:
+                "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি আশহাদু আন্নাকা আনতাল্লাহ,লা ইলাহা ইল্লা আনতাল আহাদুস সামাদ আল্লাজী লাম ইয়ালিদ ওয়ালাম ইয়ুলাদ, ওয়ালাম ইয়া কুল্লাহু কুফুওয়ান আহাদ।",
+              loop: 11,
+            },
+            {
+              id: "Rs_g65sSGqk",
+              start: 28,
+              end: 29,
+              label: "ইয়া ওয়াদুদু (313)",
+              tooltip: "ইয়া ওয়াদুদু",
+              loop: 313,
+            },
+            {
+              id: "wMka1xyhV_w",
+              start: 20.5,
+              end: 21.4,
+              label: "ইয়া লাতিফু (133)",
+              tooltip: "ইয়া লাতিফু",
+              loop: 133,
+            },
+            {
+              id: "DNgrz8oYHcI",
+              start: 6.5,
+              end: 9,
+              label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল",
+              tooltip: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল prayer",
+              loop: 100,
+            },
+            {
+              id: "14uh3215Vls",
+              start: 0,
+              end: 30,
+              label: "দরুদ শরীফ",
+              tooltip: "দরুদ শরীফ",
+              loop: 3,
+            },
+          ],
+        },
+        {
+          name: "সব সমস্যা সমাধানে",
+          videos: [
+            {
+              id: "2ePe6dTkoGg",
+              start: 30.4,
+              end: 39.2,
+              label: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স",
+              tooltip: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স",
+              loop: 3,
+            },
+            {
+              id: "maggkOnU6JY",
+              start: 0,
+              end: 9,
+              label: "আলহামদু লিল্লা হিল্লাজি আফানি",
+              tooltip: "আলহামদু লিল্লা হিল্লাজি আফানি ",
+              loop: 3,
+            },
+            {
+              id: "QA6jYhCXYyM",
+              start: 0,
+              end: 23,
+              label: "ইসমে আজম",
+              tooltip: "ইসমে আজম",
+              loop: 21,
+            },
+            {
+              id: "ueu7UtauHVc",
+              start: 0,
+              end: 66,
+              label: "সূরা ফাতিহা",
+              tooltip: "সূরা ফাতিহা",
+              loop: 7,
+            },
+            {
+              id: "ueu7UtauHVc",
+              start: 0,
+              end: 66,
+              label: "সূরা দুহা",
+              tooltip: "সূরা ফাতিহা",
+              loop: 7,
+            },
+            {
+              id: "zy3xIbbK6eE",
+              start: 5,
+              end: 130,
+              label: "সূরা বাকারার শেষ দুই আয়াত",
+              tooltip: "সূরা বাকারার শেষ দুই আয়াত",
+              loop: 21,
+            },
+            { isSubcategory: true, label: "আমল - 01" },
+            // SOURCE : https://www.youtube.com/watch?v=2gVjd3HMsxI || 5:40 MIN ||
+            {
+              id: "nPi9zcXdcKs",
+              start: 18.2,
+              end: 24,
+              label: "সূরা আল ইমরান - ১৭৩ নং আয়াত",
+              tooltip:
+                "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল : আল্লাহ আমাদের জন্য যথেষ্ট, এবং তিনিই সর্বোত্তম কার্যনির্বাহী",
+              loop: 1000,
+            },
+            { isSubcategory: true, label: "আমল - 02" },
+            // SOURCE : https://www.youtube.com/watch?v=DNSOBS65SD8
+            {
+              id: "DNSOBS65SD8",
+              start: 192.6,
+              end: 195,
+              label: "ইয়া আরহামার রাহিমিন",
+              tooltip: "২ রাকাত নফল নামাজ পড়ার পরে। ইয়া আরহামার রাহিমিন",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "১৪ টি সিজদার আয়াতের আমল - 01 " },
+            // SOURCE : https://www.youtube.com/watch?v=24tQ6NtSJ74
+            {
+              id: "a4tNKigy-4s",
+              start: 0,
+              end: 19,
+              label: "সূরা আরাফ - ২০৬ নং আয়াত",
+              tooltip: "সূরা আরাফ - ২০৬ নং আয়াত",
+              loop: 1,
+            },
+            {
+              id: "a4tNKigy-4s",
+              start: 0,
+              end: 17,
+              label: "সূরা আর-রদ্ - ১৫ নং আয়াত",
+              tooltip: "সূরা আরাফ - ২০৬ নং আয়াত",
+              loop: 1,
+            },
+          ],
+        },
+        {
+          name: "দোয়া কবুল হওয়ার আমল",
+          videos: [
+            {
+              id: "6HPXBy9kLBA",
+              start: 6,
+              end: 11.8,
+              label: "দরুদ শরীফ",
+              tooltip: "দরুদ শরীফ",
+              loop: 100,
+            },
+            {
+              id: "v45_ITHAgdY",
+              start: 47.5,
+              end: 51,
+              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ",
+              tooltip:
+                "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 499 বার",
+              loop: 499,
+            },
+            {
+              id: "UFMf485VTiI",
+              start: 45,
+              end: 48.2,
+              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম",
+              tooltip:
+                "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 1 বার",
+              loop: 1,
+            },
+            {
+              id: "6HPXBy9kLBA",
+              start: 6,
+              end: 11.8,
+              label: "দরুদ শরীফ",
+              tooltip: "দরুদ শরীফ",
+              loop: 100,
+            },
+            { isSubcategory: true, label: "সূরা আল-জুমুআহ ৪৬ নং আয়াতের আমল " },
+            // SOURCE : https://www.youtube.com/watch?v=ZA9lDa6QrpQ
+            {
+              id: "Vvm3uEmlqVs",
+              start: 0,
+              end: 18,
+              label: "কুল্লিলা-হুম্মা ফা-তিরাছ ছামা-ওয়া-তি",
+              tooltip:
+                "দোয়া করার আগে পড়ুন : কুল্লিলা-হুম্মা ফা-তিরাছ ছামা-ওয়া-তি ওয়াল আরদি‘আ-লিমাল গাইবি ওয়াশশাহা-দাতি আনতা তাহকুমুবাইনা ‘ইবা-দিকা ফী মা-কা-নূফীহি ইয়াখতালিফূন।",
+              loop: 3,
+            },
+            // SOURCE : https://www.youtube.com/watch?v=yWRSWMLI05o
+            //{ id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল", tooltip: "১০০০ বার পড়ার পর দুআ করা।", loop: 1000 },
+          ],
+        },
+        {
+          name: "OTHERS",
+          videos: [
+            {
+              id: "R8MyXEsY7gY",
+              start: 11.2,
+              end: 23,
+              label: "মানসিক চাপ, বিষণ্ণতা এবং উদ্বেগে পড়ার জন্য দুআ",
+              tooltip: "মানসিক চাপ, বিষণ্ণতা এবং উদ্বেগে পড়ার জন্য দুআ",
+              loop: 3,
+            },
+            {
+              id: "IQtvaAVEg8k",
+              start: 0,
+              end: 9.1,
+              label: "হারাম করার ইচ্ছার বিরুদ্ধে দুআ",
+              tooltip: "হারাম করার ইচ্ছার বিরুদ্ধে দুআ",
+              loop: 3,
+            },
+            {
+              id: "OHhcuL4eGbA",
+              start: 26,
+              end: 30,
+              label: "See & Read for Sick Person",
+              tooltip: "Read for the Sick Person",
+              loop: 7,
+            },
+            { isSubcategory: true, label: "বদ নজর থেকে বাঁচার আমল" },
+            // SOURCE : https://www.youtube.com/watch?v=5VjlfxCIFno
+            {
+              id: "73LSGdGcTYM",
+              start: 0,
+              end: 6.2,
+              label: "বদ নজর থেকে বাঁচার দোয়া",
+              tooltip: "প্রতিদিন 3 বার",
+              loop: 3,
+            },
+            // SOURCE : https://www.youtube.com/watch?v=Y7iSAqQvZFc
+            {
+              id: "rVPOXjlg0Qw",
+              start: 22,
+              end: 96,
+              label: "সূরা ফালাক ও নাসের আমল (সকাল-সন্ধ্যা)",
+              tooltip: "হাতে ও বুকে ফু দিয়ে শরীর বন্ধ করা (সকাল-সন্ধ্যা) ",
+              loop: 3,
+            },
+            // SOURCE : https://www.youtube.com/watch?v=o6GkFn7HLZk | 3:34 Min
+            {
+              id: "L30c6Axa06A",
+              start: 0,
+              end: 51,
+              label: "সূরা ফাতিহার আমল (সকাল-সন্ধ্যা)",
+              tooltip:
+                "নিজের রুকইয়া - সূরা ফাতিহা ৩ বার করে মোট ৯ বার শরীরে ফু দেয় । ৩ দিন আমল করা । ",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "শয়তান | বিপদ থেকে বাঁচার আমল" },
+            {
+              id: "FFefhd3C7jc",
+              start: 86.3,
+              end: 92,
+              label: "বিপদমুক্ত থাকার দোয়া",
+              tooltip:
+                "বিসমিল্লাহিল্লাজি লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়ালা ফিস সামা-ই ওয়া হুয়াস সামিউল আলিম : আল্লাহর নামে, যার নামের বরকতে আকাশ ও মাটির কোনো কিছুই কোনো অনিষ্ট করতে পারে না। তিনি সর্বশ্রোতা, সর্বজ্ঞানী - 3 বার",
+              loop: 3,
+            },
+            {
+              id: "fNj4DeOqRvc",
+              start: 0,
+              end: 17,
+              label: "সূরা আল-মুমিনুন ৯৭ ও ৯৮ নং আয়াত - শয়তান",
+              tooltip:
+                "ওয়া কুল রাব্বি আউযু বিকা মিন হামাযাতিশ শায়াতিন।, ওয়া আউযু বিকা রাব্বি আইয়্যাহদুরুন। : হে আমার পালনকর্তা, আমি তোমার কাছে আশ্রয় প্রার্থনা করছি শয়তানের কুমন্ত্রণা থেকে,  আর আমি আপনার নিকট আশ্রয় প্রার্থনা করছি যেন তারা (শয়তান) আমার কাছে আসতে না পারে।",
+              loop: 3,
+            },
+            {
+              id: "BxNUCjRT6cc",
+              start: 30,
+              end: 33.5,
+              label: "যেকোন বিপদ থেকে বাঁচার দুআ",
+              tooltip: "প্রতিদিন 3 বার",
+              loop: 3,
+            },
+            { isSubcategory: true, label: "শত্রু থেকে বাঁচার আমল" },
+            // Source : https://www.youtube.com/watch?v=Pm819brsxi4
+            {
+              id: "Pm819brsxi4",
+              start: 42,
+              end: 48.8,
+              label: "আল্লাহুম্মা ইন্না নাঝ'আলুকা",
+              tooltip:
+                "আল্লাহুম্মা ইন্না নাঝ'আলুকা ফী নুহুরিহিম ওয়া না'উজুবিকা মিন শুরুরিহিম। অর্থ: হে আল্লাহ! আমরা তোমাকে তাদের সামনে রাখছি এবং তাদের অনিষ্টতা থেকে তোমার কাছে আশ্রয় চাই।",
+              loop: 3,
+            },
+            {
+              id: "nPi9zcXdcKs",
+              start: 18.2,
+              end: 24,
+              label: "সূরা আল ইমরান - ১৭৩ নং আয়াত",
+              tooltip:
+                "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল : আল্লাহ আমাদের জন্য যথেষ্ট, এবং তিনিই সর্বোত্তম কার্যনির্বাহী",
+              loop: 3,
+            },
+            // Source : https://www.youtube.com/watch?v=5624bmeRbC8
+            {
+              id: "T_B2wjaMcZs",
+              start: 0,
+              end: 6,
+              label: "সূরা হিজর আয়াত নং : ৯৫ - শত্রু",
+              tooltip: "  ইন্না-কাফাইনা-কাল মুছতাহঝিঈন - প্রতিদিন 70 বার",
+              loop: 70,
+            },
+            { isSubcategory: true, label: "অবাধ্য সন্তান বাধ্য হওয়ার আমল" },
+            // Source : https://www.youtube.com/watch?v=9wJ3S2RpXWY
+            {
+              id: "SNfVuxCnHm8",
+              start: 0,
+              end: 25,
+              label: "সূরা বনী-ইসরাঈল - ১১১ নং আয়াত",
+              tooltip:
+                "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১ বার",
+              loop: 1,
+            },
+            { isSubcategory: true, label: " জান্নাতে প্রবেশের আমল " },
+            // SOURCE : https://www.youtube.com/watch?v=HcfjT5Rtzl0
+            {
+              id: "HcfjT5Rtzl0",
+              start: 166,
+              end: 178,
+              label: "হযরত আবু বকর (আ:) - এর চারটি আমল ",
+              tooltip:
+                "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১ বার",
+              loop: 1,
+            },
+            { isSubcategory: true, label: "নেককার জীবনসঙ্গী পাওয়ার আমল " },
+            // SOURCE : https://www.youtube.com/watch?v=ox8Lulch3h8
+            // { id: "cHG2JO4xHC4", start: 5.5, end: 11, label: "সূরা বনি ইসরাইল - ২৪ নং আয়াত", tooltip: "সূরা বনি ইসরাইল - ২৪ নং আয়াত - ৩ বার", loop: 3 },
+          ],
+        },
+      ];
+
+      function generateDropdown() {
+        const dropdown = document.getElementById("sectionDropdown");
+        dropdown.innerHTML = "";
+        videoSections.forEach((section, idx) => {
+          const opt = document.createElement("option");
+          opt.value = idx;
+          opt.textContent = section.name;
+          dropdown.appendChild(opt);
+        });
       }
-    ];
-    
-    function generateDropdown() {
-      const dropdown = document.getElementById('sectionDropdown');
-      dropdown.innerHTML = '';
-      videoSections.forEach((section, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        opt.textContent = section.name;
-        dropdown.appendChild(opt);
-      });
-    }
 
-    function showSelectedSection() {
-      const controlsDiv = document.getElementById('sectionControls');
-      const sectionIdx = parseInt(document.getElementById('sectionDropdown').value, 10);
-      const section = videoSections[sectionIdx];
-      controlsDiv.innerHTML = '';
-      
-      // Remove any existing highlight
-      const prevHighlighted = document.querySelector('.current-video');
-      if (prevHighlighted) {
-        prevHighlighted.classList.remove('current-video');
-      }
+      function showSelectedSection() {
+        const controlsDiv = document.getElementById("sectionControls");
+        const sectionIdx = parseInt(
+          document.getElementById("sectionDropdown").value,
+          10
+        );
+        const section = videoSections[sectionIdx];
+        controlsDiv.innerHTML = "";
 
-      const header = document.createElement('div');
-      header.className = 'section-header';
-      header.textContent = section.name;
-      controlsDiv.appendChild(header);
+        // Remove any existing highlight
+        const prevHighlighted = document.querySelector(".current-video");
+        if (prevHighlighted) {
+          prevHighlighted.classList.remove("current-video");
+        }
 
-      const ul = document.createElement('ul');
-      ul.className = 'video-list';
-      
-    // Keep track of actual video count (excluding subcategories) and subcategory count
-      let videoCount = 0;
-      let subcategoryCount = 0;
-      
-      section.videos.forEach((video, vIdx) => {
-        const li = document.createElement('li');
-        li.id = `section-${sectionIdx}-video-${vIdx}`;
-        
-        if (video.isSubcategory) {
-  subcategoryCount++;
-  li.className = 'subcategory';
-  li.innerHTML = `<span class="subcategory-serial">${toRoman(subcategoryCount)}.</span>
+        const header = document.createElement("div");
+        header.className = "section-header";
+        header.textContent = section.name;
+        controlsDiv.appendChild(header);
+
+        const ul = document.createElement("ul");
+        ul.className = "video-list";
+
+        // Keep track of actual video count (excluding subcategories) and subcategory count
+        let videoCount = 0;
+        let subcategoryCount = 0;
+
+        section.videos.forEach((video, vIdx) => {
+          const li = document.createElement("li");
+          li.id = `section-${sectionIdx}-video-${vIdx}`;
+
+          if (video.isSubcategory) {
+            subcategoryCount++;
+            li.className = "subcategory";
+            li.innerHTML = `<span class="subcategory-serial">${toRoman(
+              subcategoryCount
+            )}.</span>
                   <span class="video-label">${video.label}</span>`;
-} else {
-  videoCount++;
-  li.innerHTML = `<span class="video-serial">${videoCount}.</span>
+          } else {
+            videoCount++;
+            li.innerHTML = `<span class="video-serial">${videoCount}.</span>
                   <span class="video-label">${video.label}</span>
                   <span class="video-loop">x${video.loop}</span>`;
-}
-        ul.appendChild(li);
-      });
-      controlsDiv.appendChild(ul);
-
-      const btn = document.createElement('button');
-      btn.className = 'section-btn';
-      btn.textContent = `▶️ Play : ${section.name}`;
-      btn.onclick = () => playSection(sectionIdx);
-      controlsDiv.appendChild(btn);
-
-      // Reset timer display
-      resetSectionTimer(sectionIdx);
-    }
-
-    let player;
-    let playerReady = false;
-    let currentLoopCount = 0;
-    let currentMaxLoops = 1;
-    let currentStartTime = 0;
-    let currentEndTime = 0;
-    let currentVideoId = '';
-    let loopInterval = null;
-    let timerInterval = null;
-    let sectionTimerSeconds = 0;
-    let allSectionsTimerSeconds = 0;
-    let allSectionsTimerInterval = null;
-    let timersPaused = false;
-
-    let currentSectionVideos = [];
-    let playlistIndex = 0;
-    let allSectionsMode = false;
-    let allSectionsIndex = 0;
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        videoId: '',
-        playerVars: {
-          modestbranding: 1,
-          rel: 0,
-          autoplay: 0
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-
-    function onPlayerReady() {
-      playerReady = true;
-      updateAllSectionsTimer();
-    }
-
-    function playSection(sectionIdx) {
-      allSectionsMode = false;
-      currentSectionVideos = videoSections[sectionIdx].videos;
-      playlistIndex = 0;
-      startSectionTimer(sectionIdx, 0, 0);
-      updateAllSectionsTimer();
-      playNextInSection();
-    }
-
-    function playNextInSection() {
-      // Remove any existing highlight
-      const prevHighlighted = document.querySelector('.current-video');
-      if (prevHighlighted) {
-        prevHighlighted.classList.remove('current-video');
-      }
-
-      // Skip subcategories
-      while (playlistIndex < currentSectionVideos.length && currentSectionVideos[playlistIndex].isSubcategory) {
-        playlistIndex++;
-      }
-
-      if (playlistIndex >= currentSectionVideos.length) {
-        if (allSectionsMode) {
-          allSectionsIndex++;
-          if (allSectionsIndex < videoSections.length) {
-            currentSectionVideos = videoSections[allSectionsIndex].videos;
-            playlistIndex = 0;
-            showSelectedSectionByIndex(allSectionsIndex);
-            startSectionTimer(allSectionsIndex, 0, 0);
-            playNextInSection();
-            return;
-          } else {
-            allSectionsMode = false;
           }
-        }
-        
-        // Pause player when all videos are done
-        if (player && typeof player.pauseVideo === "function") {
-          player.pauseVideo();
-        }
-        
-        updateDisplay(0, 0);
-        resetSectionTimer(-1);
+          ul.appendChild(li);
+        });
+        controlsDiv.appendChild(ul);
+
+        const btn = document.createElement("button");
+        btn.className = "section-btn";
+        btn.textContent = `▶️ Play : ${section.name}`;
+        btn.onclick = () => playSection(sectionIdx);
+        controlsDiv.appendChild(btn);
+
+        // Reset timer display
+        resetSectionTimer(sectionIdx);
+      }
+
+      let player;
+      let playerReady = false;
+      let currentLoopCount = 0;
+      let currentMaxLoops = 1;
+      let currentStartTime = 0;
+      let currentEndTime = 0;
+      let currentVideoId = "";
+      let loopInterval = null;
+      let timerInterval = null;
+      let sectionTimerSeconds = 0;
+      let allSectionsTimerSeconds = 0;
+      let allSectionsTimerInterval = null;
+      let timersPaused = false;
+
+      let currentSectionVideos = [];
+      let playlistIndex = 0;
+      let allSectionsMode = false;
+      let allSectionsIndex = 0;
+
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player("player", {
+          height: "100%",
+          width: "100%",
+          videoId: "",
+          playerVars: {
+            modestbranding: 1,
+            rel: 0,
+            autoplay: 0,
+          },
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange,
+          },
+        });
+      }
+
+      function onPlayerReady() {
+        playerReady = true;
         updateAllSectionsTimer();
-        document.getElementById('tooltipText').textContent = '';
-        return;
-      }
-      
-      const item = currentSectionVideos[playlistIndex];
-      currentVideoId = item.id;
-      currentStartTime = item.start;
-      currentEndTime = item.end;
-      currentLoopCount = 0;
-      currentMaxLoops = item.loop || 1;
-      updateDisplay(0, currentMaxLoops);
-
-      // Highlight the current video
-      const currentSectionIndex = allSectionsMode ? allSectionsIndex : parseInt(document.getElementById('sectionDropdown').value, 10);
-      const currentVideoElement = document.getElementById(`section-${currentSectionIndex}-video-${playlistIndex}`);
-      if (currentVideoElement) {
-        currentVideoElement.classList.add('current-video');
       }
 
-      let sectionIdx = allSectionsMode ? allSectionsIndex : parseInt(document.getElementById('sectionDropdown').value, 10);
-      startSectionTimer(sectionIdx, playlistIndex, currentLoopCount);
-      updateAllSectionsTimer();
+      function playSection(sectionIdx) {
+        allSectionsMode = false;
+        currentSectionVideos = videoSections[sectionIdx].videos;
+        playlistIndex = 0;
+        startSectionTimer(sectionIdx, 0, 0);
+        updateAllSectionsTimer();
+        playNextInSection();
+      }
 
-      player.loadVideoById({
-        videoId: currentVideoId,
-        startSeconds: currentStartTime
-      });
-
-      document.getElementById('tooltipText').textContent = item.tooltip || '';
-      
-      // Auto-play after loading
-      setTimeout(() => {
-        if (typeof player.playVideo === "function") {
-          player.playVideo();
+      function playNextInSection() {
+        // Remove any existing highlight
+        const prevHighlighted = document.querySelector(".current-video");
+        if (prevHighlighted) {
+          prevHighlighted.classList.remove("current-video");
         }
-      }, 500);
-    }
 
-    function updateDisplay(played, remain) {
-      document.getElementById("currentLoop").textContent = played;
-      document.getElementById("remainingLoop").textContent = remain;
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING) {
-        timersPaused = false;
-        resumeTimers();
-        startLoopCheck();
-      } else if (event.data === YT.PlayerState.PAUSED) {
-        timersPaused = true;
-        pauseTimers();
-        clearLoopInterval();
-      } else if (event.data === YT.PlayerState.ENDED) {
-        timersPaused = true;
-        pauseTimers();
-        clearLoopInterval();
-        
-        // Auto-advance to next video when current video ends
-        currentLoopCount++;
-        updateDisplay(currentLoopCount, currentMaxLoops - currentLoopCount);
-        
-        if (currentLoopCount < currentMaxLoops) {
-          player.seekTo(currentStartTime);
-          player.playVideo();
-        } else {
-          clearLoopInterval();
+        // Skip subcategories
+        while (
+          playlistIndex < currentSectionVideos.length &&
+          currentSectionVideos[playlistIndex].isSubcategory
+        ) {
           playlistIndex++;
-          playNextInSection();
         }
+
+        if (playlistIndex >= currentSectionVideos.length) {
+          if (allSectionsMode) {
+            allSectionsIndex++;
+            if (allSectionsIndex < videoSections.length) {
+              currentSectionVideos = videoSections[allSectionsIndex].videos;
+              playlistIndex = 0;
+              showSelectedSectionByIndex(allSectionsIndex);
+              startSectionTimer(allSectionsIndex, 0, 0);
+              playNextInSection();
+              return;
+            } else {
+              allSectionsMode = false;
+            }
+          }
+
+          // Pause player when all videos are done
+          if (player && typeof player.pauseVideo === "function") {
+            player.pauseVideo();
+          }
+
+          updateDisplay(0, 0);
+          resetSectionTimer(-1);
+          updateAllSectionsTimer();
+          document.getElementById("tooltipText").textContent = "";
+          return;
+        }
+
+        const item = currentSectionVideos[playlistIndex];
+        currentVideoId = item.id;
+        currentStartTime = item.start;
+        currentEndTime = item.end;
+        currentLoopCount = 0;
+        currentMaxLoops = item.loop || 1;
+        updateDisplay(0, currentMaxLoops);
+
+        // Highlight the current video
+        const currentSectionIndex = allSectionsMode
+          ? allSectionsIndex
+          : parseInt(document.getElementById("sectionDropdown").value, 10);
+        const currentVideoElement = document.getElementById(
+          `section-${currentSectionIndex}-video-${playlistIndex}`
+        );
+        if (currentVideoElement) {
+          currentVideoElement.classList.add("current-video");
+        }
+
+        let sectionIdx = allSectionsMode
+          ? allSectionsIndex
+          : parseInt(document.getElementById("sectionDropdown").value, 10);
+        startSectionTimer(sectionIdx, playlistIndex, currentLoopCount);
+        updateAllSectionsTimer();
+
+        player.loadVideoById({
+          videoId: currentVideoId,
+          startSeconds: currentStartTime,
+        });
+
+        document.getElementById("tooltipText").textContent = item.tooltip || "";
+
+        // Auto-play after loading
+        setTimeout(() => {
+          if (typeof player.playVideo === "function") {
+            player.playVideo();
+          }
+        }, 500);
       }
-    }
 
-    function startLoopCheck() {
-      clearLoopInterval();
-      loopInterval = setInterval(() => {
-        if (!player || typeof player.getCurrentTime !== "function") return;
-        const currentTime = player.getCurrentTime();
-        let effectiveEndTime = currentEndTime || player.getDuration();
+      function updateDisplay(played, remain) {
+        document.getElementById("currentLoop").textContent = played;
+        document.getElementById("remainingLoop").textContent = remain;
+      }
 
-        if (currentTime >= effectiveEndTime) {
+      function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+          timersPaused = false;
+          resumeTimers();
+          startLoopCheck();
+        } else if (event.data === YT.PlayerState.PAUSED) {
+          timersPaused = true;
+          pauseTimers();
+          clearLoopInterval();
+        } else if (event.data === YT.PlayerState.ENDED) {
+          timersPaused = true;
+          pauseTimers();
+          clearLoopInterval();
+
+          // Auto-advance to next video when current video ends
           currentLoopCount++;
           updateDisplay(currentLoopCount, currentMaxLoops - currentLoopCount);
 
@@ -857,224 +1796,289 @@
             playNextInSection();
           }
         }
-      }, 200);
-    }
-
-    function clearLoopInterval() {
-      if (loopInterval) {
-        clearInterval(loopInterval);
-        loopInterval = null;
       }
-    }
 
-    function playAllSections() {
-      if (!playerReady) {
-        alert("Player is not ready yet. Please wait a moment and try again.");
-        return;
+      function startLoopCheck() {
+        clearLoopInterval();
+        loopInterval = setInterval(() => {
+          if (!player || typeof player.getCurrentTime !== "function") return;
+          const currentTime = player.getCurrentTime();
+          let effectiveEndTime = currentEndTime || player.getDuration();
+
+          if (currentTime >= effectiveEndTime) {
+            currentLoopCount++;
+            updateDisplay(currentLoopCount, currentMaxLoops - currentLoopCount);
+
+            if (currentLoopCount < currentMaxLoops) {
+              player.seekTo(currentStartTime);
+              player.playVideo();
+            } else {
+              clearLoopInterval();
+              playlistIndex++;
+              playNextInSection();
+            }
+          }
+        }, 200);
       }
-      allSectionsMode = true;
-      allSectionsIndex = 0;
-      currentSectionVideos = videoSections[allSectionsIndex].videos;
-      playlistIndex = 0;
-      showSelectedSectionByIndex(allSectionsIndex);
-      startSectionTimer(allSectionsIndex, 0, 0);
-      startAllSectionsTimer();
-      playNextInSection();
-    }
 
-    function showSelectedSectionByIndex(idx) {
-      document.getElementById('sectionDropdown').value = idx;
-      showSelectedSection();
-    }
-
-    // Section Timer functions
-    function startSectionTimer(sectionIdx, currentVideoIdx, currentLoop) {
-      clearInterval(timerInterval);
-      sectionTimerSeconds = calcSectionSeconds(sectionIdx, currentVideoIdx, currentLoop);
-      updateSectionTimerDisplay();
-      if (sectionTimerSeconds > 0) {
-        timerInterval = setInterval(() => {
-  if (!timersPaused) {
-    sectionTimerSeconds--;
-    updateSectionTimerDisplay();
-    if (sectionTimerSeconds <= 0) {
-      clearInterval(timerInterval);
-      sectionTimerSeconds = 0;
-      updateSectionTimerDisplay();
-    }
-  }
-}, 1000); // Update every second
-      }
-    }
-
-    function resetSectionTimer(sectionIdx) {
-      clearInterval(timerInterval);
-      sectionTimerSeconds = calcSectionSeconds(sectionIdx, 0, 0);
-      updateSectionTimerDisplay();
-    }
-
-    function calcSectionSeconds(sectionIdx, currentVideoIdx, currentLoop) {
-  if (sectionIdx < 0 || sectionIdx >= videoSections.length) return 0;
-  const section = videoSections[sectionIdx];
-  let totalSeconds = 0;
-  
-  // Account for current position in current video
-  if (section.videos[currentVideoIdx] && !section.videos[currentVideoIdx].isSubcategory) {
-    let v = section.videos[currentVideoIdx];
-    let remainingLoops = v.loop - currentLoop;
-    
-    // Get current position in video if playing
-    let currentPosition = 0;
-    if (player && typeof player.getCurrentTime === "function" && 
-        currentVideoId === v.id) {
-      currentPosition = player.getCurrentTime() - v.start;
-    }
-    
-    // Calculate remaining time for current video
-    let duration = v.end - v.start;
-    let remainingDuration = duration - currentPosition;
-    totalSeconds += remainingDuration + (duration * (remainingLoops - 1));
-  }
-  
-  // Calculate time for remaining videos
-  for (let i = currentVideoIdx + 1; i < section.videos.length; i++) {
-    let v = section.videos[i];
-    if (!v.isSubcategory) {
-      let duration = v.end - v.start;
-      totalSeconds += duration * v.loop;
-    }
-  }
-  return totalSeconds;
-}
-
-    function updateSectionTimerDisplay() {
-      const timerSpan = document.getElementById('sectionTimer');
-      timerSpan.textContent = sectionTimerSeconds > 0 ? `⏳ ${formatTime(sectionTimerSeconds)}` : '';
-    }
-
-    // All Sections Timer functions
-    function startAllSectionsTimer() {
-      clearInterval(allSectionsTimerInterval);
-      allSectionsTimerSeconds = calcAllSectionsSeconds();
-      updateAllSectionsTimerDisplay();
-      if (allSectionsTimerSeconds > 0) {
-      allSectionsTimerInterval = setInterval(() => {
-  if (!timersPaused) {
-    allSectionsTimerSeconds--;
-    updateAllSectionsTimerDisplay();
-    if (allSectionsTimerSeconds <= 0) {
-      clearInterval(allSectionsTimerInterval);
-      allSectionsTimerSeconds = 0;
-      updateAllSectionsTimerDisplay();
-    }
-  }
-}, 1000); // Update every second
-      }
-    }
-
-    function updateAllSectionsTimer() {
-      clearInterval(allSectionsTimerInterval);
-      allSectionsTimerSeconds = calcAllSectionsSeconds();
-      updateAllSectionsTimerDisplay();
-      if (allSectionsTimerSeconds > 0) {
-        allSectionsTimerInterval = setInterval(() => {
-  if (!timersPaused) {
-    allSectionsTimerSeconds--;
-    updateAllSectionsTimerDisplay();
-    if (allSectionsTimerSeconds <= 0) {
-      clearInterval(allSectionsTimerInterval);
-      allSectionsTimerSeconds = 0;
-      updateAllSectionsTimerDisplay();
-    }
-  }
-}, 1000); // Update every second
-      }
-    }
-
-  function calcAllSectionsSeconds() {
-  let total = 0;
-  
-  // If in allSectionsMode, calculate based on current position
-  if (allSectionsMode) {
-    // Add remaining time for current section
-    total += calcSectionSeconds(allSectionsIndex, playlistIndex, currentLoopCount);
-    
-    // Add full time for remaining sections
-    for (let s = allSectionsIndex + 1; s < videoSections.length; s++) {
-      for (let v = 0; v < videoSections[s].videos.length; v++) {
-        let vid = videoSections[s].videos[v];
-        if (!vid.isSubcategory) {
-          let duration = vid.end - vid.start;
-          total += duration * vid.loop;
+      function clearLoopInterval() {
+        if (loopInterval) {
+          clearInterval(loopInterval);
+          loopInterval = null;
         }
       }
-    }
-  } else {
-    // Calculate full time for all sections
-    for (let s = 0; s < videoSections.length; s++) {
-      for (let v = 0; v < videoSections[s].videos.length; v++) {
-        let vid = videoSections[s].videos[v];
-        if (!vid.isSubcategory) {
-          let duration = vid.end - vid.start;
-          total += duration * vid.loop;
+
+      function playAllSections() {
+        if (!playerReady) {
+          alert("Player is not ready yet. Please wait a moment and try again.");
+          return;
+        }
+        allSectionsMode = true;
+        allSectionsIndex = 0;
+        currentSectionVideos = videoSections[allSectionsIndex].videos;
+        playlistIndex = 0;
+        showSelectedSectionByIndex(allSectionsIndex);
+        startSectionTimer(allSectionsIndex, 0, 0);
+        startAllSectionsTimer();
+        playNextInSection();
+      }
+
+      function showSelectedSectionByIndex(idx) {
+        document.getElementById("sectionDropdown").value = idx;
+        showSelectedSection();
+      }
+
+      // Section Timer functions
+      function startSectionTimer(sectionIdx, currentVideoIdx, currentLoop) {
+        clearInterval(timerInterval);
+        sectionTimerSeconds = calcSectionSeconds(
+          sectionIdx,
+          currentVideoIdx,
+          currentLoop
+        );
+        updateSectionTimerDisplay();
+        if (sectionTimerSeconds > 0) {
+          timerInterval = setInterval(() => {
+            if (!timersPaused) {
+              sectionTimerSeconds--;
+              updateSectionTimerDisplay();
+              if (sectionTimerSeconds <= 0) {
+                clearInterval(timerInterval);
+                sectionTimerSeconds = 0;
+                updateSectionTimerDisplay();
+              }
+            }
+          }, 1000); // Update every second
         }
       }
-    }
-  }
-  return total;
-}
 
-    function updateAllSectionsTimerDisplay() {
-      const timerSpan = document.getElementById('allSectionsTimer');
-      timerSpan.textContent = allSectionsTimerSeconds > 0 ? `⏳ ${formatTime(allSectionsTimerSeconds)}` : '';
-    }
-
-function formatTime(sec) {
-  let h = Math.floor(sec / 3600);
-  let m = Math.floor((sec % 3600) / 60);
-  let s = Math.floor(sec % 60); // Use Math.floor to remove decimal
-  
-  return (h > 0 ? h + 'h ' : '') + 
-         (m > 0 ? m + 'm ' : (h > 0 ? '0m ' : '')) + 
-         s + 's';
-}
-
-    // Pause/resume timers
-    function pauseTimers() {
-      timersPaused = true;
-    }
-    function resumeTimers() {
-      timersPaused = false;
-    }
-
-    // Skip button logic
-    function skipCurrentContent() {
-      // If currently playing, skip to next video
-      if (player && typeof player.pauseVideo === "function") {
-        player.pauseVideo();
+      function resetSectionTimer(sectionIdx) {
+        clearInterval(timerInterval);
+        sectionTimerSeconds = calcSectionSeconds(sectionIdx, 0, 0);
+        updateSectionTimerDisplay();
       }
-      clearLoopInterval();
-      playlistIndex++;
-      playNextInSection();
-    }
 
-    // Add this function right after the videoSections array and before the generateDropdown function
+      function calcSectionSeconds(sectionIdx, currentVideoIdx, currentLoop) {
+        if (sectionIdx < 0 || sectionIdx >= videoSections.length) return 0;
+        const section = videoSections[sectionIdx];
+        let totalSeconds = 0;
 
-function toRoman(num) {
-  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
-  if (num <= 20) {
-    return roman[num - 1] || num.toString();
-  }
-  return num.toString(); // Fallback for numbers beyond 20
-}
+        // Account for current position in current video
+        if (
+          section.videos[currentVideoIdx] &&
+          !section.videos[currentVideoIdx].isSubcategory
+        ) {
+          let v = section.videos[currentVideoIdx];
+          let remainingLoops = v.loop - currentLoop;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      generateDropdown();
-      showSelectedSection();
-      updateDisplay(0, 0);
-      updateAllSectionsTimer();
-    });
-    
-  </script>
-</body>
+          // Get current position in video if playing
+          let currentPosition = 0;
+          if (
+            player &&
+            typeof player.getCurrentTime === "function" &&
+            currentVideoId === v.id
+          ) {
+            currentPosition = player.getCurrentTime() - v.start;
+          }
+
+          // Calculate remaining time for current video
+          let duration = v.end - v.start;
+          let remainingDuration = duration - currentPosition;
+          totalSeconds += remainingDuration + duration * (remainingLoops - 1);
+        }
+
+        // Calculate time for remaining videos
+        for (let i = currentVideoIdx + 1; i < section.videos.length; i++) {
+          let v = section.videos[i];
+          if (!v.isSubcategory) {
+            let duration = v.end - v.start;
+            totalSeconds += duration * v.loop;
+          }
+        }
+        return totalSeconds;
+      }
+
+      function updateSectionTimerDisplay() {
+        const timerSpan = document.getElementById("sectionTimer");
+        timerSpan.textContent =
+          sectionTimerSeconds > 0
+            ? `⏳ ${formatTime(sectionTimerSeconds)}`
+            : "";
+      }
+
+      // All Sections Timer functions
+      function startAllSectionsTimer() {
+        clearInterval(allSectionsTimerInterval);
+        allSectionsTimerSeconds = calcAllSectionsSeconds();
+        updateAllSectionsTimerDisplay();
+        if (allSectionsTimerSeconds > 0) {
+          allSectionsTimerInterval = setInterval(() => {
+            if (!timersPaused) {
+              allSectionsTimerSeconds--;
+              updateAllSectionsTimerDisplay();
+              if (allSectionsTimerSeconds <= 0) {
+                clearInterval(allSectionsTimerInterval);
+                allSectionsTimerSeconds = 0;
+                updateAllSectionsTimerDisplay();
+              }
+            }
+          }, 1000); // Update every second
+        }
+      }
+
+      function updateAllSectionsTimer() {
+        clearInterval(allSectionsTimerInterval);
+        allSectionsTimerSeconds = calcAllSectionsSeconds();
+        updateAllSectionsTimerDisplay();
+        if (allSectionsTimerSeconds > 0) {
+          allSectionsTimerInterval = setInterval(() => {
+            if (!timersPaused) {
+              allSectionsTimerSeconds--;
+              updateAllSectionsTimerDisplay();
+              if (allSectionsTimerSeconds <= 0) {
+                clearInterval(allSectionsTimerInterval);
+                allSectionsTimerSeconds = 0;
+                updateAllSectionsTimerDisplay();
+              }
+            }
+          }, 1000); // Update every second
+        }
+      }
+
+      function calcAllSectionsSeconds() {
+        let total = 0;
+
+        // If in allSectionsMode, calculate based on current position
+        if (allSectionsMode) {
+          // Add remaining time for current section
+          total += calcSectionSeconds(
+            allSectionsIndex,
+            playlistIndex,
+            currentLoopCount
+          );
+
+          // Add full time for remaining sections
+          for (let s = allSectionsIndex + 1; s < videoSections.length; s++) {
+            for (let v = 0; v < videoSections[s].videos.length; v++) {
+              let vid = videoSections[s].videos[v];
+              if (!vid.isSubcategory) {
+                let duration = vid.end - vid.start;
+                total += duration * vid.loop;
+              }
+            }
+          }
+        } else {
+          // Calculate full time for all sections
+          for (let s = 0; s < videoSections.length; s++) {
+            for (let v = 0; v < videoSections[s].videos.length; v++) {
+              let vid = videoSections[s].videos[v];
+              if (!vid.isSubcategory) {
+                let duration = vid.end - vid.start;
+                total += duration * vid.loop;
+              }
+            }
+          }
+        }
+        return total;
+      }
+
+      function updateAllSectionsTimerDisplay() {
+        const timerSpan = document.getElementById("allSectionsTimer");
+        timerSpan.textContent =
+          allSectionsTimerSeconds > 0
+            ? `⏳ ${formatTime(allSectionsTimerSeconds)}`
+            : "";
+      }
+
+      function formatTime(sec) {
+        let h = Math.floor(sec / 3600);
+        let m = Math.floor((sec % 3600) / 60);
+        let s = Math.floor(sec % 60); // Use Math.floor to remove decimal
+
+        return (
+          (h > 0 ? h + "h " : "") +
+          (m > 0 ? m + "m " : h > 0 ? "0m " : "") +
+          s +
+          "s"
+        );
+      }
+
+      // Pause/resume timers
+      function pauseTimers() {
+        timersPaused = true;
+      }
+      function resumeTimers() {
+        timersPaused = false;
+      }
+
+      // Skip button logic
+      function skipCurrentContent() {
+        // If currently playing, skip to next video
+        if (player && typeof player.pauseVideo === "function") {
+          player.pauseVideo();
+        }
+        clearLoopInterval();
+        playlistIndex++;
+        playNextInSection();
+      }
+
+      // Add this function right after the videoSections array and before the generateDropdown function
+
+      function toRoman(num) {
+        const roman = [
+          "I",
+          "II",
+          "III",
+          "IV",
+          "V",
+          "VI",
+          "VII",
+          "VIII",
+          "IX",
+          "X",
+          "XI",
+          "XII",
+          "XIII",
+          "XIV",
+          "XV",
+          "XVI",
+          "XVII",
+          "XVIII",
+          "XIX",
+          "XX",
+        ];
+        if (num <= 20) {
+          return roman[num - 1] || num.toString();
+        }
+        return num.toString(); // Fallback for numbers beyond 20
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        generateDropdown();
+        showSelectedSection();
+        updateDisplay(0, 0);
+        updateAllSectionsTimer();
+      });
+    </script>
+  </body>
 </html>
