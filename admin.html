@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Admin Dashboard - DUA AND DARUD PLAYER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0d5c3d;
+      --primary-hover: #0a4a30;
+      --danger: #c24141;
+      --danger-hover: #a03535;
+      --bg: #f0f4f2;
+      --card: #fff;
+      --border: #d1d9d4;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', sans-serif; margin: 0; padding: 20px; background: var(--bg); color: #1a1a1a; }
+    .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+    .header h1 { margin: 0; color: var(--primary); font-size: 1.5rem; }
+    .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: var(--danger-hover); }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: rgba(13,92,61,0.1); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; min-height: calc(100vh - 140px); }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+    .sidebar { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); height: fit-content; }
+    .sidebar h3 { margin: 0 0 12px 0; font-size: 14px; color: #666; text-transform: uppercase; }
+    .topic-list { list-style: none; padding: 0; margin: 0; }
+    .topic-item { padding: 12px 14px; margin: 4px 0; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+    .topic-item:hover { background: rgba(13,92,61,0.08); }
+    .topic-item.active { background: rgba(13,92,61,0.15); font-weight: 600; }
+    .topic-item .count { font-size: 11px; color: #888; }
+    .main { background: var(--card); border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .main h2 { margin: 0 0 20px 0; font-size: 1.25rem; color: var(--primary); }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .item-list { list-style: none; padding: 0; margin: 0; }
+    .item { padding: 14px 16px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .item.subcategory { background: rgba(13,92,61,0.06); border-color: rgba(13,92,61,0.2); }
+    .item-info { flex: 1; min-width: 0; }
+    .item-label { font-weight: 600; margin-bottom: 4px; }
+    .item-meta { font-size: 12px; color: #666; }
+    .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal.show { display: flex; }
+    .modal-content { background: var(--card); border-radius: 12px; padding: 24px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal h3 { margin: 0 0 16px 0; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .empty-state { text-align: center; padding: 60px 20px; color: #888; }
+    .empty-state p { margin: 0 0 16px 0; }
+    .import-export { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; background: var(--primary); color: #fff; border-radius: 8px; font-weight: 500; z-index: 1100; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #e0e0e0; }
+    .badge-sub { background: rgba(13,92,61,0.2); color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🛠️ Admin Dashboard – DUA AND DARUD PLAYER</h1>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <a href="index.html" class="btn btn-outline">← Back to Player</a>
+      <button class="btn btn-primary" onclick="showImportModal()">📥 Import JSON</button>
+      <button class="btn btn-primary" onclick="exportData()">📤 Export JSON</button>
+    </div>
+  </div>
+
+  <div class="import-export" style="background:#e8f5ee; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px;">
+    💡 To load existing data: Open the <a href="index.html">player</a>, click <strong>Copy data for Admin</strong>, then use Import JSON above and paste.
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h3>Topics (Sections)</h3>
+      <button class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 12px;" onclick="addTopic()">+ Add Topic</button>
+      <ul class="topic-list" id="topicList"></ul>
+    </aside>
+
+    <main class="main">
+      <div id="noTopic" class="empty-state">
+        <p>Select a topic from the left or add a new one.</p>
+      </div>
+      <div id="topicContent" style="display: none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+          <h2 id="topicTitle" style="margin:0;"></h2>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="editCurrentTopic()">Edit topic</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCurrentTopic()">Delete topic</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-primary" onclick="addVideo()">+ Add Video</button>
+          <button class="btn btn-outline" onclick="addSubcategory()">+ Add Subcategory</button>
+        </div>
+        <ul class="item-list" id="itemList"></ul>
+      </div>
+    </main>
+  </div>
+
+  <!-- Topic Modal -->
+  <div class="modal" id="topicModal">
+    <div class="modal-content">
+      <h3 id="topicModalTitle">Add Topic</h3>
+      <div class="form-group">
+        <label>Topic Name</label>
+        <input type="text" id="topicNameInput" placeholder="e.g. প্রতিদিন" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveTopic()">Save</button>
+        <button class="btn btn-outline" onclick="closeModal('topicModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal" id="videoModal">
+    <div class="modal-content">
+      <h3 id="videoModalTitle">Add Video</h3>
+      <div class="form-group">
+        <label>YouTube Video ID</label>
+        <input type="text" id="videoIdInput" placeholder="e.g. OE7kKmmINhQ (from youtube.com/watch?v=OE7kKmmINhQ)" />
+      </div>
+      <div class="form-group">
+        <label>Start (seconds)</label>
+        <input type="number" id="videoStartInput" value="0" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label>End (seconds)</label>
+        <input type="number" id="videoEndInput" value="60" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label>Label</label>
+        <input type="text" id="videoLabelInput" placeholder="e.g. দরুদ শরীফ" />
+      </div>
+      <div class="form-group">
+        <label>Tooltip / Description</label>
+        <textarea id="videoTooltipInput" placeholder="e.g. প্রতিদিন ১০০ বার"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Loop Count</label>
+        <input type="number" id="videoLoopInput" value="1" min="1" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveVideo()">Save</button>
+        <button class="btn btn-outline" onclick="closeModal('videoModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subcategory Modal -->
+  <div class="modal" id="subModal">
+    <div class="modal-content">
+      <h3>Add Subcategory</h3>
+      <div class="form-group">
+        <label>Subcategory Label</label>
+        <input type="text" id="subLabelInput" placeholder="e.g. নামাজের আগে আমল" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveSubcategory()">Save</button>
+        <button class="btn btn-outline" onclick="closeModal('subModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div class="modal" id="importModal">
+    <div class="modal-content">
+      <h3>Import Data</h3>
+      <p style="font-size: 13px; color: #666; margin-bottom: 12px;">Paste the exported JSON from the player, or use "Copy data for Admin" on the player page.</p>
+      <div class="form-group">
+        <label>JSON Data</label>
+        <textarea id="importJsonInput" placeholder='[{"name":"Topic","videos":[...]}]' style="min-height: 200px; font-family: monospace; font-size: 12px;"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="doImport()">Import</button>
+        <button class="btn btn-outline" onclick="closeModal('importModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const STORAGE_KEY = 'duaDarudVideoSections';
+    let data = [];
+    let currentTopicIndex = -1;
+    let editingItemIndex = -1;
+    let editingTopicIndex = -1;
+
+    function loadData() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          data = JSON.parse(stored);
+        } else {
+          data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+          saveData();
+        }
+      } catch (e) {
+        data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+        saveData();
+      }
+      renderTopicList();
+      if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
+        renderTopicContent(currentTopicIndex);
+      } else {
+        document.getElementById('noTopic').style.display = 'block';
+        document.getElementById('topicContent').style.display = 'none';
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showToast('Saved to player');
+    }
+
+    function renderTopicList() {
+      const ul = document.getElementById('topicList');
+      ul.innerHTML = data.map((t, i) => {
+        const videoCount = (t.videos || []).filter(v => !v.isSubcategory).length;
+        return `<li class="topic-item ${i === currentTopicIndex ? 'active' : ''}" onclick="selectTopic(${i})">
+          <span>${escapeHtml(t.name)}</span>
+          <span class="count">${videoCount} videos</span>
+        </li>`;
+      }).join('');
+    }
+
+    function selectTopic(i) {
+      currentTopicIndex = i;
+      renderTopicList();
+      renderTopicContent(i);
+    }
+
+    function renderTopicContent(i) {
+      document.getElementById('noTopic').style.display = 'none';
+      document.getElementById('topicContent').style.display = 'block';
+      const topic = data[i];
+      document.getElementById('topicTitle').textContent = topic.name;
+      const ul = document.getElementById('itemList');
+      const videos = topic.videos || [];
+      ul.innerHTML = videos.map((item, idx) => {
+        if (item.isSubcategory) {
+          return `<li class="item subcategory">
+            <div class="item-info">
+              <div class="item-label"><span class="badge badge-sub">Subcategory</span> ${escapeHtml(item.label)}</div>
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-outline btn-sm" onclick="editSubcategory(${idx})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteItem(${idx})">Delete</button>
+            </div>
+          </li>`;
+        } else {
+          return `<li class="item">
+            <div class="item-info">
+              <div class="item-label">${escapeHtml(item.label)}</div>
+              <div class="item-meta">ID: ${item.id} | ${item.start}s–${item.end}s | Loop: ${item.loop}x</div>
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-outline btn-sm" onclick="editVideo(${idx})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteItem(${idx})">Delete</button>
+            </div>
+          </li>`;
+        }
+      }).join('');
+    }
+
+    function addTopic() {
+      document.getElementById('topicModalTitle').textContent = 'Add Topic';
+      document.getElementById('topicNameInput').value = '';
+      editingTopicIndex = -1;
+      document.getElementById('topicModal').classList.add('show');
+    }
+
+    function editCurrentTopic() {
+      if (currentTopicIndex < 0) return;
+      document.getElementById('topicModalTitle').textContent = 'Edit Topic';
+      document.getElementById('topicNameInput').value = data[currentTopicIndex].name || '';
+      editingTopicIndex = currentTopicIndex;
+      document.getElementById('topicModal').classList.add('show');
+    }
+
+    function saveTopic() {
+      const name = document.getElementById('topicNameInput').value.trim();
+      if (!name) { showToast('Enter topic name'); return; }
+      if (editingTopicIndex >= 0) {
+        data[editingTopicIndex].name = name;
+        editingTopicIndex = -1;
+      } else {
+        data.push({ name, videos: [] });
+        currentTopicIndex = data.length - 1;
+      }
+      saveData();
+      renderTopicList();
+      renderTopicContent(currentTopicIndex);
+      closeModal('topicModal');
+    }
+
+    function addVideo() {
+      if (currentTopicIndex < 0) return;
+      document.getElementById('videoModalTitle').textContent = 'Add Video';
+      document.getElementById('videoIdInput').value = '';
+      document.getElementById('videoStartInput').value = '0';
+      document.getElementById('videoEndInput').value = '60';
+      document.getElementById('videoLabelInput').value = '';
+      document.getElementById('videoTooltipInput').value = '';
+      document.getElementById('videoLoopInput').value = '1';
+      editingItemIndex = -1;
+      document.getElementById('videoModal').classList.add('show');
+    }
+
+    function editVideo(idx) {
+      const item = data[currentTopicIndex].videos[idx];
+      if (item.isSubcategory) return;
+      document.getElementById('videoModalTitle').textContent = 'Edit Video';
+      document.getElementById('videoIdInput').value = item.id || '';
+      document.getElementById('videoStartInput').value = item.start ?? 0;
+      document.getElementById('videoEndInput').value = item.end ?? 60;
+      document.getElementById('videoLabelInput').value = item.label || '';
+      document.getElementById('videoTooltipInput').value = item.tooltip || '';
+      document.getElementById('videoLoopInput').value = item.loop ?? 1;
+      editingItemIndex = idx;
+      document.getElementById('videoModal').classList.add('show');
+    }
+
+    function saveVideo() {
+      const id = document.getElementById('videoIdInput').value.trim();
+      const label = document.getElementById('videoLabelInput').value.trim();
+      if (!id || !label) { showToast('Enter Video ID and Label'); return; }
+      const item = {
+        id,
+        start: parseFloat(document.getElementById('videoStartInput').value) || 0,
+        end: parseFloat(document.getElementById('videoEndInput').value) || 60,
+        label,
+        tooltip: document.getElementById('videoTooltipInput').value.trim(),
+        loop: parseInt(document.getElementById('videoLoopInput').value, 10) || 1,
+      };
+      if (!data[currentTopicIndex].videos) data[currentTopicIndex].videos = [];
+      if (editingItemIndex >= 0) {
+        data[currentTopicIndex].videos[editingItemIndex] = item;
+      } else {
+        data[currentTopicIndex].videos.push(item);
+      }
+      saveData();
+      renderTopicContent(currentTopicIndex);
+      closeModal('videoModal');
+    }
+
+    function addSubcategory() {
+      if (currentTopicIndex < 0) return;
+      document.getElementById('subLabelInput').value = '';
+      editingItemIndex = -1;
+      document.getElementById('subModal').classList.add('show');
+    }
+
+    function editSubcategory(idx) {
+      const item = data[currentTopicIndex].videos[idx];
+      if (!item.isSubcategory) return;
+      document.getElementById('subLabelInput').value = item.label || '';
+      editingItemIndex = idx;
+      document.getElementById('subModal').classList.add('show');
+    }
+
+    function saveSubcategory() {
+      const label = document.getElementById('subLabelInput').value.trim();
+      if (!label) { showToast('Enter subcategory label'); return; }
+      const item = { isSubcategory: true, label };
+      if (!data[currentTopicIndex].videos) data[currentTopicIndex].videos = [];
+      if (editingItemIndex >= 0) {
+        data[currentTopicIndex].videos[editingItemIndex] = item;
+      } else {
+        data[currentTopicIndex].videos.push(item);
+      }
+      saveData();
+      renderTopicContent(currentTopicIndex);
+      closeModal('subModal');
+    }
+
+    function deleteCurrentTopic() {
+      if (currentTopicIndex < 0 || !confirm('Delete this entire topic and all its videos?')) return;
+      data.splice(currentTopicIndex, 1);
+      currentTopicIndex = data.length > 0 ? 0 : -1;
+      saveData();
+      loadData();
+    }
+
+    function deleteItem(idx) {
+      if (!confirm('Delete this item?')) return;
+      data[currentTopicIndex].videos.splice(idx, 1);
+      saveData();
+      renderTopicContent(currentTopicIndex);
+      renderTopicList();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    function showImportModal() {
+      document.getElementById('importJsonInput').value = '';
+      document.getElementById('importModal').classList.add('show');
+    }
+
+    function doImport() {
+      const raw = document.getElementById('importJsonInput').value.trim();
+      if (!raw) { showToast('Paste JSON first'); return; }
+      try {
+        data = JSON.parse(raw);
+        if (!Array.isArray(data)) throw new Error('Expected array');
+        data.forEach(t => { if (!t.videos) t.videos = []; });
+        saveData();
+        loadData();
+        currentTopicIndex = 0;
+        selectTopic(0);
+        closeModal('importModal');
+        showToast('Imported successfully');
+      } catch (e) {
+        showToast('Invalid JSON: ' + e.message);
+      }
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'dua-darud-data.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('Exported');
+    }
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      if (data.length && currentTopicIndex < 0) selectTopic(0);
+    });
+  </script>
+</body>
+</html>
