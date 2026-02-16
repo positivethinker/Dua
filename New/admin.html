@@ -188,8 +188,100 @@
     </div>
   </div>
 
+  <!-- Password Protection Modal -->
+  <div class="modal show" id="passwordModal" style="backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+    <div class="modal-content" style="max-width: 400px;">
+      <h3 style="text-align: center; margin-bottom: 8px;">🔒 Admin Access</h3>
+      <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Enter password to access admin dashboard</p>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password" />
+        <div id="passwordError" style="color: var(--danger); font-size: 12px; margin-top: 6px; display: none;">Incorrect password. Please try again.</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="checkPassword()" style="width: 100%;">Unlock Dashboard</button>
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center;">
+        <a href="index.html" class="btn btn-outline btn-sm">← Back to Player</a>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/js/data.js"></script>
   <script>
+    // Password Protection System
+    const ADMIN_PASSWORD_KEY = 'duaAdminPassword';
+    const ADMIN_SESSION_KEY = 'duaAdminSession';
+    const DEFAULT_PASSWORD = 'admin123'; // Change this to your desired password
+    let isAuthenticated = false;
+
+    // Initialize password on first load
+    function initPassword() {
+      const storedPassword = localStorage.getItem(ADMIN_PASSWORD_KEY);
+      if (!storedPassword) {
+        localStorage.setItem(ADMIN_PASSWORD_KEY, DEFAULT_PASSWORD);
+      }
+    }
+
+    // Check if user has valid session
+    function checkSession() {
+      const session = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      if (session === 'authenticated') {
+        isAuthenticated = true;
+        unlockDashboard();
+      }
+    }
+
+    // Verify password
+    function checkPassword() {
+      const inputPassword = document.getElementById('passwordInput').value;
+      const storedPassword = localStorage.getItem(ADMIN_PASSWORD_KEY) || DEFAULT_PASSWORD;
+      
+      if (inputPassword === storedPassword) {
+        isAuthenticated = true;
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'authenticated');
+        document.getElementById('passwordError').style.display = 'none';
+        unlockDashboard();
+      } else {
+        document.getElementById('passwordError').style.display = 'block';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
+      }
+    }
+
+    // Unlock dashboard
+    function unlockDashboard() {
+      document.getElementById('passwordModal').classList.remove('show');
+      document.getElementById('passwordModal').style.display = 'none';
+      loadData();
+      if (data.length && currentTopicIndex < 0) selectTopic(0);
+    }
+
+    // Allow Enter key to submit password
+    document.addEventListener('DOMContentLoaded', () => {
+      initPassword();
+      checkSession();
+      
+      const passwordInput = document.getElementById('passwordInput');
+      if (passwordInput) {
+        passwordInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            checkPassword();
+          }
+        });
+        passwordInput.focus();
+      }
+    });
+
+    // Require authentication for all admin functions
+    function requireAuth() {
+      if (!isAuthenticated) {
+        showToast('Please authenticate first');
+        return false;
+      }
+      return true;
+    }
+
     const STORAGE_KEY = 'duaDarudVideoSections';
     let data = [];
     let currentTopicIndex = -1;
@@ -197,6 +289,7 @@
     let editingTopicIndex = -1;
 
     function loadData() {
+      if (!isAuthenticated) return;
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -219,6 +312,7 @@
     }
 
     function saveData() {
+      if (!requireAuth()) return;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       showToast('Saved to player');
     }
@@ -274,6 +368,7 @@
     }
 
     function addTopic() {
+      if (!requireAuth()) return;
       document.getElementById('topicModalTitle').textContent = 'Add Topic';
       document.getElementById('topicNameInput').value = '';
       editingTopicIndex = -1;
@@ -281,6 +376,7 @@
     }
 
     function editCurrentTopic() {
+      if (!requireAuth()) return;
       if (currentTopicIndex < 0) return;
       document.getElementById('topicModalTitle').textContent = 'Edit Topic';
       document.getElementById('topicNameInput').value = data[currentTopicIndex].name || '';
@@ -289,6 +385,7 @@
     }
 
     function saveTopic() {
+      if (!requireAuth()) return;
       const name = document.getElementById('topicNameInput').value.trim();
       if (!name) { showToast('Enter topic name'); return; }
       if (editingTopicIndex >= 0) {
@@ -305,6 +402,7 @@
     }
 
     function addVideo() {
+      if (!requireAuth()) return;
       if (currentTopicIndex < 0) return;
       document.getElementById('videoModalTitle').textContent = 'Add Video';
       document.getElementById('videoIdInput').value = '';
@@ -318,6 +416,7 @@
     }
 
     function editVideo(idx) {
+      if (!requireAuth()) return;
       const item = data[currentTopicIndex].videos[idx];
       if (item.isSubcategory) return;
       document.getElementById('videoModalTitle').textContent = 'Edit Video';
@@ -332,6 +431,7 @@
     }
 
     function saveVideo() {
+      if (!requireAuth()) return;
       const id = document.getElementById('videoIdInput').value.trim();
       const label = document.getElementById('videoLabelInput').value.trim();
       if (!id || !label) { showToast('Enter Video ID and Label'); return; }
@@ -355,6 +455,7 @@
     }
 
     function addSubcategory() {
+      if (!requireAuth()) return;
       if (currentTopicIndex < 0) return;
       document.getElementById('subLabelInput').value = '';
       editingItemIndex = -1;
@@ -362,6 +463,7 @@
     }
 
     function editSubcategory(idx) {
+      if (!requireAuth()) return;
       const item = data[currentTopicIndex].videos[idx];
       if (!item.isSubcategory) return;
       document.getElementById('subLabelInput').value = item.label || '';
@@ -370,6 +472,7 @@
     }
 
     function saveSubcategory() {
+      if (!requireAuth()) return;
       const label = document.getElementById('subLabelInput').value.trim();
       if (!label) { showToast('Enter subcategory label'); return; }
       const item = { isSubcategory: true, label };
@@ -385,6 +488,7 @@
     }
 
     function deleteCurrentTopic() {
+      if (!requireAuth()) return;
       if (currentTopicIndex < 0 || !confirm('Delete this entire topic and all its videos?')) return;
       data.splice(currentTopicIndex, 1);
       currentTopicIndex = data.length > 0 ? 0 : -1;
@@ -393,6 +497,7 @@
     }
 
     function deleteItem(idx) {
+      if (!requireAuth()) return;
       if (!confirm('Delete this item?')) return;
       data[currentTopicIndex].videos.splice(idx, 1);
       saveData();
@@ -410,6 +515,7 @@
     }
 
     function doImport() {
+      if (!requireAuth()) return;
       const raw = document.getElementById('importJsonInput').value.trim();
       if (!raw) { showToast('Paste JSON first'); return; }
       try {
