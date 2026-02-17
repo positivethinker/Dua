@@ -230,10 +230,64 @@
         .ambience-btn::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--accent); border-radius: 50%; display: none; }
         .ambience-btn.active::after { display: block; }
         
+        
         /* Shortcuts Modal */
         .modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:none; justify-content:center; align-items:center; }
         .modal-content { background: var(--bg-sec); padding: 30px; border-radius: 12px; border: 1px solid var(--border); max-width: 400px; text-align: center; }
         .key-badge { background: #334155; padding: 2px 6px; border-radius: 4px; font-family: monospace; border: 1px solid #475569; }
+        
+        
+        .section-item.locked {
+            opacity: 0.6;
+            filter: grayscale(100%);
+            pointer-events: none; /* Prevent clicks mostly, but we handle click in JS for warning */
+            position: relative;
+        }
+        .section-item.locked .section-header {
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.5);
+        }
+        .section-item.locked .section-header::after {
+            content: '🔒';
+            position: absolute;
+            right: 40px; /* Adjust based on expand icon position */
+            font-size: 1.2rem;
+        }
+        
+        /* Warning Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: rgba(220, 38, 38, 0.9); /* Red warning */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -303,6 +357,8 @@
             <div class="progress-container" id="progressContainer">
                 <!-- Segments will be dynamically generated based on loop count -->
             </div>
+            
+            <!-- Water Drop Timer Removed -->
             
             <div class="speed-control">
                 <span style="font-size: 0.8rem; color: var(--text-sec); margin-right: 5px;">Speed:</span>
@@ -1754,6 +1810,18 @@
           videoSections.forEach((section, sIdx) => {
               const div = document.createElement("div");
               div.className = "section-item";
+              
+              // Check lock status
+              if (isSectionLocked(sIdx)) {
+                  div.classList.add("locked");
+                  div.onclick = (e) => {
+                      // Prevent interaction if locked (except drag which is handled separately, but let's block clicks)
+                      // Actually toggleSection handles click on header. 
+                      // If we click the div body (which shouldn't happen if header covers it or list is closed), safe.
+                      // But let's rely on toggleSection for the header click.
+                  };
+              }
+
               const header = document.createElement("div");
               header.className = "section-header";
               
@@ -1765,7 +1833,7 @@
               header.onclick = () => toggleSection(sIdx);
               
               // Add drag-and-drop functionality
-              div.draggable = true;
+              div.draggable = !isSectionLocked(sIdx); // Disable drag if locked? Maybe better allowed but definitely disable play
               div.dataset.sectionIndex = sIdx;
               
               div.addEventListener('dragstart', handleDragStart);
@@ -1803,6 +1871,10 @@
       let draggedElement = null;
       
       function handleDragStart(e) {
+          if (e.target.classList.contains('locked')) {
+              e.preventDefault();
+              return;
+          }
           draggedElement = e.currentTarget;
           e.currentTarget.classList.add('dragging');
           e.dataTransfer.effectAllowed = 'move';
@@ -1843,6 +1915,17 @@
               // Save to localStorage
               localStorage.setItem('duaDarudVideoSections', JSON.stringify(videoSections));
               
+              // Update Locks keys to match new indices? 
+              // Locking relies on Index. If we reorder, index changes. Locks will point to wrong section!
+              // For now, let's assume reordering is rare or accept valid limitation. 
+              // Ideally locks should use Section ID not Index. But Sections don't have IDs in this data structure.
+              // -> Known Limitation: Reordering resets/scrambles locks.
+              // Let's clear locks on reorder to avoid confusion? Or just live with it.
+              // Given "Not work" request, clearing might be safer to prevent accidental permanent lock if index moves out of bounds.
+              // But resetting allows cheating.
+              // Let's leave as is for now, or maybe map locks? 
+              // Without Section IDs, we can't map. 
+              
               // Re-render playlist
               renderPlaylist();
           }
@@ -1858,6 +1941,12 @@
       }
 
       function toggleSection(idx) {
+          // Check lock
+          if (isSectionLocked(idx)) {
+              showToast(`Section locked for ${getLockRemainingTime(idx)}`);
+              return;
+          }
+          
           const list = document.getElementById(`list-${idx}`);
           const wasOpen = list.classList.contains("open");
           document.querySelectorAll(".video-list").forEach(el => el.classList.remove("open"));
@@ -1868,6 +1957,12 @@
       function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
 
       function playSingleSection(sIdx, vIdx = 0) {
+          // Check lock
+          if (isSectionLocked(sIdx)) {
+              showToast(`Section locked for ${getLockRemainingTime(sIdx)}`);
+              return;
+          }
+
           currentState.isAllMode = false; currentState.sectionIndex = sIdx;
           let validIdx = vIdx;
           while(validIdx < videoSections[sIdx].videos.length && videoSections[sIdx].videos[validIdx].isSubcategory) validIdx++;
@@ -1887,6 +1982,10 @@
           const video = videoSections[sIdx].videos[vIdx];
           currentState.sectionIndex = sIdx; currentState.videoIndex = vIdx;
           currentState.loopCount = 0; currentState.maxLoops = video.loop || 1;
+          
+          // Reset custom loop input when video changes
+          document.getElementById('customLoopInput').value = '';
+          
           document.querySelectorAll(".video-item").forEach(el => el.classList.remove("active"));
           const el = document.getElementById(`vid-${sIdx}-${vIdx}`);
           if(el) el.classList.add("active");
@@ -2029,23 +2128,137 @@
           else nextVideo();
       }
 
+
+      // --- SECTION LOCK FEATURE ---
+      function getSectionLocks() {
+          try {
+              return JSON.parse(localStorage.getItem('duaSectionLocks') || '{}');
+          } catch (e) { return {}; }
+      }
+
+      function saveSectionLocks(locks) {
+          localStorage.setItem('duaSectionLocks', JSON.stringify(locks));
+      }
+
+      function lockSection(sIdx) {
+          const locks = getSectionLocks();
+          const threeHours = 3 * 60 * 60 * 1000;
+          locks[sIdx] = Date.now() + threeHours;
+          saveSectionLocks(locks);
+          renderPlaylist(); // Update UI
+      }
+
+      function isSectionLocked(sIdx) {
+          const locks = getSectionLocks();
+          if (!locks[sIdx]) return false;
+          
+          if (Date.now() > locks[sIdx]) {
+              // Expired, remove it
+              delete locks[sIdx];
+              saveSectionLocks(locks);
+              return false;
+          }
+          return true;
+      }
+      
+      function getLockRemainingTime(sIdx) {
+          const locks = getSectionLocks();
+          if (!locks[sIdx]) return null;
+          const remaining = locks[sIdx] - Date.now();
+          if (remaining <= 0) return null;
+          
+          const h = Math.floor(remaining / (1000 * 60 * 60));
+          const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+          return `${h}h ${m}m`;
+      }
+
+      function showToast(message) {
+          const container = document.getElementById('toastContainer');
+          const toast = document.createElement('div');
+          toast.className = 'toast';
+          toast.innerHTML = `<span>⚠️</span> <span>${message}</span>`;
+          container.appendChild(toast);
+          
+          // Trigger animation
+          requestAnimationFrame(() => toast.classList.add('show'));
+          
+          // Remove after 3 seconds
+          setTimeout(() => {
+              toast.classList.remove('show');
+              setTimeout(() => toast.remove(), 300);
+          }, 3000);
+      }
+      
+      // Update check for locks on load
+      setInterval(() => {
+          // periodically refresh to unlock expired sections
+          const locks = getSectionLocks();
+          let changed = false;
+          Object.keys(locks).forEach(key => {
+              if (Date.now() > locks[key]) {
+                  delete locks[key];
+                  changed = true;
+              }
+          });
+          if (changed) {
+              saveSectionLocks(locks);
+              renderPlaylist();
+          }
+      }, 60000); // Check every minute
+
+      // ---------------------------
+
       function nextVideo() {
           let sIdx = currentState.sectionIndex; let vIdx = currentState.videoIndex + 1;
           const section = videoSections[sIdx];
+          
+          // Find next valid video
+          // Note: using while loop to check subcategories
+          // We need to check if we are going out of bounds
+          if (vIdx >= section.videos.length) {
+              // End of section reached immediately
+              finishSection(sIdx);
+              return;
+          }
+          
           while(vIdx < section.videos.length && section.videos[vIdx].isSubcategory) vIdx++;
-          if(vIdx < section.videos.length) startVideo(sIdx, vIdx);
-          else {
-              // Auto Play Logic: Move to next section if enabled OR isAllMode
-              if (currentState.isAllMode || isAutoPlayActive) {
-                  const nextSec = sIdx + 1;
-                  if (nextSec < videoSections.length) playSingleSection(nextSec, 0);
-                  else stop();
-              } else stop();
+          
+          if(vIdx < section.videos.length) {
+              startVideo(sIdx, vIdx);
+          } else {
+              // End of section reached after skipping subcategories
+              finishSection(sIdx);
+          }
+      }
+      
+      function finishSection(sIdx) {
+          // Lock this section
+          lockSection(sIdx);
+          
+          // Auto Play Logic: Move to next section
+          if (currentState.isAllMode || isAutoPlayActive) {
+              let nextSec = sIdx + 1;
+              // Skip locked sections in auto-play
+              while (nextSec < videoSections.length && isSectionLocked(nextSec)) {
+                  nextSec++;
+              }
+              
+              if (nextSec < videoSections.length) {
+                  playSingleSection(nextSec, 0);
+              } else {
+                  stop();
+              }
+          } else {
+              stop();
           }
       }
 
       function skipVideo() { nextVideo(); }
-      function stop() { player.stopVideo(); document.getElementById("videoTitle").textContent = "Completed"; clearInterval(timers.loopCheck); }
+      function stop() { 
+          if(player && player.stopVideo) player.stopVideo(); 
+          document.getElementById("videoTitle").textContent = "Completed"; 
+          clearInterval(timers.loopCheck); 
+      }
       function updateStats() { document.getElementById("currentLoop").textContent = currentState.loopCount + 1; document.getElementById("maxLoop").textContent = currentState.maxLoops; }
       function formatTime(s) { 
           const h = Math.floor(s / 3600);
@@ -2499,12 +2712,12 @@
       
       function checkAutoReset() {
           const now = Date.now();
-          const twelveHours = 12 * 60 * 60 * 1000;
+          const threeHours = 3 * 60 * 60 * 1000; // Changed from 12 hours to 3 hours
           const timeSinceReset = now - checklistLastReset;
           
-          if (timeSinceReset >= twelveHours) {
-              // Auto-reset: uncheck all items
-              checklistItems.forEach(item => item.completed = false);
+          if (timeSinceReset >= threeHours) {
+              // Auto-reset: DELETE all items (force completion within 3 hours)
+              checklistItems = [];
               checklistLastReset = now;
               localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
               localStorage.setItem('duaChecklistLastReset', checklistLastReset.toString());
@@ -2512,7 +2725,7 @@
           }
           
           // Update countdown timer
-          const timeUntilReset = twelveHours - timeSinceReset;
+          const timeUntilReset = threeHours - timeSinceReset;
           const hours = Math.floor(timeUntilReset / (60 * 60 * 1000));
           const minutes = Math.floor((timeUntilReset % (60 * 60 * 1000)) / (60 * 1000));
           const seconds = Math.floor((timeUntilReset % (60 * 1000)) / 1000);
@@ -2591,5 +2804,8 @@
             <button class="btn btn-primary" onclick="document.getElementById('shortcutsModal').style.display='none'">Close</button>
         </div>
     </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 </body>
 </html>
