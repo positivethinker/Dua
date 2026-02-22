@@ -17,8 +17,8 @@
             --accent-glow: rgba(255, 215, 0, 0.15);
             --border: rgba(255, 255, 255, 0.1);
         }
-        .sidebar { width: 320px; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        .sidebar { width: 320px; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+        .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
         .btn-primary { background: var(--accent); color: #000; box-shadow: 0 0 10px var(--accent-glow); }
         .active { border-color: var(--accent); color: var(--accent); }
         .video-item.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
@@ -34,8 +34,7 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; }
         .sidebar { width: 320px; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; }
         .logo { padding: 20px; border-bottom: 1px solid var(--border); }
-        .logo h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 1.5rem; background: linear-gradient(45deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 1.5rem; background: linear-gradient(45deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 1.5rem; background: linear-gradient(45deg, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .habit-streak { font-size: 0.8rem; color: #f59e0b; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
         .streak-badge { background: #f59e0b; color: #000; font-size: 0.6rem; padding: 1px 4px; border-radius: 4px; margin-left: 5px; font-weight: bold; }
         .progress-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px; display: flex; gap: 2px; padding: 2px; }
@@ -80,7 +79,7 @@
         .sidebar-backdrop.active { display: block; }
         
         /* Prevent text selection on buttons */
-        .btn, .speed-btn, .fav-filter-btn, .mobile-toggle, .tasbih-btn, .theme-btn, .bg-thumb, .ambience-btn { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+        .btn, .speed-btn, .fav-filter-btn, .mobile-toggle, .tasbih-btn, .theme-btn, .bg-thumb, .ambience-btn { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -188,7 +187,7 @@
             .main-content { padding: 5px; gap: 10px; }
             .controls-card { padding: 10px; gap: 10px; }
             .video-title { font-size: 0.95rem; margin-bottom: 4px; }
-            .tooltip { font-size: 0.75rem; min-height: auto; }
+            .tooltip { font-size: 0.75rem; min-height: 0; }
             .stats-row { margin-top: 5px; gap: 10px; }
             .actions-row { margin-top: 5px; gap: 8px; }
             .btn { padding: 8px 12px; font-size: 0.8rem; }
@@ -280,6 +279,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -288,6 +288,40 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .logo-sub { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+        .filter-row { display: flex; gap: 10px; margin: 0 20px 10px 20px; }
+        .filter-row .fav-filter-btn { margin: 0; flex: 1; }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); text-align: center; }
+        .sidebar-footer a { color: var(--text-sec); text-decoration: none; font-size: 0.8rem; margin-right: 15px; }
+        .sidebar-footer .admin-copy-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.8rem; }
+        .sidebar-footer .util-btns { margin-top: 10px; font-size: 0.75rem; }
+        .sidebar-footer .util-btns button { background: none; border: 1px solid #334155; color: #94a3b8; border-radius: 4px; cursor: pointer; }
+        .theme-picker { margin-top: 10px; display: flex; justify-content: center; gap: 8px; }
+        .theme-btn.cyan { background: #38bdf8; }
+        .theme-btn.gold { background: #eab308; }
+        .theme-btn.emerald { background: #10b981; }
+        .theme-btn.rose { background: #f43f5e; }
+        .theme-btn.violet { background: #8b5cf6; }
+        .bg-thumb.default { background: #0f172a; }
+        .bg-thumb.ocean { background: linear-gradient(to bottom, #1e3c72, #2a5298); }
+        .bg-thumb.forest { background: linear-gradient(to bottom, #11998e, #38ef7d); }
+        .bg-thumb.sunset { background: linear-gradient(to bottom, #200122, #6f0000); }
+        .saver-subtext { font-size: 0.8rem; color: #222; margin-top: 10px; }
+        .speed-label { font-size: 0.8rem; color: var(--text-sec); margin-right: 5px; }
+        .custom-loop-input { width: 50px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; padding: 2px 4px; margin-left: 5px; font-weight: 600; }
+        .note-toggle-btn { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; }
+        .note-toggle-row { text-align: center; margin-top: 5px; }
+        .checklist-card { max-width: 900px; }
+        .checklist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .checklist-title { margin: 0; color: var(--text-main); font-size: 1.1rem; }
+        .checklist-timer { font-size: 0.75rem; color: var(--text-sec); }
+        .checklist-items { margin-bottom: 12px; }
+        .checklist-input-row { display: flex; gap: 8px; }
+        .checklist-input { flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-family: 'Inter', sans-serif; outline: none; }
+        .checklist-add-btn { padding: 8px 16px; }
+        .shortcuts-list { list-style: none; padding: 0; text-align: left; }
+        .shortcuts-list li { margin: 10px 0; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -296,7 +330,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="logo">
             <h1>Dua Player</h1>
-            <div style="font-size: 0.8rem; color: #64748b; margin-top:4px;">Modern Edition</div>
+            <div class="logo-sub">Modern Edition</div>
             <div class="habit-streak" id="habitStreakDisplay" title="Daily Streak">🔥 0 Day Streak</div>
         </div>
         <div class="search-container">
@@ -304,32 +338,32 @@
         </div>
 
 
-        <div style="display:flex; gap:10px; margin: 0 20px 10px 20px;">
-             <button class="fav-filter-btn" onclick="toggleFavFilter()" id="favFilterBtn" style="margin:0; flex:1;">❤️ Favorites</button>
-             <button class="fav-filter-btn" onclick="toggleHistoryView()" id="historyBtn" style="margin:0; flex:1;">🕒 History</button>
+        <div class="filter-row">
+             <button class="fav-filter-btn" onclick="toggleFavFilter()" id="favFilterBtn">❤️ Favorites</button>
+             <button class="fav-filter-btn" onclick="toggleHistoryView()" id="historyBtn">🕒 History</button>
         </div>
         <div class="playlist" id="playlist"></div>
-        <div style="padding: 16px; border-top: 1px solid var(--border); text-align: center;">
-             <a href="admin.html" style="color: var(--text-sec); text-decoration: none; font-size: 0.8rem; margin-right: 15px;">🛠️ Admin</a>
-             <button onclick="copyDataForAdmin()" style="background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.8rem;">📋 Copy Data</button>
-             <div style="margin-top: 10px; font-size: 0.75rem;">
-                 <button onclick="backupData()" style="background:none; border:1px solid #334155; color:#94a3b8; border-radius:4px; cursor:pointer;">Backup</button>
-                 <button onclick="document.getElementById('restoreInput').click()" style="background:none; border:1px solid #334155; color:#94a3b8; border-radius:4px; cursor:pointer;">Restore</button>
-                 <button onclick="showShortcuts()" style="background:none; border:1px solid #334155; color:#94a3b8; border-radius:4px; cursor:pointer;">⌨ Keys</button>
-                 <input type="file" id="restoreInput" style="display:none" onchange="restoreData(this)" accept=".json">
+        <div class="sidebar-footer">
+             <a href="admin.html">🛠️ Admin</a>
+             <button onclick="copyDataForAdmin()" class="admin-copy-btn">📋 Copy Data</button>
+             <div class="util-btns">
+                 <button onclick="backupData()">Backup</button>
+                 <button onclick="document.getElementById('restoreInput').click()">Restore</button>
+                 <button onclick="showShortcuts()">⌨ Keys</button>
+                 <input type="file" id="restoreInput" class="hidden" onchange="restoreData(this)" accept=".json">
              </div>
-             <div style="margin-top: 10px; display: flex; justify-content: center; gap: 8px;">
-                 <div class="theme-btn" style="background: #38bdf8;" onclick="setTheme('#38bdf8')"></div>
-                 <div class="theme-btn" style="background: #eab308;" onclick="setTheme('#eab308')"></div>
-                 <div class="theme-btn" style="background: #10b981;" onclick="setTheme('#10b981')"></div>
-                 <div class="theme-btn" style="background: #f43f5e;" onclick="setTheme('#f43f5e')"></div>
-                 <div class="theme-btn" style="background: #8b5cf6;" onclick="setTheme('#8b5cf6')"></div>
+             <div class="theme-picker">
+                 <div class="theme-btn cyan" onclick="setTheme('#38bdf8')"></div>
+                 <div class="theme-btn gold" onclick="setTheme('#eab308')"></div>
+                 <div class="theme-btn emerald" onclick="setTheme('#10b981')"></div>
+                 <div class="theme-btn rose" onclick="setTheme('#f43f5e')"></div>
+                 <div class="theme-btn violet" onclick="setTheme('#8b5cf6')"></div>
              </div>
              <div class="bg-picker">
-                 <div class="bg-thumb" style="background: #0f172a" onclick="setBg('none')" title="Default Dark"></div>
-                 <div class="bg-thumb" style="background: linear-gradient(to bottom, #1e3c72, #2a5298)" onclick="setBg('ocean')" title="Ocean"></div>
-                 <div class="bg-thumb" style="background: linear-gradient(to bottom, #11998e, #38ef7d)" onclick="setBg('forest')" title="Forest"></div>
-                 <div class="bg-thumb" style="background: linear-gradient(to bottom, #200122, #6f0000)" onclick="setBg('sunset')" title="Sunset"></div>
+                 <div class="bg-thumb default" onclick="setBg('none')" title="Default Dark"></div>
+                 <div class="bg-thumb ocean" onclick="setBg('ocean')" title="Ocean"></div>
+                 <div class="bg-thumb forest" onclick="setBg('forest')" title="Forest"></div>
+                 <div class="bg-thumb sunset" onclick="setBg('sunset')" title="Sunset"></div>
              </div>
         </div>
         </div>
@@ -337,7 +371,7 @@
     <main class="main-content">
         <div class="saver-overlay" id="saverOverlay" onclick="toggleSaver()" title="Double Tap or Click to Wake">
             <div class="saver-text">Audio Mode Active</div>
-            <div style="font-size:0.8rem; color:#222; margin-top:10px;">Tap to Wake</div>
+            <div class="saver-subtext">Tap to Wake</div>
         </div>
         
 
@@ -361,7 +395,7 @@
             <!-- Water Drop Timer Removed -->
             
             <div class="speed-control">
-                <span style="font-size: 0.8rem; color: var(--text-sec); margin-right: 5px;">Speed:</span>
+                <span class="speed-label">Speed:</span>
                 <button class="speed-btn" onclick="setSpeed(0.75)">0.75x</button>
                 <button class="speed-btn active" onclick="setSpeed(1)" id="btn-speed-1">1x</button>
                 <button class="speed-btn" onclick="setSpeed(1.25)">1.25x</button>
@@ -371,13 +405,13 @@
                 <div class="stat-badge">
                     <span>Repeat</span>
                     <span class="stat-value"><span id="currentLoop">0</span>/<span id="maxLoop">-</span></span>
-                    <input type="number" id="customLoopInput" min="1" placeholder="Set" style="width:50px; background:rgba(255,255,255,0.1); border:1px solid var(--border); color:var(--accent); border-radius:4px; padding:2px 4px; margin-left:5px; font-weight:600;" title="Custom Loop Count" onchange="updateCustomLoop()">
+                    <input type="number" id="customLoopInput" class="custom-loop-input" min="1" placeholder="Set" title="Custom Loop Count" onchange="updateCustomLoop()">
                 </div>
                 <div class="stat-badge">
                     <span>Remaining</span>
                     <span class="stat-value" id="remainingTime">--:--</span>
                 </div>
-                <div class="stat-badge" id="allTimerBadge" style="display:none;">
+                <div class="stat-badge hidden" id="allTimerBadge">
                     <span>Total</span>
                     <span class="stat-value" id="allTimer">--:--</span>
                 </div>
@@ -390,29 +424,29 @@
                  <button class="btn btn-primary" onclick="skipVideo()">Skip ⏭</button>
             </div>
             <textarea class="note-area" id="personalNote" placeholder="Write a personal note for this Dua..." oninput="saveNote()"></textarea>
-            <div style="text-align: center; margin-top: 5px;">
-                <button onclick="toggleNote()" style="background:none; border:none; color:var(--text-sec); cursor:pointer; font-size:0.8rem;">📝 Add/View Note</button>
+            <div class="note-toggle-row">
+                <button onclick="toggleNote()" class="note-toggle-btn">📝 Add/View Note</button>
             </div>
         </div>
         
         <!-- Daily Checklist Card -->
-        <div class="controls-card" style="max-width: 900px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="margin: 0; color: var(--text-main); font-size: 1.1rem;">✅ Daily Checklist</h3>
-                <div style="font-size: 0.75rem; color: var(--text-sec);" id="checklistResetTimer">
+        <div class="controls-card checklist-card">
+            <div class="checklist-header">
+                <h3 class="checklist-title">✅ Daily Checklist</h3>
+                <div class="checklist-timer" id="checklistResetTimer">
                     Resets in: --:--
                 </div>
             </div>
             
-            <div id="checklistContainer" style="margin-bottom: 12px;">
+            <div id="checklistContainer" class="checklist-items">
                 <!-- Checklist items will be rendered here -->
             </div>
             
-            <div style="display: flex; gap: 8px;">
+            <div class="checklist-input-row">
                 <input type="text" id="checklistInput" placeholder="Add a new task..." 
-                    style="flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-family: 'Inter', sans-serif; outline: none;"
+                    class="checklist-input"
                     onkeypress="if(event.key==='Enter') addChecklistItem()">
-                <button class="btn btn-primary" onclick="addChecklistItem()" style="padding: 8px 16px;">Add</button>
+                <button class="btn btn-primary checklist-add-btn" onclick="addChecklistItem()">Add</button>
             </div>
         </div>
     </main>
@@ -2793,13 +2827,13 @@
     <div class="modal" id="shortcutsModal" onclick="this.style.display='none'">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3>Keyboard Shortcuts</h3>
-            <ul style="list-style:none; padding:0; text-align:left;">
-                <li style="margin:10px 0;"><span class="key-badge">Space</span> Play/Pause</li>
-                <li style="margin:10px 0;"><span class="key-badge">→</span> Next Video</li>
-                <li style="margin:10px 0;"><span class="key-badge">←</span> Previous Video</li>
-                <li style="margin:10px 0;"><span class="key-badge">S</span> Toggle Sleep Timer</li>
-                <li style="margin:10px 0;"><span class="key-badge">F</span> Toggle Fullscreen</li>
-                <li style="margin:10px 0;"><span class="key-badge">B</span> Toggle Battery Saver</li>
+            <ul class="shortcuts-list">
+                <li><span class="key-badge">Space</span> Play/Pause</li>
+                <li><span class="key-badge">→</span> Next Video</li>
+                <li><span class="key-badge">←</span> Previous Video</li>
+                <li><span class="key-badge">S</span> Toggle Sleep Timer</li>
+                <li><span class="key-badge">F</span> Toggle Fullscreen</li>
+                <li><span class="key-badge">B</span> Toggle Battery Saver</li>
             </ul>
             <button class="btn btn-primary" onclick="document.getElementById('shortcutsModal').style.display='none'">Close</button>
         </div>

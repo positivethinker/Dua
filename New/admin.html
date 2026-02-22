@@ -63,26 +63,42 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #e0e0e0; }
     .badge-sub { background: rgba(13,92,61,0.2); color: var(--primary); }
+    .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .info-banner { background:#e8f5ee; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px; }
+    .sidebar-add-btn { width: 100%; margin-bottom: 12px; }
+    .topic-content-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
+    .topic-title { margin:0; }
+    .topic-actions { display:flex; gap:8px; }
+    .import-info { font-size: 13px; color: #666; margin-bottom: 12px; }
+    .import-textarea { min-height: 200px; font-family: monospace; font-size: 12px; }
+    .password-modal-content { max-width: 400px; }
+    .password-header { text-align: center; margin-bottom: 8px; }
+    .password-subtext { font-size: 13px; color: #666; text-align: center; margin-bottom: 20px; }
+    .password-error { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
+    .password-submit-btn { width: 100%; }
+    .password-footer { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; }
+    .hidden { display: none; }
+    .glass-modal { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>🛠️ Admin Dashboard – DUA AND DARUD PLAYER</h1>
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <div class="header-actions">
       <a href="index.html" class="btn btn-outline">← Back to Player</a>
       <button class="btn btn-primary" onclick="showImportModal()">📥 Import JSON</button>
       <button class="btn btn-primary" onclick="exportData()">📤 Export JSON</button>
     </div>
   </div>
 
-  <div class="import-export" style="background:#e8f5ee; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px;">
+  <div class="info-banner">
     💡 To load existing data: Open the <a href="index.html">player</a>, click <strong>Copy data for Admin</strong>, then use Import JSON above and paste.
   </div>
 
   <div class="layout">
     <aside class="sidebar">
       <h3>Topics (Sections)</h3>
-      <button class="btn btn-primary btn-sm" style="width: 100%; margin-bottom: 12px;" onclick="addTopic()">+ Add Topic</button>
+      <button class="btn btn-primary btn-sm sidebar-add-btn" onclick="addTopic()">+ Add Topic</button>
       <ul class="topic-list" id="topicList"></ul>
     </aside>
 
@@ -90,10 +106,10 @@
       <div id="noTopic" class="empty-state">
         <p>Select a topic from the left or add a new one.</p>
       </div>
-      <div id="topicContent" style="display: none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
-          <h2 id="topicTitle" style="margin:0;"></h2>
-          <div style="display:flex; gap:8px;">
+      <div id="topicContent" class="hidden">
+        <div class="topic-content-header">
+          <h2 id="topicTitle" class="topic-title"></h2>
+          <div class="topic-actions">
             <button class="btn btn-outline btn-sm" onclick="editCurrentTopic()">Edit topic</button>
             <button class="btn btn-danger btn-sm" onclick="deleteCurrentTopic()">Delete topic</button>
           </div>
@@ -176,10 +192,10 @@
   <div class="modal" id="importModal">
     <div class="modal-content">
       <h3>Import Data</h3>
-      <p style="font-size: 13px; color: #666; margin-bottom: 12px;">Paste the exported JSON from the player, or use "Copy data for Admin" on the player page.</p>
+      <p class="import-info">Paste the exported JSON from the player, or use "Copy data for Admin" on the player page.</p>
       <div class="form-group">
         <label>JSON Data</label>
-        <textarea id="importJsonInput" placeholder='[{"name":"Topic","videos":[...]}]' style="min-height: 200px; font-family: monospace; font-size: 12px;"></textarea>
+        <textarea id="importJsonInput" class="import-textarea" placeholder='[{"name":"Topic","videos":[...]}]'></textarea>
       </div>
       <div class="form-actions">
         <button class="btn btn-primary" onclick="doImport()">Import</button>
@@ -189,19 +205,19 @@
   </div>
 
   <!-- Password Protection Modal -->
-  <div class="modal show" id="passwordModal" style="backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-    <div class="modal-content" style="max-width: 400px;">
-      <h3 style="text-align: center; margin-bottom: 8px;">🔒 Admin Access</h3>
-      <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Enter password to access admin dashboard</p>
+  <div class="modal show glass-modal" id="passwordModal">
+    <div class="modal-content password-modal-content">
+      <h3 class="password-header">🔒 Admin Access</h3>
+      <p class="password-subtext">Enter password to access admin dashboard</p>
       <div class="form-group">
         <label>Password</label>
         <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password" />
-        <div id="passwordError" style="color: var(--danger); font-size: 12px; margin-top: 6px; display: none;">Incorrect password. Please try again.</div>
+        <div id="passwordError" class="password-error">Incorrect password. Please try again.</div>
       </div>
       <div class="form-actions">
-        <button class="btn btn-primary" onclick="checkPassword()" style="width: 100%;">Unlock Dashboard</button>
+        <button class="btn btn-primary password-submit-btn" onclick="checkPassword()">Unlock Dashboard</button>
       </div>
-      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center;">
+      <div class="password-footer">
         <a href="index.html" class="btn btn-outline btn-sm">← Back to Player</a>
       </div>
     </div>
