@@ -79,7 +79,21 @@
     .password-footer { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; }
     .hidden { display: none; }
     .glass-modal { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .item-actions { gap: 4px; }
+    .btn-icon { padding: 6px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; min-width: 32px; }
+    .topic-select-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+    .topic-select-item { padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+    .topic-select-item:hover { background: rgba(13,92,61,0.05); border-color: var(--primary); }
+    .topic-select-item.current { opacity: 0.5; cursor: not-allowed; background: #f8f8f8; }
+    
+    .item { cursor: default; transition: transform 0.2s, box-shadow 0.2s, background 0.2s; position: relative; }
+    .item.dragging { opacity: 0.4; background: #f0f0f0; border: 2px dashed var(--primary); transform: scale(0.98); }
+    .item.drag-over { border-top: 3px solid var(--primary); background: rgba(13,92,61,0.05); }
+    .drag-handle { cursor: grab; color: #aaa; padding: 10px 8px; font-size: 18px; display: flex; align-items: center; -webkit-user-select: none; user-select: none; }
+    .drag-handle:active { cursor: grabbing; }
+    .drag-handle:hover { color: var(--primary); }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="header">
@@ -88,6 +102,7 @@
       <a href="index.html" class="btn btn-outline">← Back to Player</a>
       <button class="btn btn-primary" onclick="showImportModal()">📥 Import JSON</button>
       <button class="btn btn-primary" onclick="exportData()">📤 Export JSON</button>
+      <button class="btn btn-outline" onclick="pushToSupabase()" title="Push local data to Supabase">☁️ Sync to Supabase</button>
     </div>
   </div>
 
@@ -188,7 +203,6 @@
     </div>
   </div>
 
-  <!-- Import Modal -->
   <div class="modal" id="importModal">
     <div class="modal-content">
       <h3>Import Data</h3>
@@ -200,6 +214,18 @@
       <div class="form-actions">
         <button class="btn btn-primary" onclick="doImport()">Import</button>
         <button class="btn btn-outline" onclick="closeModal('importModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Move Item Modal -->
+  <div class="modal" id="moveModal">
+    <div class="modal-content">
+      <h3>Move to Topic</h3>
+      <p class="import-info">Select the destination topic for this item.</p>
+      <ul class="topic-select-list" id="topicSelectList"></ul>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="closeModal('moveModal')">Cancel</button>
       </div>
     </div>
   </div>
@@ -226,6 +252,11 @@
   <script src="assets/js/data.js"></script>
   <script>
     // Password Protection System
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://behfqjrslzptquvyftes.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_oTCRST7zxpY9ylk3I2xbOA_asKWH3nB';
+    const _supabase = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
     const ADMIN_PASSWORD_KEY = 'duaAdminPassword';
     const ADMIN_SESSION_KEY = 'duaAdminSession';
     const DEFAULT_PASSWORD = 'admin123'; // Change this to your desired password
@@ -304,8 +335,59 @@
     let editingItemIndex = -1;
     let editingTopicIndex = -1;
 
-    function loadData() {
+    async function loadData() {
       if (!isAuthenticated) return;
+      
+      // 1. Try Supabase
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+          try {
+              const { data: sections, error: sError } = await _supabase
+                  .from('sections')
+                  .select('*')
+                  .order('order_index');
+              
+              if (!sError && sections && sections.length > 0) {
+                  const { data: videos, error: vError } = await _supabase
+                      .from('videos')
+                      .select('*')
+                      .order('order_index');
+                  
+                  if (!vError && videos) {
+                      data = sections.map(s => ({
+                          id: s.id,
+                          name: s.name,
+                          order_index: s.order_index,
+                          videos: (videos || [])
+                              .filter(v => v.section_id === s.id)
+                              .sort((a, b) => (a.order_index || 0) - (b.order_index || 0))
+                              .map(v => ({
+                                  db_id: v.id,
+                                  section_id: v.section_id,
+                                  id: v.youtube_id,
+                                  start: v.start_time,
+                                  end: v.end_time,
+                                  label: v.label,
+                                  tooltip: v.tooltip,
+                                  loop: v.loop_count,
+                                  isSubcategory: v.is_subcategory,
+                                  order_index: v.order_index
+                              }))
+                      }));
+                      renderTopicList();
+                      if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
+                        renderTopicContent(currentTopicIndex);
+                      } else if (data.length > 0) {
+                        selectTopic(0);
+                      }
+                      return;
+                  }
+              }
+          } catch (e) {
+              console.error("Supabase load failed", e);
+          }
+      }
+
+      // 2. Fallback to LocalStorage
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -325,6 +407,23 @@
         document.getElementById('noTopic').style.display = 'block';
         document.getElementById('topicContent').style.display = 'none';
       }
+    }
+
+    function setupRealtime() {
+        if (!_supabase || SUPABASE_URL === 'https://behfqjrslzptquvyftes.supabase.co') return;
+
+        _supabase
+            .channel('admin-db-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'sections' }, () => {
+                // Only reload if not currently editing in a modal to avoid losing input
+                const anyModalOpen = document.querySelector('.modal.show');
+                if (!anyModalOpen) loadData();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, () => {
+                const anyModalOpen = document.querySelector('.modal.show');
+                if (!anyModalOpen) loadData();
+            })
+            .subscribe();
     }
 
     function saveData() {
@@ -358,28 +457,34 @@
       const ul = document.getElementById('itemList');
       const videos = topic.videos || [];
       ul.innerHTML = videos.map((item, idx) => {
+        const isFirst = idx === 0;
+        const isLast = idx === videos.length - 1;
+        
+        let labelHtml = '';
         if (item.isSubcategory) {
-          return `<li class="item subcategory">
-            <div class="item-info">
-              <div class="item-label"><span class="badge badge-sub">Subcategory</span> ${escapeHtml(item.label)}</div>
-            </div>
-            <div class="item-actions">
-              <button class="btn btn-outline btn-sm" onclick="editSubcategory(${idx})">Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteItem(${idx})">Delete</button>
-            </div>
-          </li>`;
+          labelHtml = `<div class="item-label"><span class="badge badge-sub">Subcategory</span> ${escapeHtml(item.label)}</div>`;
         } else {
-          return `<li class="item">
-            <div class="item-info">
-              <div class="item-label">${escapeHtml(item.label)}</div>
-              <div class="item-meta">ID: ${item.id} | ${item.start}s–${item.end}s | Loop: ${item.loop}x</div>
-            </div>
-            <div class="item-actions">
-              <button class="btn btn-outline btn-sm" onclick="editVideo(${idx})">Edit</button>
-              <button class="btn btn-danger btn-sm" onclick="deleteItem(${idx})">Delete</button>
-            </div>
-          </li>`;
+          labelHtml = `<div class="item-label">${escapeHtml(item.label)}</div>
+                       <div class="item-meta">ID: ${item.id} | ${item.start}s–${item.end}s | Loop: ${item.loop}x</div>`;
         }
+
+        return `<li class="item ${item.isSubcategory ? 'subcategory' : ''}" 
+                    draggable="true" 
+                    ondragstart="handleDragStart(event, ${idx})"
+                    ondragover="handleDragOver(event, ${idx})"
+                    ondragleave="handleDragLeave(event)"
+                    ondrop="handleDrop(event, ${idx})"
+                    ondragend="handleDragEnd(event)">
+          <div class="drag-handle" title="Drag to reorder">⠿</div>
+          <div class="item-info">
+            ${labelHtml}
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-outline btn-icon" onclick="showMoveModal(${idx})" title="Move to Topic">↗</button>
+            <button class="btn btn-outline btn-sm" onclick="${item.isSubcategory ? 'editSubcategory' : 'editVideo'}(${idx})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem(${idx})">Delete</button>
+          </div>
+        </li>`;
       }).join('');
     }
 
@@ -400,15 +505,31 @@
       document.getElementById('topicModal').classList.add('show');
     }
 
-    function saveTopic() {
+    async function saveTopic() {
       if (!requireAuth()) return;
       const name = document.getElementById('topicNameInput').value.trim();
       if (!name) { showToast('Enter topic name'); return; }
+      
+      let topicId = null;
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+          try {
+              if (editingTopicIndex >= 0) {
+                  const topic = data[editingTopicIndex];
+                  const { error } = await _supabase.from('sections').update({ name }).eq('id', topic.id);
+                  if (error) throw error;
+              } else {
+                  const { data: newTopic, error } = await _supabase.from('sections').insert([{ name, order_index: data.length }]).select();
+                  if (error) throw error;
+                  topicId = newTopic[0].id;
+              }
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
       if (editingTopicIndex >= 0) {
         data[editingTopicIndex].name = name;
         editingTopicIndex = -1;
       } else {
-        data.push({ name, videos: [] });
+        data.push({ id: topicId, name, videos: [] });
         currentTopicIndex = data.length - 1;
       }
       saveData();
@@ -446,24 +567,56 @@
       document.getElementById('videoModal').classList.add('show');
     }
 
-    function saveVideo() {
+    async function saveVideo() {
       if (!requireAuth()) return;
-      const id = document.getElementById('videoIdInput').value.trim();
+      const youtube_id = document.getElementById('videoIdInput').value.trim();
       const label = document.getElementById('videoLabelInput').value.trim();
-      if (!id || !label) { showToast('Enter Video ID and Label'); return; }
-      const item = {
-        id,
-        start: parseFloat(document.getElementById('videoStartInput').value) || 0,
-        end: parseFloat(document.getElementById('videoEndInput').value) || 60,
+      if (!youtube_id || !label) { showToast('Enter Video ID and Label'); return; }
+      
+      const topic = data[currentTopicIndex];
+      const videoData = {
+        section_id: topic.id,
+        youtube_id,
+        start_time: parseFloat(document.getElementById('videoStartInput').value) || 0,
+        end_time: parseFloat(document.getElementById('videoEndInput').value) || 60,
         label,
         tooltip: document.getElementById('videoTooltipInput').value.trim(),
-        loop: parseInt(document.getElementById('videoLoopInput').value, 10) || 1,
+        loop_count: parseInt(document.getElementById('videoLoopInput').value, 10) || 1,
+        is_subcategory: false
       };
-      if (!data[currentTopicIndex].videos) data[currentTopicIndex].videos = [];
+
+      let dbId = null;
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
+          try {
+              if (editingItemIndex >= 0) {
+                  const item = topic.videos[editingItemIndex];
+                  const { error } = await _supabase.from('videos').update(videoData).eq('id', item.db_id);
+                  if (error) throw error;
+              } else {
+                  videoData.order_index = topic.videos.length;
+                  const { data: newVid, error } = await _supabase.from('videos').insert([videoData]).select();
+                  if (error) throw error;
+                  dbId = newVid[0].id;
+              }
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      const item = {
+        db_id: dbId || (editingItemIndex >= 0 ? topic.videos[editingItemIndex].db_id : null),
+        id: youtube_id,
+        start: videoData.start_time,
+        end: videoData.end_time,
+        label,
+        tooltip: videoData.tooltip,
+        loop: videoData.loop_count,
+        isSubcategory: false
+      };
+
+      if (!topic.videos) topic.videos = [];
       if (editingItemIndex >= 0) {
-        data[currentTopicIndex].videos[editingItemIndex] = item;
+        topic.videos[editingItemIndex] = item;
       } else {
-        data[currentTopicIndex].videos.push(item);
+        topic.videos.push(item);
       }
       saveData();
       renderTopicContent(currentTopicIndex);
@@ -487,34 +640,185 @@
       document.getElementById('subModal').classList.add('show');
     }
 
-    function saveSubcategory() {
+    async function saveSubcategory() {
       if (!requireAuth()) return;
       const label = document.getElementById('subLabelInput').value.trim();
       if (!label) { showToast('Enter subcategory label'); return; }
-      const item = { isSubcategory: true, label };
-      if (!data[currentTopicIndex].videos) data[currentTopicIndex].videos = [];
+      
+      const topic = data[currentTopicIndex];
+      const subData = {
+          section_id: topic.id,
+          label,
+          is_subcategory: true
+      };
+
+      let dbId = null;
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
+          try {
+              if (editingItemIndex >= 0) {
+                  const item = topic.videos[editingItemIndex];
+                  const { error } = await _supabase.from('videos').update(subData).eq('id', item.db_id);
+                  if (error) throw error;
+              } else {
+                  subData.order_index = topic.videos.length;
+                  const { data: newSub, error } = await _supabase.from('videos').insert([subData]).select();
+                  if (error) throw error;
+                  dbId = newSub[0].id;
+              }
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      const item = { db_id: dbId || (editingItemIndex >= 0 ? topic.videos[editingItemIndex].db_id : null), isSubcategory: true, label };
+      if (!topic.videos) topic.videos = [];
       if (editingItemIndex >= 0) {
-        data[currentTopicIndex].videos[editingItemIndex] = item;
+        topic.videos[editingItemIndex] = item;
       } else {
-        data[currentTopicIndex].videos.push(item);
+        topic.videos.push(item);
       }
       saveData();
       renderTopicContent(currentTopicIndex);
       closeModal('subModal');
     }
 
-    function deleteCurrentTopic() {
+    async function deleteCurrentTopic() {
       if (!requireAuth()) return;
       if (currentTopicIndex < 0 || !confirm('Delete this entire topic and all its videos?')) return;
+      
+      const topic = data[currentTopicIndex];
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
+          try {
+              const { error } = await _supabase.from('sections').delete().eq('id', topic.id);
+              if (error) throw error;
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
       data.splice(currentTopicIndex, 1);
       currentTopicIndex = data.length > 0 ? 0 : -1;
       saveData();
       loadData();
     }
 
-    function deleteItem(idx) {
+    let draggedItemIndex = -1;
+
+    function handleDragStart(e, index) {
+      draggedItemIndex = index;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e, index) {
+      e.preventDefault();
+      const target = e.target.closest('.item');
+      if (target && index !== draggedItemIndex) {
+        target.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(e) {
+      const target = e.target.closest('.item');
+      if (target) {
+        target.classList.remove('drag-over');
+      }
+    }
+
+    async function handleDrop(e, index) {
+      e.preventDefault();
+      const target = e.target.closest('.item');
+      if (target) {
+        target.classList.remove('drag-over');
+      }
+
+      if (draggedItemIndex === index) return;
+
+      const items = data[currentTopicIndex].videos;
+      const draggedItem = items.splice(draggedItemIndex, 1)[0];
+      items.splice(index, 0, draggedItem);
+
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && data[currentTopicIndex].id) {
+        try {
+          // Re-index all items in this section for consistency
+          for (let i = 0; i < items.length; i++) {
+            const v = items[i];
+            if (v.db_id) {
+              await _supabase.from('videos').update({ order_index: i }).eq('id', v.db_id);
+            }
+          }
+        } catch (err) {
+          showToast('Supabase Error: ' + err.message);
+        }
+      }
+
+      saveData();
+      renderTopicContent(currentTopicIndex);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.item').forEach(el => el.classList.remove('drag-over'));
+      draggedItemIndex = -1;
+    }
+
+    let itemToMoveIndex = -1;
+    function showMoveModal(idx) {
+      if (!requireAuth()) return;
+      itemToMoveIndex = idx;
+      const list = document.getElementById('topicSelectList');
+      list.innerHTML = data.map((t, i) => {
+        const isCurrent = i === currentTopicIndex;
+        return `<li class="topic-select-item ${isCurrent ? 'current' : ''}" onclick="${isCurrent ? '' : `moveItemToTopic(${i})`}">
+          ${escapeHtml(t.name)} ${isCurrent ? '(Current)' : ''}
+        </li>`;
+      }).join('');
+      document.getElementById('moveModal').classList.add('show');
+    }
+
+    async function moveItemToTopic(targetTopicIndex) {
+      if (!requireAuth() || itemToMoveIndex < 0) return;
+      
+      const sourceTopic = data[currentTopicIndex];
+      const targetTopic = data[targetTopicIndex];
+      const item = sourceTopic.videos.splice(itemToMoveIndex, 1)[0];
+      
+      // Add to target
+      if (!targetTopic.videos) targetTopic.videos = [];
+      targetTopic.videos.push(item);
+      
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && item.db_id && targetTopic.id) {
+        try {
+          // Update section_id and order_index
+          await _supabase.from('videos').update({ 
+            section_id: targetTopic.id, 
+            order_index: targetTopic.videos.length - 1 
+          }).eq('id', item.db_id);
+          
+          // Re-index source topic videos
+          for (let i = 0; i < sourceTopic.videos.length; i++) {
+            const v = sourceTopic.videos[i];
+            if (v.db_id) await _supabase.from('videos').update({ order_index: i }).eq('id', v.db_id);
+          }
+        } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+      
+      itemToMoveIndex = -1;
+      saveData();
+      closeModal('moveModal');
+      renderTopicContent(currentTopicIndex);
+      renderTopicList();
+      showToast(`Moved to ${targetTopic.name}`);
+    }
+
+    async function deleteItem(idx) {
       if (!requireAuth()) return;
       if (!confirm('Delete this item?')) return;
+      
+      const item = data[currentTopicIndex].videos[idx];
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && item.db_id) {
+          try {
+              const { error } = await _supabase.from('videos').delete().eq('id', item.db_id);
+              if (error) throw error;
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
       data[currentTopicIndex].videos.splice(idx, 1);
       saveData();
       renderTopicContent(currentTopicIndex);
@@ -559,6 +863,60 @@
       showToast('Exported');
     }
 
+    async function pushToSupabase() {
+        if (!requireAuth()) return;
+        if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+            showToast('Supabase not configured');
+            return;
+        }
+
+        if (!confirm('This will OVERWRITE all data in Supabase with your current local data. Continue?')) return;
+
+        showToast('Syncing...');
+
+        try {
+            // Delete all sections (cascade delete should handle videos)
+            const { error: delError } = await _supabase.from('sections').delete().filter('name', 'neq', 'DOES_NOT_EXIST_XYZ_123');
+            if (delError) throw delError;
+
+            for (let i = 0; i < data.length; i++) {
+                const topic = data[i];
+                const { data: newSec, error: secError } = await _supabase
+                    .from('sections')
+                    .insert([{ name: topic.name, order_index: i }])
+                    .select();
+                
+                if (secError) throw secError;
+                const sectionId = newSec[0].id;
+                topic.id = sectionId;
+
+                if (topic.videos && topic.videos.length > 0) {
+                    const videosToInsert = topic.videos.map((v, vIdx) => ({
+                        section_id: sectionId,
+                        youtube_id: v.id || '',
+                        start_time: v.start || 0,
+                        end_time: v.end || 0,
+                        label: v.label || '',
+                        tooltip: v.tooltip || '',
+                        loop_count: v.loop || 1,
+                        is_subcategory: !!v.isSubcategory,
+                        order_index: vIdx
+                    }));
+
+                    const { error: vidError } = await _supabase.from('videos').insert(videosToInsert);
+                    if (vidError) throw vidError;
+                }
+            }
+
+            saveData();
+            showToast('Successfully pushed to Supabase!');
+            loadData();
+        } catch (e) {
+            console.error(e);
+            showToast('Sync failed: ' + e.message);
+        }
+    }
+
     function showToast(msg) {
       const t = document.createElement('div');
       t.className = 'toast';
@@ -576,6 +934,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadData();
       if (data.length && currentTopicIndex < 0) selectTopic(0);
+      setupRealtime();
     });
   </script>
 </body>

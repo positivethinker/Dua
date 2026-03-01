@@ -19,12 +19,8 @@
         }
         .sidebar { width: 320px; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
         .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
-        .btn-primary { background: var(--accent); color: #000; box-shadow: 0 0 10px var(--accent-glow); }
         .active { border-color: var(--accent); color: var(--accent); }
-        .video-item.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
-        /* Scrollbar refined */
-        ::-webkit-scrollbar-thumb { background: rgba(255, 215, 0, 0.2); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 215, 0, 0.4); }        .theme-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: inline-block; margin-left: 5px; }
+        .theme-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: inline-block; margin-left: 5px; }
         .theme-btn.active { border-color: #fff; }
         .fav-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #475569; margin-left: auto; padding: 2px 6px; z-index: 10; transition: color 0.2s; }
         .fav-btn.active { color: #f43f5e; }
@@ -32,17 +28,48 @@
         .fav-filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; }
-        .sidebar { width: 320px; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; }
         .logo { padding: 20px; border-bottom: 1px solid var(--border); }
         .logo h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 1.5rem; background: linear-gradient(45deg, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .habit-streak { font-size: 0.8rem; color: #f59e0b; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
         .streak-badge { background: #f59e0b; color: #000; font-size: 0.6rem; padding: 1px 4px; border-radius: 4px; margin-left: 5px; font-weight: bold; }
-        .progress-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px; display: flex; gap: 2px; padding: 2px; }
-        .progress-segment { flex: 1; background: rgba(255,255,255,0.15); border-radius: 2px; position: relative; overflow: hidden; min-width: 8px; }
-        .progress-segment-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s linear; border-radius: 2px; }
-        .progress-segment.completed .progress-segment-fill { width: 100%; }
+        .progress-container {
+            width: 100%;
+            margin-top: 10px;
+            min-height: 215px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at center, rgba(255,255,255,0.07) 0 20%, rgba(255,255,255,0.02) 21% 42%, transparent 43%),
+                linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .radial-progress-svg { width: min(100%, 235px); height: auto; transform: rotate(-90deg); overflow: visible; }
+        .loop-ring-track { fill: none; stroke: rgba(255,255,255,0.1); }
+        .loop-ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 0.35s linear; }
+        .radial-progress-center {
+            position: absolute;
+            width: 102px;
+            height: 102px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.14), rgba(0,0,0,0.28));
+            border: 1px solid rgba(255,255,255,0.15);
+            text-align: center;
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+        }
+        .radial-progress-label { font-size: 0.7rem; color: var(--text-sec); letter-spacing: 0.06em; text-transform: uppercase; }
+        .radial-progress-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; margin-top: 3px; }
+        .radial-progress-percent { font-size: 0.8rem; color: var(--accent); margin-top: 6px; font-weight: 600; }
         .playlist { flex: 1; overflow-y: auto; padding: 10px; }
         .section-item { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #182235; }
+        .section-item.playing { border-color: var(--accent); }
         .section-header { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); transition: background 0.2s; font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid var(--border); cursor: move; }
         .section-header:hover { background: rgba(255,215,0,0.05); }
         .section-header.active { background: rgba(255,215,0,0.05); color: var(--accent); }
@@ -55,9 +82,41 @@
         .video-item.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
         .video-loop-badge { font-size: 0.75rem; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin-left: auto; color: var(--accent); }
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 20px; gap: 20px; align-items: center; }
-        .player-card { width: 100%; max-width: 900px; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); }
+        .media-layout-row {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 0;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: linear-gradient(180deg, rgba(18,24,38,0.92), rgba(11,16,27,0.92));
+            box-shadow: 0 18px 42px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+        .media-panel {
+            min-width: 0;
+            padding: 16px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+        }
+        .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .panel-title { font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; color: #9fb0c8; font-weight: 700; }
+        .panel-chip { font-size: 0.78rem; color: var(--accent); border: 1px solid rgba(255,255,255,0.22); padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.04); }
+        .player-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); }
+        .progress-side-card {
+            padding: 16px 16px 18px;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+        }
+        .progress-side-card .progress-container { margin-top: 0; min-height: 205px; }
+        .progress-side-card .stats-row { margin-top: 12px; margin-bottom: 14px; gap: 8px; flex-direction: column; align-items: stretch; }
+        .progress-side-card .stat-badge { width: 100%; justify-content: space-between; padding: 8px 10px; }
+        .progress-side-card #customLoopInput { width: 56px; margin-left: 0; text-align: center; }
+        #remainingBadge { margin-bottom: 10px; }
+        .progress-caption { margin-top: 10px; text-align: center; font-size: 0.8rem; color: var(--text-sec); }
         #player { width: 100%; height: 100%; }
-        .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
         .info-row { text-align: center; }
         .video-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px 0; color: var(--text-main); }
         .tooltip { font-size: 0.95rem; color: var(--text-sec); font-style: italic; min-height: 1.4rem; }
@@ -92,7 +151,11 @@
             .mobile-toggle { display: flex; }
             .main-content { padding: 10px; }
             .player-card { border-radius: 8px; width: 100%; max-width: 100%; }
+            .media-layout-row { grid-template-columns: 1fr; max-width: 100%; }
+            .media-panel, .progress-side-card { width: 100%; max-width: 100%; }
+            .media-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
             .controls-card { padding: 16px; }
+            .progress-container { min-height: 160px; }
         }
         
         /* Mobile landscape and small tablets - 768px */
@@ -120,7 +183,7 @@
         /* Small phones - 480px */
         @media (max-width: 480px) {
             .sidebar { width: 280px; left: -280px; }
-            .sidebar.active { transform: translateX(110px); }
+            .sidebar.active { transform: translateX(280px); left: 0; }
             
             .logo { padding: 15px; }
             .logo h1 { font-size: 1.2rem; }
@@ -131,8 +194,16 @@
             
             .main-content { padding: 8px; gap: 15px; }
             .player-card { border-radius: 8px; }
+            .media-panel, .progress-side-card { padding: 10px; }
             
             .controls-card { padding: 12px; gap: 12px; }
+            .progress-container { min-height: 145px; }
+            .radial-progress-center {
+                width: 84px;
+                height: 84px;
+            }
+            .radial-progress-value { font-size: 1.2rem; }
+            .radial-progress-percent { font-size: 0.75rem; }
             .video-title { font-size: 1rem; margin-bottom: 6px; }
             .tooltip { font-size: 0.8rem; }
             
@@ -374,10 +445,41 @@
             <div class="saver-subtext">Tap to Wake</div>
         </div>
         
-
-
-        <div class="player-card">
-            <div id="player"></div>
+        <div class="media-layout-row">
+            <div class="media-panel">
+                <div class="panel-head">
+                    <div class="panel-title">Now Playing</div>
+                    <div class="panel-chip" id="loopChip">Loop 1/1</div>
+                </div>
+                <div class="player-card">
+                    <div id="player"></div>
+                </div>
+            </div>
+            <div class="progress-side-card">
+                <div class="panel-head">
+                    <div class="panel-title">Session Progress</div>
+                    <div class="panel-chip">Live</div>
+                </div>
+                <div class="progress-container" id="progressContainer">
+                    <!-- Circular progress will be dynamically generated -->
+                </div>
+                <div class="stats-row">
+                    <div class="stat-badge">
+                        <span>Repeat</span>
+                        <span class="stat-value"><span id="currentLoop">0</span>/<span id="maxLoop">-</span></span>
+                        <input type="number" id="customLoopInput" class="custom-loop-input" min="1" placeholder="Set" title="Custom Loop Count" onchange="updateCustomLoop()">
+                    </div>
+                    <div class="stat-badge" id="remainingBadge">
+                        <span>Remaining</span>
+                        <span class="stat-value" id="remainingTime">--:--</span>
+                    </div>
+                    <div class="stat-badge hidden" id="allTimerBadge">
+                        <span>Total</span>
+                        <span class="stat-value" id="allTimer">--:--</span>
+                    </div>
+                </div>
+                <div class="progress-caption">Loop completion for the current dua</div>
+            </div>
         </div>
         
 
@@ -385,11 +487,6 @@
             <div class="info-row">
                 <h2 class="video-title" id="videoTitle">Ready to Play</h2>
                 <div class="tooltip" id="tooltip">Select a section from the playlist to begin</div>
-            </div>
-            
-            
-            <div class="progress-container" id="progressContainer">
-                <!-- Segments will be dynamically generated based on loop count -->
             </div>
             
             <!-- Water Drop Timer Removed -->
@@ -400,21 +497,6 @@
                 <button class="speed-btn active" onclick="setSpeed(1)" id="btn-speed-1">1x</button>
                 <button class="speed-btn" onclick="setSpeed(1.25)">1.25x</button>
                 <button class="speed-btn" onclick="setSpeed(1.5)">1.5x</button>
-            </div>
-            <div class="stats-row">
-                <div class="stat-badge">
-                    <span>Repeat</span>
-                    <span class="stat-value"><span id="currentLoop">0</span>/<span id="maxLoop">-</span></span>
-                    <input type="number" id="customLoopInput" class="custom-loop-input" min="1" placeholder="Set" title="Custom Loop Count" onchange="updateCustomLoop()">
-                </div>
-                <div class="stat-badge">
-                    <span>Remaining</span>
-                    <span class="stat-value" id="remainingTime">--:--</span>
-                </div>
-                <div class="stat-badge hidden" id="allTimerBadge">
-                    <span>Total</span>
-                    <span class="stat-value" id="allTimer">--:--</span>
-                </div>
             </div>
             <div class="actions-row">
                  <button class="btn btn-secondary" onclick="toggleAutoPlay()" id="autoPlayBtn" title="Auto-Play Next Video">🔄 Auto</button>
@@ -450,8 +532,14 @@
             </div>
         </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+      // Supabase Configuration
+      const SUPABASE_URL = 'https://behfqjrslzptquvyftes.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_oTCRST7zxpY9ylk3I2xbOA_asKWH3nB';
+      const _supabase = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
       const defaultVideoSections = [
         {
           name: "প্রতিদিন",
@@ -1802,14 +1890,68 @@
       ];
 
       let videoSections;
-      try {
-        const stored = localStorage.getItem("duaDarudVideoSections");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) videoSections = parsed;
-        }
-      } catch (e) {}
-      if (!videoSections) videoSections = defaultVideoSections;
+
+      async function initializeData() {
+          // 1. Try Supabase
+          if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+              try {
+                  const { data: sections, error: sError } = await _supabase
+                      .from('sections')
+                      .select('*')
+                      .order('order_index');
+                  
+                  if (!sError && sections && sections.length > 0) {
+                      const { data: videos, error: vError } = await _supabase
+                          .from('videos')
+                          .select('*')
+                          .order('order_index');
+                      
+                      if (!vError && videos) {
+                          videoSections = sections.map(s => ({
+                              name: s.name,
+                              videos: videos
+                                  .filter(v => v.section_id === s.id)
+                                  .map(v => ({
+                                      id: v.youtube_id,
+                                      start: v.start_time,
+                                      end: v.end_time,
+                                      label: v.label,
+                                      tooltip: v.tooltip,
+                                      loop: v.loop_count,
+                                      isSubcategory: v.is_subcategory
+                                  }))
+                          }));
+                      }
+                  }
+              } catch (e) { console.error("Supabase load failed", e); }
+          }
+
+          // 2. Try LocalStorage if Supabase failed or not configured
+          if (!videoSections) {
+              try {
+                  const stored = localStorage.getItem("duaDarudVideoSections");
+                  if (stored) {
+                      const parsed = JSON.parse(stored);
+                      if (Array.isArray(parsed) && parsed.length > 0) videoSections = parsed;
+                  }
+              } catch (e) {}
+          }
+
+          // 3. Fallback to default
+          if (!videoSections) videoSections = defaultVideoSections;
+
+          renderPlaylist();
+      }
+
+      function setupRealtime() {
+          if (!_supabase || SUPABASE_URL === 'https://behfqjrslzptquvyftes.supabase.co') return;
+
+          _supabase
+              .channel('schema-db-changes')
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'sections' }, () => initializeData())
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, () => initializeData())
+              .subscribe();
+      }
 
       let player, playerReady = false;
       let currentState = { sectionIndex: -1, videoIndex: -1, loopCount: 0, maxLoops: 0, isPlaying: false, isAllMode: false, allSectionIndex: 0 };
@@ -1819,7 +1961,7 @@
           player = new YT.Player("player", {
               height: "100%", width: "100%", videoId: "",
               playerVars: { modestbranding: 1, rel: 0, autoplay: 0, playsinline: 1, origin: window.location.origin },
-              events: { onReady: () => { playerReady = true; renderPlaylist(); }, onStateChange: onPlayerStateChange }
+              events: { onReady: () => { playerReady = true; initializeData(); setupRealtime(); }, onStateChange: onPlayerStateChange }
           });
       }
 
@@ -1974,7 +2116,7 @@
           });
       }
 
-      function toggleSection(idx) {
+      function toggleSection(idx, forceOpen = false) {
           // Check lock
           if (isSectionLocked(idx)) {
               showToast(`Section locked for ${getLockRemainingTime(idx)}`);
@@ -1982,10 +2124,20 @@
           }
           
           const list = document.getElementById(`list-${idx}`);
+          if (!list) return;
           const wasOpen = list.classList.contains("open");
+          if (forceOpen && wasOpen) return; 
+
           document.querySelectorAll(".video-list").forEach(el => el.classList.remove("open"));
           document.querySelectorAll(".section-header").forEach(el => el.classList.remove("active"));
-          if (!wasOpen) { list.classList.add("open"); list.previousElementSibling.classList.add("active"); }
+          if (forceOpen || !wasOpen) { 
+              list.classList.add("open"); 
+              list.previousElementSibling.classList.add("active"); 
+              // Auto scroll section into view
+              if (!wasOpen || forceOpen) {
+                  list.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }
+          }
       }
 
       function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
@@ -2002,7 +2154,6 @@
           while(validIdx < videoSections[sIdx].videos.length && videoSections[sIdx].videos[validIdx].isSubcategory) validIdx++;
           if(validIdx >= videoSections[sIdx].videos.length) return;
           startVideo(sIdx, validIdx);
-          toggleSection(sIdx);
           if (window.innerWidth <= 900) toggleSidebar(); 
       }
 
@@ -2021,8 +2172,16 @@
           document.getElementById('customLoopInput').value = '';
           
           document.querySelectorAll(".video-item").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll(".section-item").forEach(el => el.classList.remove("playing"));
+
+          toggleSection(sIdx, true); // Ensure section is expanded and scrolled to
+
           const el = document.getElementById(`vid-${sIdx}-${vIdx}`);
-          if(el) el.classList.add("active");
+          if(el) {
+              el.classList.add("active");
+              el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              el.closest('.section-item').classList.add("playing");
+          }
           document.getElementById("videoTitle").textContent = video.label;
           document.getElementById("tooltip").textContent = video.tooltip || "";
           updateStats();
@@ -2038,18 +2197,84 @@
       
       function createProgressSegments(loopCount) {
           const container = document.getElementById('progressContainer');
+          if (!container) return;
+
+          const loops = Math.max(1, parseInt(loopCount, 10) || 1);
           container.innerHTML = '';
-          
-          for (let i = 0; i < loopCount; i++) {
-              const segment = document.createElement('div');
-              segment.className = 'progress-segment';
-              segment.id = `progress-segment-${i}`;
-              
-              const fill = document.createElement('div');
-              fill.className = 'progress-segment-fill';
-              
-              segment.appendChild(fill);
-              container.appendChild(segment);
+
+          const size = 320;
+          const center = size / 2;
+          const outerRadius = 128;
+          const minInnerRadius = 44;
+          const radiusStep = loops === 1 ? 0 : (outerRadius - minInnerRadius) / (loops - 1);
+          const strokeWidth = loops === 1 ? 12 : Math.max(3, Math.min(10, radiusStep - 2));
+          const palette = ['#34d399', '#60a5fa', '#f59e0b', '#22d3ee', '#f472b6', '#a78bfa'];
+          const svgNs = 'http://www.w3.org/2000/svg';
+
+          const svg = document.createElementNS(svgNs, 'svg');
+          svg.setAttribute('class', 'radial-progress-svg');
+          svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+
+          for (let i = 0; i < loops; i++) {
+              const radius = outerRadius - (i * radiusStep);
+              const circumference = 2 * Math.PI * radius;
+              const color = palette[i % palette.length];
+
+              const track = document.createElementNS(svgNs, 'circle');
+              track.setAttribute('class', 'loop-ring-track');
+              track.setAttribute('cx', center);
+              track.setAttribute('cy', center);
+              track.setAttribute('r', radius);
+              track.setAttribute('stroke-width', strokeWidth);
+              svg.appendChild(track);
+
+              const fill = document.createElementNS(svgNs, 'circle');
+              fill.setAttribute('class', 'loop-ring-fill');
+              fill.setAttribute('cx', center);
+              fill.setAttribute('cy', center);
+              fill.setAttribute('r', radius);
+              fill.setAttribute('stroke-width', strokeWidth);
+              fill.setAttribute('stroke', color);
+              fill.setAttribute('stroke-dasharray', circumference.toString());
+              fill.setAttribute('stroke-dashoffset', circumference.toString());
+              fill.dataset.loopIndex = i.toString();
+              fill.dataset.circumference = circumference.toString();
+              svg.appendChild(fill);
+          }
+
+          const centerInfo = document.createElement('div');
+          centerInfo.className = 'radial-progress-center';
+          centerInfo.innerHTML = `
+              <div class="radial-progress-label">Loop</div>
+              <div class="radial-progress-value" id="radialLoopValue">1/${loops}</div>
+              <div class="radial-progress-percent" id="radialLoopPercent">--:--</div>
+          `;
+
+          container.appendChild(svg);
+          container.appendChild(centerInfo);
+          updateRadialProgress(0);
+      }
+
+      function updateRadialProgress(currentPct, remainingSeconds = null) {
+          const rings = document.querySelectorAll('.loop-ring-fill');
+          rings.forEach((ring, idx) => {
+              const circumference = parseFloat(ring.dataset.circumference || '0');
+              let fillPct = 0;
+
+              if (idx < currentState.loopCount) fillPct = 100;
+              else if (idx === currentState.loopCount) fillPct = Math.max(0, Math.min(100, currentPct));
+
+              ring.style.strokeDashoffset = (circumference * (1 - (fillPct / 100))).toString();
+          });
+
+          const valueEl = document.getElementById('radialLoopValue');
+          const pctEl = document.getElementById('radialLoopPercent');
+          if (valueEl) {
+              const currentLoop = Math.min(currentState.loopCount + 1, Math.max(1, currentState.maxLoops));
+              valueEl.textContent = `${currentLoop}/${Math.max(1, currentState.maxLoops)}`;
+          }
+          if (pctEl) {
+              pctEl.textContent = remainingSeconds === null ? '--:--' : formatTime(Math.max(0, remainingSeconds));
           }
       }
       
@@ -2069,25 +2294,11 @@
               const remaining = Math.max(0, v.end - cur);
               document.getElementById("remainingTime").textContent = formatTime(remaining);
               
-              // Update segmented progress bar
+              // Update radial loop progress
               const duration = v.end - v.start;
               const elapsed = cur - v.start;
               const pct = Math.min(100, Math.max(0, (elapsed / duration) * 100));
-              
-              // Mark completed segments
-              for (let i = 0; i < currentState.loopCount; i++) {
-                  const segment = document.getElementById(`progress-segment-${i}`);
-                  if (segment) {
-                      segment.classList.add('completed');
-                      segment.querySelector('.progress-segment-fill').style.width = '100%';
-                  }
-              }
-              
-              // Update current segment
-              const currentSegment = document.getElementById(`progress-segment-${currentState.loopCount}`);
-              if (currentSegment) {
-                  currentSegment.querySelector('.progress-segment-fill').style.width = pct + '%';
-              }
+              updateRadialProgress(pct, remaining);
 
               updateTotalTimer();
           }, 500);
@@ -2293,7 +2504,14 @@
           document.getElementById("videoTitle").textContent = "Completed"; 
           clearInterval(timers.loopCheck); 
       }
-      function updateStats() { document.getElementById("currentLoop").textContent = currentState.loopCount + 1; document.getElementById("maxLoop").textContent = currentState.maxLoops; }
+      function updateStats() {
+          const displayLoop = Math.min(currentState.loopCount + 1, Math.max(1, currentState.maxLoops));
+          document.getElementById("currentLoop").textContent = displayLoop;
+          document.getElementById("maxLoop").textContent = currentState.maxLoops;
+          const chip = document.getElementById("loopChip");
+          if (chip) chip.textContent = `Loop ${displayLoop}/${Math.max(1, currentState.maxLoops)}`;
+          updateRadialProgress(0);
+      }
       function formatTime(s) { 
           const h = Math.floor(s / 3600);
           const m = Math.floor((s % 3600) / 60); 
@@ -2747,7 +2965,7 @@
       function checkAutoReset() {
           const now = Date.now();
           const threeHours = 3 * 60 * 60 * 1000; // Changed from 12 hours to 3 hours
-          const timeSinceReset = now - checklistLastReset;
+          let timeSinceReset = now - checklistLastReset;
           
           if (timeSinceReset >= threeHours) {
               // Auto-reset: DELETE all items (force completion within 3 hours)
@@ -2756,10 +2974,11 @@
               localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
               localStorage.setItem('duaChecklistLastReset', checklistLastReset.toString());
               renderChecklist();
+              timeSinceReset = 0;
           }
           
           // Update countdown timer
-          const timeUntilReset = threeHours - timeSinceReset;
+          const timeUntilReset = Math.max(0, threeHours - timeSinceReset);
           const hours = Math.floor(timeUntilReset / (60 * 60 * 1000));
           const minutes = Math.floor((timeUntilReset % (60 * 60 * 1000)) / (60 * 1000));
           const seconds = Math.floor((timeUntilReset % (60 * 1000)) / 1000);
@@ -2789,9 +3008,18 @@
       document.addEventListener('keydown', function(e) {
          if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; 
 
-         if (e.code === 'Space') { e.preventDefault(); if(player.getPlayerState()===1) player.pauseVideo(); else player.playVideo(); }
-         else if (e.code === 'ArrowRight') { e.preventDefault(); nextVideo(); }
+         if (e.code === 'Space') {
+             if (!playerReady || !player) return;
+             e.preventDefault();
+             if(player.getPlayerState()===1) player.pauseVideo(); else player.playVideo();
+         }
+         else if (e.code === 'ArrowRight') {
+             if (!playerReady || !player) return;
+             e.preventDefault();
+             nextVideo();
+         }
          else if (e.code === 'ArrowLeft') { 
+             if (!playerReady || !player) return;
              e.preventDefault(); 
              player.seekTo(0);
          }
