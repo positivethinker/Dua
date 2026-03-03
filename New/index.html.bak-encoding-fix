@@ -16,10 +16,8 @@
             --accent: #ffd700; /* Gold */
             --accent-glow: rgba(255, 215, 0, 0.15);
             --border: rgba(255, 255, 255, 0.1);
-            --sidebar-width: 320px;
-            --sidebar-width-sm: 280px;
         }
-        .sidebar { width: var(--sidebar-width); flex: 0 0 var(--sidebar-width); min-height: 0; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+        .sidebar { width: 320px; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
         .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
         .active { border-color: var(--accent); color: var(--accent); }
         .theme-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: inline-block; margin-left: 5px; }
@@ -29,8 +27,7 @@
         .fav-filter-btn { background: none; border: 1px solid var(--border); color: var(--text-sec); border-radius: 6px; padding: 6px 12px; margin: 10px 20px 0 20px; cursor: pointer; font-size: 0.85rem; width: calc(100% - 40px); }
         .fav-filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
         * { box-sizing: border-box; }
-        html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); min-height: 100vh; min-height: 100dvh; height: 100dvh; overflow: hidden; display: flex; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; }
         .logo { padding: 20px; border-bottom: 1px solid var(--border); }
         .logo h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 1.5rem; background: linear-gradient(45deg, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .habit-streak { font-size: 0.8rem; color: #f59e0b; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
@@ -84,7 +81,7 @@
         .video-item:hover { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
         .video-item.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
         .video-loop-badge { font-size: 0.75rem; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin-left: auto; color: var(--accent); }
-        .main-content { flex: 1; min-width: 0; min-height: 0; width: 100%; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 20px; gap: 20px; align-items: center; }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 20px; gap: 20px; align-items: center; }
         .media-layout-row {
             width: 100%;
             max-width: 900px;
@@ -128,16 +125,6 @@
             display: flex;
             flex-direction: column;
             background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-            margin: 10px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.14);
-            box-shadow: 0 16px 34px rgba(0,0,0,0.34);
-            animation: floatSideCard 5.5s ease-in-out infinite;
-        }
-        @keyframes floatSideCard {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-            100% { transform: translateY(0); }
         }
         .progress-side-card .progress-container { margin-top: 0; min-height: 205px; }
         .progress-side-card .stats-row {
@@ -165,7 +152,7 @@
         .progress-caption span {
             display: inline-block;
             padding-left: 100%;
-            animation: progressCaptionMarquee 40s linear infinite;
+            animation: progressCaptionMarquee 14s linear infinite;
         }
         @keyframes progressCaptionMarquee {
             0% { transform: translateX(0); }
@@ -178,7 +165,7 @@
         .stats-row { display: flex; justify-content: center; gap: 30px; margin-top: 10px; flex-wrap: wrap; }
         .stat-badge { background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); }
         .stat-value { font-weight: 700; color: var(--accent); font-size: 1.1rem; }
-        .actions-row { display: flex; justify-content: center; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+        .actions-row { display: flex; justify-content: center; gap: 16px; margin-top: 10px; }
         .btn { padding: 10px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: transform 0.1s, opacity 0.2s; display: flex; align-items: center; gap: 8px; }
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--accent); color: #0f172a; }
@@ -201,37 +188,14 @@
         
         /* Tablet and below - 900px */
         @media (max-width: 900px) {
-            body { height: auto; min-height: 100dvh; overflow-y: auto; }
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: min(86vw, var(--sidebar-width));
-                flex-basis: min(86vw, var(--sidebar-width));
-                transform: translateX(-100%);
-                z-index: 50;
-                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-            }
-            .sidebar.active { transform: translateX(0); }
+            .sidebar { position: fixed; left: -320px; top: 0; bottom: 0; z-index: 50; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+            .sidebar.active { transform: translateX(320px); left: 0; }
             .mobile-toggle { display: flex; }
-            .main-content { padding: 10px; align-items: stretch; overflow-y: auto; }
-            .player-card {
-                border-radius: 8px;
-                width: 100%;
-                max-width: 100%;
-                height: 240px;
-                min-height: 240px;
-                max-height: 240px;
-                aspect-ratio: auto;
-                position: sticky;
-                top: 8px;
-                z-index: 15;
-            }
-            .media-layout-row { grid-template-columns: 1fr; max-width: 100%; border-radius: 12px; }
+            .main-content { padding: 10px; }
+            .player-card { border-radius: 8px; width: 100%; max-width: 100%; }
+            .media-layout-row { grid-template-columns: 1fr; max-width: 100%; }
             .media-panel, .progress-side-card { width: 100%; max-width: 100%; }
             .media-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-            .progress-side-card { margin: 0; border-radius: 0; border: none; border-top: 1px solid rgba(255,255,255,0.12); box-shadow: none; animation: none; }
             .controls-card { padding: 16px; }
             .progress-container { min-height: 160px; }
             .panel-title.marquee-title { max-width: 72%; }
@@ -266,8 +230,8 @@
         
         /* Small phones - 480px */
         @media (max-width: 480px) {
-            .sidebar { width: min(88vw, var(--sidebar-width-sm)); flex-basis: min(88vw, var(--sidebar-width-sm)); }
-            .sidebar.active { transform: translateX(0); }
+            .sidebar { width: 280px; left: -280px; }
+            .sidebar.active { transform: translateX(280px); left: 0; }
             
             .logo { padding: 15px; }
             .logo h1 { font-size: 1.2rem; }
@@ -277,15 +241,8 @@
             .search-input { padding: 8px; font-size: 0.9rem; }
             
             .main-content { padding: 8px; gap: 15px; }
-            .player-card {
-                border-radius: 8px;
-                height: 200px;
-                min-height: 200px;
-                max-height: 200px;
-                top: 6px;
-            }
+            .player-card { border-radius: 8px; }
             .media-panel, .progress-side-card { padding: 10px; }
-            .progress-side-card { margin: 0; }
             
             .controls-card { padding: 12px; gap: 12px; }
             .progress-container { min-height: 145px; }
@@ -310,24 +267,16 @@
             }
             
             .actions-row { 
-                gap: 6px;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                justify-content: center;
-                padding-bottom: 2px;
-                -webkit-overflow-scrolling: touch;
+                gap: 8px; 
+                flex-wrap: wrap;
             }
-            .actions-row::-webkit-scrollbar { display: none; }
             .btn { 
-                padding: 8px 10px; 
-                font-size: 0.8rem;
-                flex: 0 0 auto;
-                min-width: 0;
+                padding: 10px 14px; 
+                font-size: 0.85rem;
+                flex: 1 1 calc(50% - 4px);
+                min-width: 120px;
                 justify-content: center;
-                white-space: nowrap;
             }
-            .speed-control { justify-content: center; }
-            .speed-label { width: 100%; margin-right: 0; text-align: center; }
             
             .speed-control { gap: 4px; }
             .speed-btn { padding: 6px 10px; font-size: 0.75rem; }
@@ -381,7 +330,9 @@
         .speed-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
         .speed-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
 
-        
+        .saver-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        .saver-text { color: #333; font-size: 1.5rem; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 0.7; } 100% { opacity: 0.3; } }
         
         .note-area { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text-sec); padding: 10px; border-radius: 8px; margin-top: 15px; font-family: 'Inter', sans-serif; resize: vertical; min-height: 60px; display: none; }
         .note-area:focus { outline: none; border-color: var(--accent); color: var(--text-main); }
@@ -416,7 +367,7 @@
             background: rgba(0,0,0,0.5);
         }
         .section-item.locked .section-header::after {
-            content: '🔒';
+            content: 'ðŸ”’';
             position: absolute;
             right: 40px; /* Adjust based on expand icon position */
             font-size: 1.2rem;
@@ -475,7 +426,7 @@
         .bg-thumb.ocean { background: linear-gradient(to bottom, #1e3c72, #2a5298); }
         .bg-thumb.forest { background: linear-gradient(to bottom, #11998e, #38ef7d); }
         .bg-thumb.sunset { background: linear-gradient(to bottom, #200122, #6f0000); }
-        
+        .saver-subtext { font-size: 0.8rem; color: #222; margin-top: 10px; }
         .speed-label { font-size: 0.8rem; color: var(--text-sec); margin-right: 5px; }
         .custom-loop-input { width: 50px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; padding: 2px 4px; margin-left: 5px; font-weight: 600; }
         .note-toggle-btn { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; }
@@ -495,30 +446,30 @@
 </head>
 <body>
     <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
-    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+    <button class="mobile-toggle" onclick="toggleSidebar()">â˜°</button>
     <aside class="sidebar" id="sidebar">
         <div class="logo">
             <h1>Dua Player</h1>
             <div class="logo-sub">Modern Edition</div>
-            <div class="habit-streak" id="habitStreakDisplay" title="Daily Streak">🔥 0 Day Streak</div>
+            <div class="habit-streak" id="habitStreakDisplay" title="Daily Streak">ðŸ”¥ 0 Day Streak</div>
         </div>
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="🔍 Search Duas..." oninput="handleSearch(this.value)" id="searchInput">
+            <input type="text" class="search-input" placeholder="ðŸ” Search Duas..." oninput="handleSearch(this.value)" id="searchInput">
         </div>
 
 
         <div class="filter-row">
-             <button class="fav-filter-btn" onclick="toggleFavFilter()" id="favFilterBtn">❤️ Favorites</button>
-             <button class="fav-filter-btn" onclick="toggleHistoryView()" id="historyBtn">🕒 History</button>
+             <button class="fav-filter-btn" onclick="toggleFavFilter()" id="favFilterBtn">â¤ï¸ Favorites</button>
+             <button class="fav-filter-btn" onclick="toggleHistoryView()" id="historyBtn">ðŸ•’ History</button>
         </div>
         <div class="playlist" id="playlist"></div>
         <div class="sidebar-footer">
-             <a href="admin.html">🛠️ Admin</a>
-             <button onclick="copyDataForAdmin()" class="admin-copy-btn">📋 Copy Data</button>
+             <a href="admin.html">ðŸ› ï¸ Admin</a>
+             <button onclick="copyDataForAdmin()" class="admin-copy-btn">ðŸ“‹ Copy Data</button>
              <div class="util-btns">
                  <button onclick="backupData()">Backup</button>
                  <button onclick="document.getElementById('restoreInput').click()">Restore</button>
-                 <button onclick="showShortcuts()">⌨ Keys</button>
+                 <button onclick="showShortcuts()">âŒ¨ Keys</button>
                  <input type="file" id="restoreInput" class="hidden" onchange="restoreData(this)" accept=".json">
              </div>
              <div class="theme-picker">
@@ -538,6 +489,11 @@
         </div>
     </aside>
     <main class="main-content">
+        <div class="saver-overlay" id="saverOverlay" onclick="toggleSaver()" title="Double Tap or Click to Wake">
+            <div class="saver-text">Audio Mode Active</div>
+            <div class="saver-subtext">Tap to Wake</div>
+        </div>
+        
         <div class="media-layout-row">
             <div class="media-panel">
                 <div class="panel-head">
@@ -563,14 +519,15 @@
                         <button class="speed-btn" onclick="setSpeed(1.5)">1.5x</button>
                     </div>
                     <div class="actions-row">
-                        <button class="btn btn-secondary" onclick="toggleAutoPlay()" id="autoPlayBtn" title="Auto-Play Next Video">🔄 Auto</button>
-                        <button class="btn btn-secondary" onclick="toggleSleepTimer()" id="sleepBtn">🌙 Sleep</button>
-                        <button class="btn btn-secondary" onclick="playAllSections()">▶ Play All</button>
-                        <button class="btn btn-primary" onclick="skipVideo()">Skip ⏭</button>
+                        <button class="btn btn-secondary" onclick="toggleAutoPlay()" id="autoPlayBtn" title="Auto-Play Next Video">ðŸ”„ Auto</button>
+                        <button class="btn btn-secondary" onclick="toggleSleepTimer()" id="sleepBtn">ðŸŒ™ Sleep</button>
+                        <button class="btn btn-secondary" onclick="toggleSaver()">ðŸ”‹ Saver</button>
+                        <button class="btn btn-secondary" onclick="playAllSections()">â–¶ Play All</button>
+                        <button class="btn btn-primary" onclick="skipVideo()">Skip â­</button>
                     </div>
                     <textarea class="note-area" id="personalNote" placeholder="Write a personal note for this Dua..." oninput="saveNote()"></textarea>
                     <div class="note-toggle-row">
-                        <button onclick="toggleNote()" class="note-toggle-btn">📝 Add/View Note</button>
+                        <button onclick="toggleNote()" class="note-toggle-btn">ðŸ“ Add/View Note</button>
                     </div>
                 </div>
             </div>
@@ -612,24 +569,24 @@
 
       const defaultVideoSections = [
         {
-          name: "প্রতিদিন",
+          name: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨",
           videos: [
             // {
             //   id: "14uh3215Vls",
             //   start: 0,
             //   end: 30,
-            //   label: "দরুদ শরীফ",
-            //   tooltip: "দরুদ শরীফ",
+            //   label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+            //   tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
             //   loop: 7,
             // },
-            { isSubcategory: true, label: "মুসা (আ:) শেখানো বিশেষ কালিমা" },
+            { isSubcategory: true, label: "à¦®à§à¦¸à¦¾ (à¦†:) à¦¶à§‡à¦–à¦¾à¦¨à§‹ à¦¬à¦¿à¦¶à§‡à¦· à¦•à¦¾à¦²à¦¿à¦®à¦¾" },
             // SOURCE : https://www.youtube.com/watch?v=zVifzaW7R1s
             {
               id: "OE7kKmmINhQ",
               start: 0,
               end: 239,
-              label: "লা ইলাহা ইল্লাল্লাহ (♾️)",
-              tooltip: "প্রতিদিন ১০০ বার",
+              label: "à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹ (â™¾ï¸)",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦à§¦ à¦¬à¦¾à¦°",
               loop: 1,
             },
             {
@@ -637,73 +594,73 @@
               start: 19,
               end: 23.4,
               label:
-              "সুবহানাল্লাহ | ওয়ালহামদুলিল্লাহ | ওয়া লা ইলাহা ইল্লাল্লাহ | ওয়াল্লাহু আকবার",
-              tooltip: "প্রতিদিন ১০০ বার",
+              "à¦¸à§à¦¬à¦¹à¦¾à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹ | à¦“à¦¯à¦¼à¦¾à¦²à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾à¦¹ | à¦“à¦¯à¦¼à¦¾ à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹ | à¦“à¦¯à¦¼à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦•à¦¬à¦¾à¦°",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦à§¦ à¦¬à¦¾à¦°",
               loop: 100,
             },
             {
               id: "aTPiHKiJ5Xg",
               start: 2.3,
               end: 8.7,
-              label: "লা ইলাহা ইল্লাল্লাহ ওয়াহুদাহু লা শারীকা",
-              tooltip: "প্রতিদিন ১০০ বার আল্লাহ ব্যতীত প্রকৃত কোন ইলাহ নেই, তিনি একক, তাঁর কোন শরীক নেই; রাজত্ব একমাত্র তাঁরই, সমস্ত প্রশংসাও একমাত্র তাঁরই জন্য, আর তিনি সকল বিষয়ের ওপর ক্ষমতাবান।  হ্যাঁ, ঐ ব্যক্তি সক্ষম হবে, যে এর চেয়ে ঐ দু’আটির ’আমল বেশি পরিমাণ করবে।(বুখারি, হাদিস ৩২৯৩)",
+              label: "à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹ à¦“à§Ÿà¦¾à¦¹à§à¦¦à¦¾à¦¹à§ à¦²à¦¾ à¦¶à¦¾à¦°à§€à¦•à¦¾",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦à§¦ à¦¬à¦¾à¦° à¦†à¦²à§à¦²à¦¾à¦¹ à¦¬à§à¦¯à¦¤à§€à¦¤ à¦ªà§à¦°à¦•à§ƒà¦¤ à¦•à§‹à¦¨ à¦‡à¦²à¦¾à¦¹ à¦¨à§‡à¦‡, à¦¤à¦¿à¦¨à¦¿ à¦à¦•à¦•, à¦¤à¦¾à¦à¦° à¦•à§‹à¦¨ à¦¶à¦°à§€à¦• à¦¨à§‡à¦‡; à¦°à¦¾à¦œà¦¤à§à¦¬ à¦à¦•à¦®à¦¾à¦¤à§à¦° à¦¤à¦¾à¦à¦°à¦‡, à¦¸à¦®à¦¸à§à¦¤ à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾à¦“ à¦à¦•à¦®à¦¾à¦¤à§à¦° à¦¤à¦¾à¦à¦°à¦‡ à¦œà¦¨à§à¦¯, à¦†à¦° à¦¤à¦¿à¦¨à¦¿ à¦¸à¦•à¦² à¦¬à¦¿à¦·à§Ÿà§‡à¦° à¦“à¦ªà¦° à¦•à§à¦·à¦®à¦¤à¦¾à¦¬à¦¾à¦¨à¥¤  à¦¹à§à¦¯à¦¾à¦, à¦ à¦¬à§à¦¯à¦•à§à¦¤à¦¿ à¦¸à¦•à§à¦·à¦® à¦¹à¦¬à§‡, à¦¯à§‡ à¦à¦° à¦šà§‡à§Ÿà§‡ à¦ à¦¦à§â€™à¦†à¦Ÿà¦¿à¦° â€™à¦†à¦®à¦² à¦¬à§‡à¦¶à¦¿ à¦ªà¦°à¦¿à¦®à¦¾à¦£ à¦•à¦°à¦¬à§‡à¥¤(à¦¬à§à¦–à¦¾à¦°à¦¿, à¦¹à¦¾à¦¦à¦¿à¦¸ à§©à§¨à§¯à§©)",
               loop: 100,
             },
            {
              id: "uO5VHphOZzQ",
               start: 0,
               end: 856.8,
-              label: "যাদুকরের প্রতি অভিশাপ",
-              tooltip: "প্রতিদিন ১ বার",
+              label: "à¦¯à¦¾à¦¦à§à¦•à¦°à§‡à¦° à¦ªà§à¦°à¦¤à¦¿ à¦…à¦­à¦¿à¦¶à¦¾à¦ª",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§ à¦¬à¦¾à¦°",
               loop: 1,
             },
             {
               id: "5R06LRdUCSE",
               start: 12,
               end: 1966,
-              label: " সূরা কাহফ",
-              tooltip: "প্রতিদিন ১ বার",
+              label: " à¦¸à§‚à¦°à¦¾ à¦•à¦¾à¦¹à¦«",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§ à¦¬à¦¾à¦°",
               loop: 1,
             },
           ],
         },
         {
-          name: "নামাজের আগে ও পরে আমল",
+          name: "à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦†à¦—à§‡ à¦“ à¦ªà¦°à§‡ à¦†à¦®à¦²",
           videos: [
-            { isSubcategory: true, label: "নামাজের আগে আমল" },
-            { isSubcategory: true, label: "দুই সিজদাহের মাঝে আমল" },
+            { isSubcategory: true, label: "à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦†à¦—à§‡ à¦†à¦®à¦²" },
+            { isSubcategory: true, label: "à¦¦à§à¦‡ à¦¸à¦¿à¦œà¦¦à¦¾à¦¹à§‡à¦° à¦®à¦¾à¦à§‡ à¦†à¦®à¦²" },
             {
               id: "V4WF16FhLcg",
               start: 3.8,
               end: 6,
-              label: "রাব্বির ফিরলি জুনুবি",
-              tooltip: "রাব্বির ফিরলি জুনুবি প্রতিদিন 1 বার",
+              label: "à¦°à¦¾à¦¬à§à¦¬à¦¿à¦° à¦«à¦¿à¦°à¦²à¦¿ à¦œà§à¦¨à§à¦¬à¦¿",
+              tooltip: "à¦°à¦¾à¦¬à§à¦¬à¦¿à¦° à¦«à¦¿à¦°à¦²à¦¿ à¦œà§à¦¨à§à¦¬à¦¿ à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 1 à¦¬à¦¾à¦°",
               loop: 1,
             },
             {
               id: "dGYQBskQBRw",
               start: 15,
               end: 21.8,
-              label: "আল্লাহুম্মা আইন্নি",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦‡à¦¨à§à¦¨à¦¿",
               tooltip:
-                "আল্লাহুম্মা আইন্নি আলা জিকরিকা ওয়া শুকরিকা ওয়া হুসনি ইবাদাতিকা",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦²à¦¾ à¦œà¦¿à¦•à¦°à¦¿à¦•à¦¾ à¦“à¦¯à¦¼à¦¾ à¦¶à§à¦•à¦°à¦¿à¦•à¦¾ à¦“à¦¯à¦¼à¦¾ à¦¹à§à¦¸à¦¨à¦¿ à¦‡à¦¬à¦¾à¦¦à¦¾à¦¤à¦¿à¦•à¦¾",
               loop: 1,
             },
-            { isSubcategory: true, label: "নামাজের পরে আমল" },
+            { isSubcategory: true, label: "à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦ªà¦°à§‡ à¦†à¦®à¦²" },
             {
               id: "z_tt3DzYd2k",
               start: 2,
               end: 6.4,
-              label: "আল্লাহুয়াকবার",
-              tooltip: "আল্লাহ সর্বশ্রেষ্ঠ",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à§Ÿà¦¾à¦•à¦¬à¦¾à¦°",
+              tooltip: "à¦†à¦²à§à¦²à¦¾à¦¹ à¦¸à¦°à§à¦¬à¦¶à§à¦°à§‡à¦·à§à¦ ",
               loop: 1,
             },
             {
               id: "Xx85iIXcQNs",
               start: 7.7,
               end: 9,
-              label: "আস্তাগফিরুল্লাহ",
-              tooltip: "আমি আল্লাহর কাছে ক্ষমা প্রার্থনা করছি - তিনবার",
+              label: "à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹",
+              tooltip: "à¦†à¦®à¦¿ à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦•à¦¾à¦›à§‡ à¦•à§à¦·à¦®à¦¾ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾ à¦•à¦°à¦›à¦¿ - à¦¤à¦¿à¦¨à¦¬à¦¾à¦°",
               loop: 3,
             },
             {
@@ -718,7 +675,7 @@
               id: "Xx85iIXcQNs",
               start: 18.8,
               end: 25,
-              label: "লা ইলাহা ইল্লাল্লাহ",
+              label: "à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹",
               tooltip: "La ilaha illAllahu",
               loop: 1,
             },
@@ -726,25 +683,25 @@
               id: "LuCTs4eTNtQ",
               start: 0,
               end: 12,
-              label: "আল্লাহুম্মা আনতাস সালাম",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾à¦¸ à¦¸à¦¾à¦²à¦¾à¦®",
               tooltip:
-                "আল্লাহুম্মা আনতাস সালাম ওয়া মিনকাস সালাম তাবারকতা ইয়া জালজালালি ওয়াল ইকরাম : হে আল্লাহ, তুমি শান্তির কর্তা এবং তোমার কাছ থেকেই শান্তি আসে। তুমি বরকতময়, হে মহিমা ও সম্মানের মালিক। [হিসনুল মুসলিম: ৬৬]",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾à¦¸ à¦¸à¦¾à¦²à¦¾à¦® à¦“à¦¯à¦¼à¦¾ à¦®à¦¿à¦¨à¦•à¦¾à¦¸ à¦¸à¦¾à¦²à¦¾à¦® à¦¤à¦¾à¦¬à¦¾à¦°à¦•à¦¤à¦¾ à¦‡à¦¯à¦¼à¦¾ à¦œà¦¾à¦²à¦œà¦¾à¦²à¦¾à¦²à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦‡à¦•à¦°à¦¾à¦® : à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹, à¦¤à§à¦®à¦¿ à¦¶à¦¾à¦¨à§à¦¤à¦¿à¦° à¦•à¦°à§à¦¤à¦¾ à¦à¦¬à¦‚ à¦¤à§‹à¦®à¦¾à¦° à¦•à¦¾à¦› à¦¥à§‡à¦•à§‡à¦‡ à¦¶à¦¾à¦¨à§à¦¤à¦¿ à¦†à¦¸à§‡à¥¤ à¦¤à§à¦®à¦¿ à¦¬à¦°à¦•à¦¤à¦®à¦¯à¦¼, à¦¹à§‡ à¦®à¦¹à¦¿à¦®à¦¾ à¦“ à¦¸à¦®à§à¦®à¦¾à¦¨à§‡à¦° à¦®à¦¾à¦²à¦¿à¦•à¥¤ [à¦¹à¦¿à¦¸à¦¨à§à¦² à¦®à§à¦¸à¦²à¦¿à¦®: à§¬à§¬]",
               loop: 1,
             },
             {
               id: "DkipClSGLKY",
               start: 0,
               end: 10,
-              label: "শিরক থেকে আশ্রয় প্রার্থনা",
+              label: "à¦¶à¦¿à¦°à¦• à¦¥à§‡à¦•à§‡ à¦†à¦¶à§à¦°à¦¯à¦¼ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾",
               tooltip:
-                " আল্লাহুম্মা ইন্নি আউজুবিকা আন উশরিকা বিকা ওয়া আনা আ’লামু, ওয়া আস্তাগফিরুকা লিমা লা আ’লামু - হে আল্লাহ! আমি সজ্ঞানে আপনার সাথে শিরক করা থেকে আপনার কাছে আশ্রয় চাই এবং যা আমার অজ্ঞাত, তার জন্যও আপনার কাছে ক্ষমা চাই",
+                " à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦‰à¦œà§à¦¬à¦¿à¦•à¦¾ à¦†à¦¨ à¦‰à¦¶à¦°à¦¿à¦•à¦¾ à¦¬à¦¿à¦•à¦¾ à¦“à§Ÿà¦¾ à¦†à¦¨à¦¾ à¦†â€™à¦²à¦¾à¦®à§, à¦“à§Ÿà¦¾ à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦•à¦¾ à¦²à¦¿à¦®à¦¾ à¦²à¦¾ à¦†â€™à¦²à¦¾à¦®à§ - à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦®à¦¿ à¦¸à¦œà§à¦žà¦¾à¦¨à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦¸à¦¾à¦¥à§‡ à¦¶à¦¿à¦°à¦• à¦•à¦°à¦¾ à¦¥à§‡à¦•à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦†à¦¶à§à¦°à¦¯à¦¼ à¦šà¦¾à¦‡ à¦à¦¬à¦‚ à¦¯à¦¾ à¦†à¦®à¦¾à¦° à¦…à¦œà§à¦žà¦¾à¦¤, à¦¤à¦¾à¦° à¦œà¦¨à§à¦¯à¦“ à¦†à¦ªà¦¨à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦•à§à¦·à¦®à¦¾ à¦šà¦¾à¦‡",
               loop: 1,
             },
             {
               id: "0_R94CDcanI",
               start: 0,
               end: 7,
-              label: "ইবাদতে সাহায্যের জন্য দোয়া",
+              label: "à¦‡à¦¬à¦¾à¦¦à¦¤à§‡ à¦¸à¦¾à¦¹à¦¾à¦¯à§à¦¯à§‡à¦° à¦œà¦¨à§à¦¯ à¦¦à§‹à§Ÿà¦¾",
               tooltip: "Allahumma A'inni Ala Zikrika Wa Shukrika",
               loop: 1,
             },
@@ -752,25 +709,25 @@
               id: "L30c6Axa06A",
               start: 0,
               end: 51,
-              label: "সূরা ফাতিহা",
+              label: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦¤à¦¿à¦¹à¦¾",
               tooltip:
-                "নিজের রুকইয়া - সূরা ফাতিহা ৩ বার করে মোট ৯ বার শরীরে ফু দেয় । ৩ দিন আমল করা । ",
+                "à¦¨à¦¿à¦œà§‡à¦° à¦°à§à¦•à¦‡à§Ÿà¦¾ - à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦¤à¦¿à¦¹à¦¾ à§© à¦¬à¦¾à¦° à¦•à¦°à§‡ à¦®à§‹à¦Ÿ à§¯ à¦¬à¦¾à¦° à¦¶à¦°à§€à¦°à§‡ à¦«à§ à¦¦à§‡à§Ÿ à¥¤ à§© à¦¦à¦¿à¦¨ à¦†à¦®à¦² à¦•à¦°à¦¾ à¥¤ ",
               loop: 1,
             },
             {
               id: "uv3VXLVK6FQ",
               start: 10,
               end: 30,
-              label: "আল-ইখলাস",
-              tooltip: "প্রতিদিন 3 বার",
+              label: "à¦†à¦²-à¦‡à¦–à¦²à¦¾à¦¸",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 3 à¦¬à¦¾à¦°",
               loop: 3,
             },
             {
               id: "rVPOXjlg0Qw",
               start: 22,
               end: 96,
-              label: "সূরা ফালাক, সূরা নাস",
-              tooltip: "সূরা ফালাক, সূরা নাস",
+              label: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦²à¦¾à¦•, à¦¸à§‚à¦°à¦¾ à¦¨à¦¾à¦¸",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦²à¦¾à¦•, à¦¸à§‚à¦°à¦¾ à¦¨à¦¾à¦¸",
               loop: 3,
             },
             {
@@ -779,16 +736,16 @@
               end: 25.2,
               label: "ADD",
               tooltip:
-                "আল্লাহুম্মা ইন্নাকা আফুউন কারীম, তুহিব্বুল আফুওয়া ফাফু আন্নি",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¾à¦•à¦¾ à¦†à¦«à§à¦‰à¦¨ à¦•à¦¾à¦°à§€à¦®, à¦¤à§à¦¹à¦¿à¦¬à§à¦¬à§à¦² à¦†à¦«à§à¦“à¦¯à¦¼à¦¾ à¦«à¦¾à¦«à§ à¦†à¦¨à§à¦¨à¦¿",
               loop: 1,
             },
-            { isSubcategory: true, label: "প্রয়োজন পূরণের পরীক্ষিত আমল" },
+            { isSubcategory: true, label: "à¦ªà§à¦°à¦¯à¦¼à§‹à¦œà¦¨ à¦ªà§‚à¦°à¦£à§‡à¦° à¦ªà¦°à§€à¦•à§à¦·à¦¿à¦¤ à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=CoKyZXLNAtg
             {
               id: "dfZYTEgfwDc",
               start: 0,
               end: 30,
-              label: "আয়তুল কুরসী",
+              label: "à¦†à§Ÿà¦¤à§à¦² à¦•à§à¦°à¦¸à§€",
               tooltip: "Ayatul Kursi",
               loop: 1,
             },
@@ -796,35 +753,35 @@
               id: "8t-Jwm72UD4",
               start: 0,
               end: 129,
-              label: "সূরা আল-ইমরান: ২৬-২৭",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦²-à¦‡à¦®à¦°à¦¾à¦¨: à§¨à§¬-à§¨à§­",
               tooltip: "SURAH AL-IMRAN",
               loop: 1,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির জন্য" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦œà¦¨à§à¦¯" },
             {
               id: "SEh3c0Va5qk",
               start: 5,
               end: 8.5,
-              label: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক",
-              tooltip: "আল্লাহুম্মা ইন্নি আস আলুকা মিন ফাদলিক",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸ à¦†à¦²à§à¦•à¦¾ à¦®à¦¿à¦¨ à¦«à¦¾à¦¦à¦²à¦¿à¦•",
+              tooltip: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸ à¦†à¦²à§à¦•à¦¾ à¦®à¦¿à¦¨ à¦«à¦¾à¦¦à¦²à¦¿à¦•",
               loop: 1,
             },
-            { isSubcategory: true, label: "ফরজরের নামাজের সুন্নতের পর" },
+            { isSubcategory: true, label: "à¦«à¦°à¦œà¦°à§‡à¦° à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦¸à§à¦¨à§à¦¨à¦¤à§‡à¦° à¦ªà¦°" },
             //Source : https://www.youtube.com/watch?v=4vWvEFKNsLY || JAMATE - FAZAR
             {
               id: "3NjYi7mCtDs",
               start: 34.5,
               end: 39,
-              label: "সুবহানাল্লাহি ওয়া বিহামদিহী",
-              tooltip: "প্রতিদিন ১০০ বার | আস্তাগফিরুল্লাহ ১০০ বার",
+              label: "à¦¸à§à¦¬à¦¹à¦¾à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¿ à¦“à¦¯à¦¼à¦¾ à¦¬à¦¿à¦¹à¦¾à¦®à¦¦à¦¿à¦¹à§€",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦à§¦ à¦¬à¦¾à¦° | à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹ à§§à§¦à§¦ à¦¬à¦¾à¦°",
               loop: 100,
             },
             {
               id: "VNoq93-17Ho",
               start: 1,
               end: 168,
-              label: "আস্তাগফিরুল্লাহ",
-              tooltip: "আস্তাগফিরুল্লাহ ১০০ বার",
+              label: "à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹",
+              tooltip: "à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹ à§§à§¦à§¦ à¦¬à¦¾à¦°",
               loop: 1,
             },
             //Source : https://www.youtube.com/watch?v=2nkXqv5x-90&t=89s
@@ -833,19 +790,19 @@
               start: 27.8,
               end: 34.4,
               label:
-                "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ",
+                "à¦‡à§Ÿà¦¾ à¦¹à¦¾à¦‡à§Ÿà§ à¦‡à§Ÿà¦¾ à¦•à¦¾à¦‡à¦¯à¦¼à§à¦®, à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¬à¦¿à¦°à¦¾à¦¹à¦®à¦¾à¦¤à¦¿à¦•à¦¾ à¦†à¦¸à¦¤à¦¾à¦—à¦¿à¦œ",
               tooltip:
-                "ইয়া হাইয়ু ইয়া কাইয়ুম, লা ইলাহা ইল্লা আনতা বিরাহমাতিকা আসতাগিজ",
+                "à¦‡à§Ÿà¦¾ à¦¹à¦¾à¦‡à§Ÿà§ à¦‡à§Ÿà¦¾ à¦•à¦¾à¦‡à¦¯à¦¼à§à¦®, à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¬à¦¿à¦°à¦¾à¦¹à¦®à¦¾à¦¤à¦¿à¦•à¦¾ à¦†à¦¸à¦¤à¦¾à¦—à¦¿à¦œ",
               loop: 40,
             },
-            { isSubcategory: true, label: "ফরজরের নামাজের পর" },
+            { isSubcategory: true, label: "à¦«à¦°à¦œà¦°à§‡à¦° à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦ªà¦°" },
             // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI || 14:00 Min
             {
               id: "K6BWL4gfCB8",
               start: 4.1,
               end: 9.8,
-              label: "আল্লাহুম্মা ইন্নি আসআলুকা ইলমান নাফিআ",
-              tooltip: "বী সাল্লাল্লাহু আলাইহি ওয়াসাল্লাম ফজরের সালাত পড়ে সালাম ফিরিয়ে বলতেনঃ ইবনে মাজাহ : ৯২৫ : হে আল্লাহ্! আমি আপনার কাছে উপকারী জ্ঞান, পবিত্র রিযিক ও এবং কবূল হওয়ার যোগ্য কর্মতৎপরতা প্রার্থনা",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸à¦†à¦²à§à¦•à¦¾ à¦‡à¦²à¦®à¦¾à¦¨ à¦¨à¦¾à¦«à¦¿à¦†",
+              tooltip: "à¦¬à§€ à¦¸à¦¾à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦²à¦¾à¦‡à¦¹à¦¿ à¦“à§Ÿà¦¾à¦¸à¦¾à¦²à§à¦²à¦¾à¦® à¦«à¦œà¦°à§‡à¦° à¦¸à¦¾à¦²à¦¾à¦¤ à¦ªà§œà§‡ à¦¸à¦¾à¦²à¦¾à¦® à¦«à¦¿à¦°à¦¿à§Ÿà§‡ à¦¬à¦²à¦¤à§‡à¦¨à¦ƒ à¦‡à¦¬à¦¨à§‡ à¦®à¦¾à¦œà¦¾à¦¹ : à§¯à§¨à§« : à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹à§! à¦†à¦®à¦¿ à¦†à¦ªà¦¨à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦‰à¦ªà¦•à¦¾à¦°à§€ à¦œà§à¦žà¦¾à¦¨, à¦ªà¦¬à¦¿à¦¤à§à¦° à¦°à¦¿à¦¯à¦¿à¦• à¦“ à¦à¦¬à¦‚ à¦•à¦¬à§‚à¦² à¦¹à¦“à§Ÿà¦¾à¦° à¦¯à§‹à¦—à§à¦¯ à¦•à¦°à§à¦®à¦¤à§Žà¦ªà¦°à¦¤à¦¾ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾",
               loop: 1,
             },
             // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI || 14:00 Min
@@ -853,8 +810,8 @@
               id: "Sta_p-oB_d4",
               start: 0,
               end: 14,
-              label: "বিসমিল্লাহির রাহমানির রাহিম",
-              tooltip: "প্রতিদিন ১৯ বার",
+              label: "à¦¬à¦¿à¦¸à¦®à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦° à¦°à¦¾à¦¹à¦®à¦¾à¦¨à¦¿à¦° à¦°à¦¾à¦¹à¦¿à¦®",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¯ à¦¬à¦¾à¦°",
               loop: 19,
             },
             // Source : https://www.youtube.com/watch?v=RLo1NQ5-_10 || 1:00 Min
@@ -862,8 +819,8 @@
               id: "uv3VXLVK6FQ",
               start: 10,
               end: 30,
-              label: "সারাদিন গুনাহ থেকে বাঁচার আমল",
-              tooltip: "আল-ইখলাস - প্রতিদিন ১০ বার",
+              label: "à¦¸à¦¾à¦°à¦¾à¦¦à¦¿à¦¨ à¦—à§à¦¨à¦¾à¦¹ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦†à¦®à¦²",
+              tooltip: "à¦†à¦²-à¦‡à¦–à¦²à¦¾à¦¸ - à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦ à¦¬à¦¾à¦°",
               loop: 10,
             },
             //Source : https://www.youtube.com/watch?v=SNuoTZTeGMM&t=678s
@@ -871,16 +828,16 @@
               id: "fOPmnFezp5w",
               start: 14.9,
               end: 16,
-              label: "সূরা আর রহমান ৭৮ নং আয়াত",
-              tooltip: "প্রতিদিন ১০০ বার",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦° à¦°à¦¹à¦®à¦¾à¦¨ à§­à§® à¦¨à¦‚ à¦†à¦¯à¦¼à¦¾à¦¤",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦à§¦ à¦¬à¦¾à¦°",
               loop: 100,
             },
             {
               id: "U_5o4JEINfQ",
               start: 11.8,
               end: 17,
-              label: "সূরা আম্বিয়া ৮৭ নং আয়াত : দোয়া ইউনুস",
-              tooltip: "প্রতিদিন 40 বার",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦®à§à¦¬à¦¿à¦¯à¦¼à¦¾ à§®à§­ à¦¨à¦‚ à¦†à¦¯à¦¼à¦¾à¦¤ : à¦¦à§‹à¦¯à¦¼à¦¾ à¦‡à¦‰à¦¨à§à¦¸",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 40 à¦¬à¦¾à¦°",
               loop: 40,
             },
             // Source : https://www.youtube.com/watch?v=xL-w_hPOR1Q | https://www.youtube.com/watch?v=BzKAJ8JyVcQ&t=8s
@@ -888,16 +845,16 @@
               id: "97TteyKVyiE",
               start: 0,
               end: 12,
-              label: "সুরা শুরা : আয়াত ১৯ (🔃)",
+              label: "à¦¸à§à¦°à¦¾ à¦¶à§à¦°à¦¾ : à¦†à§Ÿà¦¾à¦¤ à§§à§¯ (ðŸ”ƒ)",
               tooltip:
-                "আল্লাহু লাতিফুম্ বি-ইবাদিহি ইয়ারজুকু মাইয়্যাশায়ু, ওয়া হুয়াল কাভিয়্যুল আজিজ : আল্লাহ তাঁর বান্দাদের প্রতি দয়ালু। তিনি যাকে ইচ্ছা, রিযিক দান করেন। তিনি প্রবল, পরাক্রমশালী।",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§ à¦²à¦¾à¦¤à¦¿à¦«à§à¦®à§ à¦¬à¦¿-à¦‡à¦¬à¦¾à¦¦à¦¿à¦¹à¦¿ à¦‡à§Ÿà¦¾à¦°à¦œà§à¦•à§ à¦®à¦¾à¦‡à§Ÿà§à¦¯à¦¾à¦¶à¦¾à§Ÿà§, à¦“à§Ÿà¦¾ à¦¹à§à§Ÿà¦¾à¦² à¦•à¦¾à¦­à¦¿à§Ÿà§à¦¯à§à¦² à¦†à¦œà¦¿à¦œ : à¦†à¦²à§à¦²à¦¾à¦¹ à¦¤à¦¾à¦à¦° à¦¬à¦¾à¦¨à§à¦¦à¦¾à¦¦à§‡à¦° à¦ªà§à¦°à¦¤à¦¿ à¦¦à§Ÿà¦¾à¦²à§à¥¤ à¦¤à¦¿à¦¨à¦¿ à¦¯à¦¾à¦•à§‡ à¦‡à¦šà§à¦›à¦¾, à¦°à¦¿à¦¯à¦¿à¦• à¦¦à¦¾à¦¨ à¦•à¦°à§‡à¦¨à¥¤ à¦¤à¦¿à¦¨à¦¿ à¦ªà§à¦°à¦¬à¦², à¦ªà¦°à¦¾à¦•à§à¦°à¦®à¦¶à¦¾à¦²à§€à¥¤",
               loop: 70,
             },
             {
               id: "dfZYTEgfwDc",
               start: 0,
               end: 30,
-              label: "আয়তুল কুরসী",
+              label: "à¦†à§Ÿà¦¤à§à¦² à¦•à§à¦°à¦¸à§€",
               tooltip: "Ayatul Kursi",
               loop: 1,
             },
@@ -905,215 +862,215 @@
               id: "GpjwpMvDx7I",
               start: 0,
               end: 555,
-              label: "সূরা ইয়াসিন",
-              tooltip: "সূরা ইয়াসিন - Any Goal",
+              label: "à¦¸à§‚à¦°à¦¾ à¦‡à§Ÿà¦¾à¦¸à¦¿à¦¨",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦‡à§Ÿà¦¾à¦¸à¦¿à¦¨ - Any Goal",
               loop: 1,
             },
             //Source : https://www.youtube.com/watch?v=VQ_8T8wPscM
-            { isSubcategory: true, label: "বড় ধরনের রোগ থেকে বাঁচার জন্য" },
+            { isSubcategory: true, label: "à¦¬à¦¡à¦¼ à¦§à¦°à¦¨à§‡à¦° à¦°à§‹à¦— à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦œà¦¨à§à¦¯" },
             {
               id: "3NjYi7mCtDs",
               start: 34.5,
               end: 39,
-              label: "সুবহানাল্লাহি ওয়া বিহামদিহী",
-              tooltip: "প্রতিদিন 3 বার",
+              label: "à¦¸à§à¦¬à¦¹à¦¾à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¿ à¦“à¦¯à¦¼à¦¾ à¦¬à¦¿à¦¹à¦¾à¦®à¦¦à¦¿à¦¹à§€",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 3 à¦¬à¦¾à¦°",
               loop: 3,
             },
             {
               id: "VQ_8T8wPscM",
               start: 232,
               end: 243,
-              label: "আল্লাহুম্মা ইন্নী আস’আলুকা মিম্মা ইন্দাকা",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à§€ à¦†à¦¸â€™à¦†à¦²à§à¦•à¦¾ à¦®à¦¿à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¦à¦¾à¦•à¦¾",
               tooltip:
-                "আল্লাহুম্মা ইন্নী আস’আলুকা মিম্মা ইন্দাকা, ওয়া আফিয আলাইয়া মিন ফাদলিকা, ওয়া আনশুর আলাইয়া মিন রাহমাতিকা, ওয়া আনজিল আলাইয়া মিন বারাকাতিকা। : “হে আল্লাহ! আমি তোমার নিকট প্রার্থনা করছি তোমার নিকট যা আছে তা থেকে। তুমি তোমার অনুগ্রহ আমার ওপর ঢেলে দাও, তোমার রহমত আমার ওপর ছড়িয়ে দাও এবং তোমার বরকত আমার ওপর নাযিল কর।",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à§€ à¦†à¦¸â€™à¦†à¦²à§à¦•à¦¾ à¦®à¦¿à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¦à¦¾à¦•à¦¾, à¦“à¦¯à¦¼à¦¾ à¦†à¦«à¦¿à¦¯ à¦†à¦²à¦¾à¦‡à¦¯à¦¼à¦¾ à¦®à¦¿à¦¨ à¦«à¦¾à¦¦à¦²à¦¿à¦•à¦¾, à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¶à§à¦° à¦†à¦²à¦¾à¦‡à¦¯à¦¼à¦¾ à¦®à¦¿à¦¨ à¦°à¦¾à¦¹à¦®à¦¾à¦¤à¦¿à¦•à¦¾, à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦œà¦¿à¦² à¦†à¦²à¦¾à¦‡à¦¯à¦¼à¦¾ à¦®à¦¿à¦¨ à¦¬à¦¾à¦°à¦¾à¦•à¦¾à¦¤à¦¿à¦•à¦¾à¥¤ : â€œà¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦®à¦¿ à¦¤à§‹à¦®à¦¾à¦° à¦¨à¦¿à¦•à¦Ÿ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾ à¦•à¦°à¦›à¦¿ à¦¤à§‹à¦®à¦¾à¦° à¦¨à¦¿à¦•à¦Ÿ à¦¯à¦¾ à¦†à¦›à§‡ à¦¤à¦¾ à¦¥à§‡à¦•à§‡à¥¤ à¦¤à§à¦®à¦¿ à¦¤à§‹à¦®à¦¾à¦° à¦…à¦¨à§à¦—à§à¦°à¦¹ à¦†à¦®à¦¾à¦° à¦“à¦ªà¦° à¦¢à§‡à¦²à§‡ à¦¦à¦¾à¦“, à¦¤à§‹à¦®à¦¾à¦° à¦°à¦¹à¦®à¦¤ à¦†à¦®à¦¾à¦° à¦“à¦ªà¦° à¦›à¦¡à¦¼à¦¿à¦¯à¦¼à§‡ à¦¦à¦¾à¦“ à¦à¦¬à¦‚ à¦¤à§‹à¦®à¦¾à¦° à¦¬à¦°à¦•à¦¤ à¦†à¦®à¦¾à¦° à¦“à¦ªà¦° à¦¨à¦¾à¦¯à¦¿à¦² à¦•à¦°à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (🔃)" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² (ðŸ”ƒ)" },
             // Source : https://www.youtube.com/watch?v=0Uc1WVNaWDU
             {
               id: "0Uc1WVNaWDU",
               start: 108.5,
               end: 117.4,
-              label: "ইয়া জালজালালি ওয়াল ইকরাম",
+              label: "à¦‡à¦¯à¦¼à¦¾ à¦œà¦¾à¦²à¦œà¦¾à¦²à¦¾à¦²à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦‡à¦•à¦°à¦¾à¦®",
               tooltip:
-                "ফজরের নামাজের পর এবং আসরের নামাজের পর 100 Times: ইয়া জালজালালি ওয়াল ইকরাম : হে আল্লাহ, তুমি শান্তির কর্তা এবং তোমার কাছ থেকেই শান্তি আসে। তুমি বরকতময়, হে মহিমা ও সম্মানের মালিক। [হিসনুল মুসলিম: ৬৬]",
+                "à¦«à¦œà¦°à§‡à¦° à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦ªà¦° à¦à¦¬à¦‚ à¦†à¦¸à¦°à§‡à¦° à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦ªà¦° 100 Times: à¦‡à¦¯à¦¼à¦¾ à¦œà¦¾à¦²à¦œà¦¾à¦²à¦¾à¦²à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦‡à¦•à¦°à¦¾à¦® : à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹, à¦¤à§à¦®à¦¿ à¦¶à¦¾à¦¨à§à¦¤à¦¿à¦° à¦•à¦°à§à¦¤à¦¾ à¦à¦¬à¦‚ à¦¤à§‹à¦®à¦¾à¦° à¦•à¦¾à¦› à¦¥à§‡à¦•à§‡à¦‡ à¦¶à¦¾à¦¨à§à¦¤à¦¿ à¦†à¦¸à§‡à¥¤ à¦¤à§à¦®à¦¿ à¦¬à¦°à¦•à¦¤à¦®à¦¯à¦¼, à¦¹à§‡ à¦®à¦¹à¦¿à¦®à¦¾ à¦“ à¦¸à¦®à§à¦®à¦¾à¦¨à§‡à¦° à¦®à¦¾à¦²à¦¿à¦•à¥¤ [à¦¹à¦¿à¦¸à¦¨à§à¦² à¦®à§à¦¸à¦²à¦¿à¦®: à§¬à§¬]",
                 loop: 25,
             },
-            { isSubcategory: true, label: "স্মরণশক্তি বৃদ্ধির দোয়া" },
+            { isSubcategory: true, label: "à¦¸à§à¦®à¦°à¦£à¦¶à¦•à§à¦¤à¦¿ à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦¦à§‹à¦¯à¦¼à¦¾" },
             // Source : https://www.youtube.com/watch?v=nnqhGW6ZX8k
             {
               id: "hEjXkTP4XKg",
               start: 243,
               end: 260,
-              label: "সূরা ত্বাহা: ২৫-২৮ নং আয়াত 🔃",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¤à§à¦¬à¦¾à¦¹à¦¾: à§¨à§«-à§¨à§® à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤ ðŸ”ƒ",
               tooltip:
-                "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১১ বার",
+                "à¦“à§Ÿà¦¾ à¦•à§à¦²à¦¿à¦² à¦¹à¦¾à¦®à¦¦à§ à¦²à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦²à§à¦²à¦¾à¦¯à§€ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦¤à§à¦¤à¦¾à¦–à¦¿à¦¯ à¦“à§Ÿà¦¾à¦²à¦¾à¦¦à¦¾, à¦“à§Ÿà¦¾ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦•à§à¦²à§à¦²à¦¾à¦¹à§‚ à¦¶à¦¾à¦°à§€à¦•à§à¦¨ à¦«à¦¿à¦² à¦®à§à¦²à§à¦•à¦¿, à¦“à§Ÿà¦¾ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦•à§à¦²à§à¦²à¦¾à¦¹à§‚ à¦“à§Ÿà¦¾à¦²à¦¿à¦‡à§à¦¯à§à¦® à¦®à¦¿à¦¨à¦¾à¦œà§â€Œà¦¯à§à¦²à§à¦²à¦¿, à¦“à§Ÿà¦¾ à¦•à¦¾à¦¬à§à¦¬à¦¿à¦°à¦¹à§‚ à¦¤à¦¾à¦•à¦¬à§€à¦°à¦¾à¥¤ à¦¬à¦²à§à¦¨, à¦¸à¦®à¦¸à§à¦¤ à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾ à¦†à¦²à§à¦²à¦¾à¦¹à¦°, à¦¯à¦¿à¦¨à¦¿ à¦•à§‹à¦¨à§‹ à¦¸à¦¨à§à¦¤à¦¾à¦¨ à¦—à§à¦°à¦¹à¦£ à¦•à¦°à§‡à¦¨à¦¨à¦¿, à¦¤à¦¾à¦à¦° à¦°à¦¾à¦œà¦¤à§à¦¬à§‡ à¦¤à¦¾à¦à¦° à¦•à§‹à¦¨à§‹ à¦¶à¦°à¦¿à¦• à¦¨à§‡à¦‡ à¦à¦¬à¦‚ à¦¦à§à¦°à§à¦¬à¦²à¦¤à¦¾ à¦¥à§‡à¦•à§‡ à¦°à¦•à§à¦·à¦¾ à¦•à¦°à¦¾à¦° à¦œà¦¨à§à¦¯ à¦¤à¦¾à¦à¦° à¦•à§‹à¦¨à§‹ à¦…à¦­à¦¿à¦­à¦¾à¦¬à¦•à§‡à¦°à¦“ à¦ªà§à¦°à¦¯à¦¼à§‹à¦œà¦¨ à¦¨à§‡à¦‡à¥¤ à¦†à¦° à¦¤à¦¾à¦à¦°à¦‡ à¦®à¦¹à¦¿à¦®à¦¾ à¦˜à§‹à¦·à¦£à¦¾ à¦•à¦°à§à¦¨ à¦¯à¦¥à¦¾à¦¯à¦¥à¦­à¦¾à¦¬à§‡ | à¦¯à¦–à¦¨ à¦•à¦¥à¦¾ à¦¬à¦²à¦¾ à¦¶à§à¦°à§ à¦•à¦°à¦¬à§‡à¥¤ à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§§ à¦¬à¦¾à¦°",
               loop: 11,
             },
-            { isSubcategory: true, label: "আসরের নামাজের পর আমল (জুমার)" },
+            { isSubcategory: true, label: "à¦†à¦¸à¦°à§‡à¦° à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦ªà¦° à¦†à¦®à¦² (à¦œà§à¦®à¦¾à¦°)" },
             // SOURCE : https://www.youtube.com/watch?v=B0PM2Z7YSb4
             {
               id: "B0PM2Z7YSb4",
               start: 48,
               end: 56,
-              label: "৮০ বছরের গুনাহ ক্ষমার বিশেষ দরুদ আমল",
+              label: "à§®à§¦ à¦¬à¦›à¦°à§‡à¦° à¦—à§à¦¨à¦¾à¦¹ à¦•à§à¦·à¦®à¦¾à¦° à¦¬à¦¿à¦¶à§‡à¦· à¦¦à¦°à§à¦¦ à¦†à¦®à¦²",
               tooltip:
-                "আল্লাহুম্মা সাল্লি ‘আলা মুহাম্মাদিন ন্-নাবিয়্যিল উম্মিয়্যি, ওয়া ‘আলা আলিহি ওয়া সাল্লিম তাসলীমা। : হে আল্লাহ! আপনি উম্মী নবী হযরত মুহাম্মদ ﷺ-এর উপর, তাঁর পরিবার-পরিজনের উপর রহমত ও শান্তি বর্ষণ করুন—পরিপূর্ণভাবে।",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦¸à¦¾à¦²à§à¦²à¦¿ â€˜à¦†à¦²à¦¾ à¦®à§à¦¹à¦¾à¦®à§à¦®à¦¾à¦¦à¦¿à¦¨ à¦¨à§-à¦¨à¦¾à¦¬à¦¿à§Ÿà§à¦¯à¦¿à¦² à¦‰à¦®à§à¦®à¦¿à§Ÿà§à¦¯à¦¿, à¦“à§Ÿà¦¾ â€˜à¦†à¦²à¦¾ à¦†à¦²à¦¿à¦¹à¦¿ à¦“à§Ÿà¦¾ à¦¸à¦¾à¦²à§à¦²à¦¿à¦® à¦¤à¦¾à¦¸à¦²à§€à¦®à¦¾à¥¤ : à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦ªà¦¨à¦¿ à¦‰à¦®à§à¦®à§€ à¦¨à¦¬à§€ à¦¹à¦¯à¦°à¦¤ à¦®à§à¦¹à¦¾à¦®à§à¦®à¦¦ ï·º-à¦à¦° à¦‰à¦ªà¦°, à¦¤à¦¾à¦à¦° à¦ªà¦°à¦¿à¦¬à¦¾à¦°-à¦ªà¦°à¦¿à¦œà¦¨à§‡à¦° à¦‰à¦ªà¦° à¦°à¦¹à¦®à¦¤ à¦“ à¦¶à¦¾à¦¨à§à¦¤à¦¿ à¦¬à¦°à§à¦·à¦£ à¦•à¦°à§à¦¨â€”à¦ªà¦°à¦¿à¦ªà§‚à¦°à§à¦£à¦­à¦¾à¦¬à§‡à¥¤",
               loop: 80,
             },
-             { isSubcategory: true, label: "মাগরিব পর - রিজিক বৃদ্ধির আমল" },
+             { isSubcategory: true, label: "à¦®à¦¾à¦—à¦°à¦¿à¦¬ à¦ªà¦° - à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=rVsOYwB0i64 || https://www.youtube.com/watch?v=vCpGWJ9VqdQ
             {
               id: "N78PGdl2-Wo",
               start: 0,
               end: 398,
-              label: "সূরা ওয়াকিয়া",
-              tooltip: "সূরা ওয়াকিয়া - মাগরিব নামাজের পর পড়া",
+              label: "à¦¸à§‚à¦°à¦¾ à¦“à§Ÿà¦¾à¦•à¦¿à§Ÿà¦¾",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦“à§Ÿà¦¾à¦•à¦¿à§Ÿà¦¾ - à¦®à¦¾à¦—à¦°à¦¿à¦¬ à¦¨à¦¾à¦®à¦¾à¦œà§‡à¦° à¦ªà¦° à¦ªà§œà¦¾",
               loop: 1,
             },
-            { isSubcategory: true, label: "শেষ - সকাল-সন্ধ্যার দোয়া " },
+            { isSubcategory: true, label: "à¦¶à§‡à¦· - à¦¸à¦•à¦¾à¦²-à¦¸à¦¨à§à¦§à§à¦¯à¦¾à¦° à¦¦à§‹à¦¯à¦¼à¦¾ " },
             {
               id: "z03wnWxvGeI",
               start: 0,
               end: 14,
               label:
-                "রদিতুবিল্লাহি রব্বাও ওয়া বিল ইসলামি দিনাও ওয়া বি মুহাম্মাদিন নাবিয়্যাও ওয়া রাসূলা।",
+                "à¦°à¦¦à¦¿à¦¤à§à¦¬à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿ à¦°à¦¬à§à¦¬à¦¾à¦“ à¦“à§Ÿà¦¾ à¦¬à¦¿à¦² à¦‡à¦¸à¦²à¦¾à¦®à¦¿ à¦¦à¦¿à¦¨à¦¾à¦“ à¦“à§Ÿà¦¾ à¦¬à¦¿ à¦®à§à¦¹à¦¾à¦®à§à¦®à¦¾à¦¦à¦¿à¦¨ à¦¨à¦¾à¦¬à¦¿à§Ÿà§à¦¯à¦¾à¦“ à¦“à§Ÿà¦¾ à¦°à¦¾à¦¸à§‚à¦²à¦¾à¥¤",
               tooltip:
-                "আমি আল্লাহকে প্রতিপালক হিসাবে, ইসলামকে দ্বীন হিসাবে এবং মুহাম্মাদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লামকে নবী ও রাসূল হিসাবে পেয়ে খুশি হয়েছি। ",
+                "à¦†à¦®à¦¿ à¦†à¦²à§à¦²à¦¾à¦¹à¦•à§‡ à¦ªà§à¦°à¦¤à¦¿à¦ªà¦¾à¦²à¦• à¦¹à¦¿à¦¸à¦¾à¦¬à§‡, à¦‡à¦¸à¦²à¦¾à¦®à¦•à§‡ à¦¦à§à¦¬à§€à¦¨ à¦¹à¦¿à¦¸à¦¾à¦¬à§‡ à¦à¦¬à¦‚ à¦®à§à¦¹à¦¾à¦®à§à¦®à¦¾à¦¦ à¦¸à¦¾à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦²à¦¾à¦‡à¦¹à¦¿ à¦“à§Ÿà¦¾ à¦¸à¦¾à¦²à§à¦²à¦¾à¦®à¦•à§‡ à¦¨à¦¬à§€ à¦“ à¦°à¦¾à¦¸à§‚à¦² à¦¹à¦¿à¦¸à¦¾à¦¬à§‡ à¦ªà§‡à§Ÿà§‡ à¦–à§à¦¶à¦¿ à¦¹à§Ÿà§‡à¦›à¦¿à¥¤ ",
               loop: 3,
             },
           ],
         },
         {
-          name: "ঘুমানোর আগে ও পরে আমল",
+          name: "à¦˜à§à¦®à¦¾à¦¨à§‹à¦° à¦†à¦—à§‡ à¦“ à¦ªà¦°à§‡ à¦†à¦®à¦²",
           videos: [
-            { isSubcategory: true, label: "ঘুমানোর আগে আমল" },
+            { isSubcategory: true, label: "à¦˜à§à¦®à¦¾à¦¨à§‹à¦° à¦†à¦—à§‡ à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=Gf65O27XHD0
             {
               id: "zy3xIbbK6eE",
               start: 5,
               end: 130,
-              label: "সূরা বাকারা: আয়াত ২৮৫-২৮৬",
-              tooltip: "সূরা বাকারার শেষ দুই আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¾à¦•à¦¾à¦°à¦¾: à¦†à§Ÿà¦¾à¦¤ à§¨à§®à§«-à§¨à§®à§¬",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¾à¦•à¦¾à¦°à¦¾à¦° à¦¶à§‡à¦· à¦¦à§à¦‡ à¦†à§Ÿà¦¾à¦¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল (ঘুমানোর আগে)" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² (à¦˜à§à¦®à¦¾à¦¨à§‹à¦° à¦†à¦—à§‡)" },
             // SOURCE : https://www.youtube.com/watch?v=PyoxwfCeKMs
             {
               id: "HOBTLKIfkmE",
               start: 61,
               end: 99.5,
-              label: "রিজিক বৃদ্ধির সর্বশ্রেষ্ঠ আমল (কাবার ইমাম)",
-              tooltip: "প্রতিদিন 3 বার with Salam",
+              label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦¸à¦°à§à¦¬à¦¶à§à¦°à§‡à¦·à§à¦  à¦†à¦®à¦² (à¦•à¦¾à¦¬à¦¾à¦° à¦‡à¦®à¦¾à¦®)",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 3 à¦¬à¦¾à¦° with Salam",
               loop: 3,
             },
-            { isSubcategory: true, label: "নবীজিকে স্বপ্নে দেখার আমল - 01" },
+            { isSubcategory: true, label: "à¦¨à¦¬à§€à¦œà¦¿à¦•à§‡ à¦¸à§à¦¬à¦ªà§à¦¨à§‡ à¦¦à§‡à¦–à¦¾à¦° à¦†à¦®à¦² - 01" },
             // SOURCE : https://www.youtube.com/watch?v=7OZ39NZjlL4
             {
               id: "14uh3215Vls",
               start: 0,
               end: 30,
-              label: "দরুদ শরীফ",
-              tooltip: "দরুদ শরীফ",
+              label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+              tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
               loop: 3,
             },
             {
               id: "7OZ39NZjlL4",
               start: 122.5,
               end: 150,
-              label: "আল্লাহুম্মা ইন্নী আসআলুকা বিযালালি ওয়াজহিকাল",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à§€ à¦†à¦¸à¦†à¦²à§à¦•à¦¾ à¦¬à¦¿à¦¯à¦¾à¦²à¦¾à¦²à¦¿ à¦“à§Ÿà¦¾à¦œà¦¹à¦¿à¦•à¦¾à¦²",
               tooltip:
-              "ওযু করে ডান পাশে শুয়ে | আল্লাহুম্মা ইন্নী আসআলুকা বিযালালি ওয়াজহিকাল কারীমি আন তুরীয়ানী ওয়াজহা নবীয়্যিকা মুহাম্মাদিন ﷺ আও আন তাজমা‘া বাইনী ওয়াবাইনা-হু ইয়াওমাল কিয়ামতি ফিদ দারাজাতিল উলা। আমীন। ওয়ালা তুফাররিক বাইনী ওয়াবাইনা-হু বিরাহমাতিকা ইয়া আরহামার রাহিমীন। - ৩ বার",
+              "à¦“à¦¯à§ à¦•à¦°à§‡ à¦¡à¦¾à¦¨ à¦ªà¦¾à¦¶à§‡ à¦¶à§à¦¯à¦¼à§‡ | à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à§€ à¦†à¦¸à¦†à¦²à§à¦•à¦¾ à¦¬à¦¿à¦¯à¦¾à¦²à¦¾à¦²à¦¿ à¦“à§Ÿà¦¾à¦œà¦¹à¦¿à¦•à¦¾à¦² à¦•à¦¾à¦°à§€à¦®à¦¿ à¦†à¦¨ à¦¤à§à¦°à§€à§Ÿà¦¾à¦¨à§€ à¦“à§Ÿà¦¾à¦œà¦¹à¦¾ à¦¨à¦¬à§€à§Ÿà§à¦¯à¦¿à¦•à¦¾ à¦®à§à¦¹à¦¾à¦®à§à¦®à¦¾à¦¦à¦¿à¦¨ ï·º à¦†à¦“ à¦†à¦¨ à¦¤à¦¾à¦œà¦®à¦¾â€˜à¦¾ à¦¬à¦¾à¦‡à¦¨à§€ à¦“à§Ÿà¦¾à¦¬à¦¾à¦‡à¦¨à¦¾-à¦¹à§ à¦‡à§Ÿà¦¾à¦“à¦®à¦¾à¦² à¦•à¦¿à§Ÿà¦¾à¦®à¦¤à¦¿ à¦«à¦¿à¦¦ à¦¦à¦¾à¦°à¦¾à¦œà¦¾à¦¤à¦¿à¦² à¦‰à¦²à¦¾à¥¤ à¦†à¦®à§€à¦¨à¥¤ à¦“à§Ÿà¦¾à¦²à¦¾ à¦¤à§à¦«à¦¾à¦°à¦°à¦¿à¦• à¦¬à¦¾à¦‡à¦¨à§€ à¦“à§Ÿà¦¾à¦¬à¦¾à¦‡à¦¨à¦¾-à¦¹à§ à¦¬à¦¿à¦°à¦¾à¦¹à¦®à¦¾à¦¤à¦¿à¦•à¦¾ à¦‡à§Ÿà¦¾ à¦†à¦°à¦¹à¦¾à¦®à¦¾à¦° à¦°à¦¾à¦¹à¦¿à¦®à§€à¦¨à¥¤ - à§© à¦¬à¦¾à¦°",
               loop: 3,
             },
             {
               id: "UiBdT9Otf3I",
               start: 0,
               end: 24,
-              label: "সূরা কাউসার",
-              tooltip: "১০০ বার ",
+              label: "à¦¸à§‚à¦°à¦¾ à¦•à¦¾à¦‰à¦¸à¦¾à¦°",
+              tooltip: "à§§à§¦à§¦ à¦¬à¦¾à¦° ",
               loop: 100,
             },
             {
               id: "14uh3215Vls",
               start: 0,
               end: 30,
-              label: "দরুদ শরীফ",
-              tooltip: "দরুদ শরীফ",
+              label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+              tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
               loop: 10,
             },
             // https://www.youtube.com/watch?v=cjHj3fQMH6Q <---------<<<
-            // { isSubcategory: true, label: "নবীজিকে স্বপ্নে দেখার আমল - 02" },
+            // { isSubcategory: true, label: "à¦¨à¦¬à§€à¦œà¦¿à¦•à§‡ à¦¸à§à¦¬à¦ªà§à¦¨à§‡ à¦¦à§‡à¦–à¦¾à¦° à¦†à¦®à¦² - 02" },
             // {
               //   id: "ZfU16Q4efhY",
               //   start: 0,
               //   end: 170,
-              //   label: "সূরা মুজাম্মিলের আমল",
-              //   tooltip: "সূরা মোজাম্মিল পড়ে ঘুমিয়ে পড়া।  (কারো সাথে কথা না বলে )",
+              //   label: "à¦¸à§‚à¦°à¦¾ à¦®à§à¦œà¦¾à¦®à§à¦®à¦¿à¦²à§‡à¦° à¦†à¦®à¦²",
+              //   tooltip: "à¦¸à§‚à¦°à¦¾ à¦®à§‹à¦œà¦¾à¦®à§à¦®à¦¿à¦² à¦ªà§œà§‡ à¦˜à§à¦®à¦¿à§Ÿà§‡ à¦ªà§œà¦¾à¥¤  (à¦•à¦¾à¦°à§‹ à¦¸à¦¾à¦¥à§‡ à¦•à¦¥à¦¾ à¦¨à¦¾ à¦¬à¦²à§‡ )",
               //   loop: 1,
             // },
-            // { isSubcategory: true, label: "নবীজিকে স্বপ্নে দেখার আমল - 03" },
+            // { isSubcategory: true, label: "à¦¨à¦¬à§€à¦œà¦¿à¦•à§‡ à¦¸à§à¦¬à¦ªà§à¦¨à§‡ à¦¦à§‡à¦–à¦¾à¦° à¦†à¦®à¦² - 03" },
             // {
               //   id: "ZfU16Q4efhY",
               //   start: 0,
               //   end: 170,
-              //   label: "সূরা মুজাম্মিলের আমল",
-              //   tooltip: "সূরা মোজাম্মিল পড়ে ঘুমিয়ে পড়া।  (কারো সাথে কথা না বলে )",
+              //   label: "à¦¸à§‚à¦°à¦¾ à¦®à§à¦œà¦¾à¦®à§à¦®à¦¿à¦²à§‡à¦° à¦†à¦®à¦²",
+              //   tooltip: "à¦¸à§‚à¦°à¦¾ à¦®à§‹à¦œà¦¾à¦®à§à¦®à¦¿à¦² à¦ªà§œà§‡ à¦˜à§à¦®à¦¿à§Ÿà§‡ à¦ªà§œà¦¾à¥¤  (à¦•à¦¾à¦°à§‹ à¦¸à¦¾à¦¥à§‡ à¦•à¦¥à¦¾ à¦¨à¦¾ à¦¬à¦²à§‡ )",
               //   loop: 1,
               // },
-              { isSubcategory: true, label: "ঘুম থেকে উঠার পর" },
+              { isSubcategory: true, label: "à¦˜à§à¦® à¦¥à§‡à¦•à§‡ à¦‰à¦ à¦¾à¦° à¦ªà¦°" },
               {
                 id: "_P75cWrTGPs",
                 start: 124.2,
                 end: 131.8,
-                label: "আলহামদুলিল্লাহ",
-                tooltip: "প্রতিদিন 3 বার",
+                label: "à¦†à¦²à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾à¦¹",
+                tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 3 à¦¬à¦¾à¦°",
                 loop: 3,
               },
             ],
         },
         {
-          name: "ইস্তেগফার : 3:00 AM",
+          name: "à¦‡à¦¸à§à¦¤à§‡à¦—à¦«à¦¾à¦° : 3:00 AM",
           videos: [
             {
               id: "3b2NujLLSpw",
               start: 6,
               end: 43,
-              label: "সাইয়েদুল ইস্তেগফার",
+              label: "à¦¸à¦¾à¦‡à§Ÿà§‡à¦¦à§à¦² à¦‡à¦¸à§à¦¤à§‡à¦—à¦«à¦¾à¦°",
               tooltip:
-              "আল্লাহুম্মা আংতা রাব্বি লা ইলাহা ইল্লা আংতা খালাক্বতানি ওয়া আনা আবদুকা ওয়া আনা আলা আহ্দিকা ওয়া ওয়াদিকা মাসতা তায়াতু, আউজু বিকা মিন শাররি মা ছনাতু, আবুউ লাকা বিনিমাতিকা আলাইয়া, ওয়া আবুউ লাকা বিজাম্বি; ফাগফির লি, ফা ইন্নাহু লা ইয়াগফিরুজ-জুনুবা ইল্লা আংতা।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦‚à¦¤à¦¾ à¦°à¦¾à¦¬à§à¦¬à¦¿ à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦‚à¦¤à¦¾ à¦–à¦¾à¦²à¦¾à¦•à§à¦¬à¦¤à¦¾à¦¨à¦¿ à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¾ à¦†à¦¬à¦¦à§à¦•à¦¾ à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¾ à¦†à¦²à¦¾ à¦†à¦¹à§à¦¦à¦¿à¦•à¦¾ à¦“à¦¯à¦¼à¦¾ à¦“à¦¯à¦¼à¦¾à¦¦à¦¿à¦•à¦¾ à¦®à¦¾à¦¸à¦¤à¦¾ à¦¤à¦¾à¦¯à¦¼à¦¾à¦¤à§, à¦†à¦‰à¦œà§ à¦¬à¦¿à¦•à¦¾ à¦®à¦¿à¦¨ à¦¶à¦¾à¦°à¦°à¦¿ à¦®à¦¾ à¦›à¦¨à¦¾à¦¤à§, à¦†à¦¬à§à¦‰ à¦²à¦¾à¦•à¦¾ à¦¬à¦¿à¦¨à¦¿à¦®à¦¾à¦¤à¦¿à¦•à¦¾ à¦†à¦²à¦¾à¦‡à¦¯à¦¼à¦¾, à¦“à¦¯à¦¼à¦¾ à¦†à¦¬à§à¦‰ à¦²à¦¾à¦•à¦¾ à¦¬à¦¿à¦œà¦¾à¦®à§à¦¬à¦¿; à¦«à¦¾à¦—à¦«à¦¿à¦° à¦²à¦¿, à¦«à¦¾ à¦‡à¦¨à§à¦¨à¦¾à¦¹à§ à¦²à¦¾ à¦‡à¦¯à¦¼à¦¾à¦—à¦«à¦¿à¦°à§à¦œ-à¦œà§à¦¨à§à¦¬à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦‚à¦¤à¦¾à¥¤",
               loop: 1,
             },
             {
               id: "Fbm63isVYmY",
               start: 23.4,
               end: 30,
-              label: "আস্তাগফিরুল্লাহ হাল্লাজি (♾️)",
+              label: "à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹ à¦¹à¦¾à¦²à§à¦²à¦¾à¦œà¦¿ (â™¾ï¸)",
               tooltip:
-              "আস্তাগফিরুল্লাহ হাল্লাজি লা ইলাহা ইল্লা হুয়াল হাইয়ুল কাইয়ুম ওয়াতুবি ইলাইহি। (আবু দাউদ-১৫১৭)",
+              "à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹ à¦¹à¦¾à¦²à§à¦²à¦¾à¦œà¦¿ à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦¹à§à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦‡à¦¯à¦¼à§à¦² à¦•à¦¾à¦‡à¦¯à¦¼à§à¦® à¦“à¦¯à¦¼à¦¾à¦¤à§à¦¬à¦¿ à¦‡à¦²à¦¾à¦‡à¦¹à¦¿à¥¤ (à¦†à¦¬à§ à¦¦à¦¾à¦‰à¦¦-à§§à§«à§§à§­)",
               loop: 1,
             },
             {
               id: "F8J09kBMsJU",
               start: 0,
               end: 7,
-              label: "আসতাগফিরুললাহা ওয়া আতুবুহ ইলাইহ",
-              tooltip: "আবূ হুরাইরাহ (রাঃ) বর্ণনা করেন, আমি রাসূলুল্লাহ সাল্লাল্লাহু আলাইহি ওয়াসাল্লাম-কে বলতে শুনেছিঃ আল্লাহর শপথ! আমি প্রতিদিন আল্লাহর কাছে সত্তরবারেরও অধিক ইস্তিগফার ও তওবা করে থাকি। বুখারী-৬৩০৭",
+              label: "à¦†à¦¸à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à¦²à¦¾à¦¹à¦¾ à¦“à¦¯à¦¼à¦¾ à¦†à¦¤à§à¦¬à§à¦¹ à¦‡à¦²à¦¾à¦‡à¦¹",
+              tooltip: "à¦†à¦¬à§‚ à¦¹à§à¦°à¦¾à¦‡à¦°à¦¾à¦¹ (à¦°à¦¾à¦ƒ) à¦¬à¦°à§à¦£à¦¨à¦¾ à¦•à¦°à§‡à¦¨, à¦†à¦®à¦¿ à¦°à¦¾à¦¸à§‚à¦²à§à¦²à§à¦²à¦¾à¦¹ à¦¸à¦¾à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦²à¦¾à¦‡à¦¹à¦¿ à¦“à§Ÿà¦¾à¦¸à¦¾à¦²à§à¦²à¦¾à¦®-à¦•à§‡ à¦¬à¦²à¦¤à§‡ à¦¶à§à¦¨à§‡à¦›à¦¿à¦ƒ à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦¶à¦ªà¦¥! à¦†à¦®à¦¿ à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦•à¦¾à¦›à§‡ à¦¸à¦¤à§à¦¤à¦°à¦¬à¦¾à¦°à§‡à¦°à¦“ à¦…à¦§à¦¿à¦• à¦‡à¦¸à§à¦¤à¦¿à¦—à¦«à¦¾à¦° à¦“ à¦¤à¦“à¦¬à¦¾ à¦•à¦°à§‡ à¦¥à¦¾à¦•à¦¿à¥¤ à¦¬à§à¦–à¦¾à¦°à§€-à§¬à§©à§¦à§­",
               loop: 70,
             },
             {
               id: "ef9hA9jKtWw",
               start: 53,
               end: 63,
-              label: "রাব্বিগ্ ফিরলী, ওয়া তুব ‘আলাইয়্যা, ইন্নাকা আনতাত তাওয়া-বুর রাহীম",
-              tooltip: "রাসুলুল্লাহ (সাঃ) মসজিদে বসে এক বৈঠকেই এই দোয়া ১০০ বার পড়েছেন। [আবূ দাঊদ-১৫১৬]",
+              label: "à¦°à¦¾à¦¬à§à¦¬à¦¿à¦—à§ à¦«à¦¿à¦°à¦²à§€, à¦“à§Ÿà¦¾ à¦¤à§à¦¬ â€˜à¦†à¦²à¦¾à¦‡à§Ÿà§à¦¯à¦¾, à¦‡à¦¨à§à¦¨à¦¾à¦•à¦¾ à¦†à¦¨à¦¤à¦¾à¦¤ à¦¤à¦¾à¦“à§Ÿà¦¾-à¦¬à§à¦° à¦°à¦¾à¦¹à§€à¦®",
+              tooltip: "à¦°à¦¾à¦¸à§à¦²à§à¦²à§à¦²à¦¾à¦¹ (à¦¸à¦¾à¦ƒ) à¦®à¦¸à¦œà¦¿à¦¦à§‡ à¦¬à¦¸à§‡ à¦à¦• à¦¬à§ˆà¦ à¦•à§‡à¦‡ à¦à¦‡ à¦¦à§‹à§Ÿà¦¾ à§§à§¦à§¦ à¦¬à¦¾à¦° à¦ªà§œà§‡à¦›à§‡à¦¨à¥¤ [à¦†à¦¬à§‚ à¦¦à¦¾à¦Šà¦¦-à§§à§«à§§à§¬]",
               loop: 100,
             },
             {
               id: "U_5o4JEINfQ",
               start: 11.8,
               end: 17,
-              label: "সুরা আম্বিয়া: ৮৭ - দোয়া ইউনুস(♾️)",
+              label: "à¦¸à§à¦°à¦¾ à¦†à¦®à§à¦¬à¦¿à§Ÿà¦¾: à§®à§­ - à¦¦à§‹à¦¯à¦¼à¦¾ à¦‡à¦‰à¦¨à§à¦¸(â™¾ï¸)",
               tooltip: "-",
               loop: 1,
             },
@@ -1121,240 +1078,240 @@
               id: "VNoq93-17Ho",
               start: 2,
               end: 22,
-              label: "আস্তাগফিরুল্লাহ",
-              tooltip: "আমি আল্লাহর ক্ষমাপ্রার্থনা করছি ।",
+              label: "à¦†à¦¸à§à¦¤à¦¾à¦—à¦«à¦¿à¦°à§à¦²à§à¦²à¦¾à¦¹",
+              tooltip: "à¦†à¦®à¦¿ à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦•à§à¦·à¦®à¦¾à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾ à¦•à¦°à¦›à¦¿ à¥¤",
               loop: 10,
             },
             {
               id: "UFMf485VTiI",
               start: 45,
               end: 48.2,
-              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম",
+              label: "à¦²à¦¾ à¦¹à¦¾à¦“à¦²à¦¾ à¦“à¦¯à¦¼à¦¾à¦²à¦¾ à¦•à§à¦“à¦¯à¦¼à¦¾à¦¤à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦¬à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦² à¦†à¦²à¦¿à¦‰à¦² à¦†à¦œà¦¿à¦®",
               tooltip:
-                "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন ১০০ বার",
+                "à¦†à¦²à§à¦²à¦¾à¦¹ à¦›à¦¾à§œà¦¾ à¦•à§‹à¦¨à§‹ à¦­à¦°à¦¸à¦¾ à¦¨à§‡à¦‡, à¦•à§‹à¦¨à§‹ à¦•à§à¦·à¦®à¦¤à¦¾ à¦¬à¦¾ à¦¶à¦•à§à¦¤à¦¿ à¦¨à§‡à¦‡ | à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§à§¦à§¦ à¦¬à¦¾à¦°",
               loop: 100,
             },
             {
               id: "n3-Ri8SKre4",
               start: 1531.8,
               end: 1544,
-              label: "সূরা আল মুমিনূন ১১৮ নং আয়াত(♾️)",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦®à§à¦®à¦¿à¦¨à§‚à¦¨ à§§à§§à§® à¦¨à¦‚ à¦†à¦¯à¦¼à¦¾à¦¤(â™¾ï¸)",
               tooltip: " ------ ",
               loop: 1,
             },
-            { isSubcategory: true, label: "নবী আদম (আঃ) এর দোয়া" },
+            { isSubcategory: true, label: "à¦¨à¦¬à§€ à¦†à¦¦à¦® (à¦†à¦ƒ) à¦à¦° à¦¦à§‹à§Ÿà¦¾" },
             {
               id: "J7r4QEeKTgU",
               start: 1,
               end: 17,
-              label: "সূরা আরাফ - ২৩ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦°à¦¾à¦« - à§¨à§© à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-              "আদম আঃ এর দোয়া আল্লাহ যেভাবে কবুল করেছেন - রাব্বানা যালামনা আনফুসানা অইল্লাম তাগফির লানা অতারহামনা লানাকুনান্না মিনাল খা-সিরীন",
+              "à¦†à¦¦à¦® à¦†à¦ƒ à¦à¦° à¦¦à§‹à§Ÿà¦¾ à¦†à¦²à§à¦²à¦¾à¦¹ à¦¯à§‡à¦­à¦¾à¦¬à§‡ à¦•à¦¬à§à¦² à¦•à¦°à§‡à¦›à§‡à¦¨ - à¦°à¦¾à¦¬à§à¦¬à¦¾à¦¨à¦¾ à¦¯à¦¾à¦²à¦¾à¦®à¦¨à¦¾ à¦†à¦¨à¦«à§à¦¸à¦¾à¦¨à¦¾ à¦…à¦‡à¦²à§à¦²à¦¾à¦® à¦¤à¦¾à¦—à¦«à¦¿à¦° à¦²à¦¾à¦¨à¦¾ à¦…à¦¤à¦¾à¦°à¦¹à¦¾à¦®à¦¨à¦¾ à¦²à¦¾à¦¨à¦¾à¦•à§à¦¨à¦¾à¦¨à§à¦¨à¦¾ à¦®à¦¿à¦¨à¦¾à¦² à¦–à¦¾-à¦¸à¦¿à¦°à§€à¦¨",
               loop: 1,
             },
-            { isSubcategory: true, label: "নবী সুলাইমান (আঃ) এর দোয়া" },
+            { isSubcategory: true, label: "à¦¨à¦¬à§€ à¦¸à§à¦²à¦¾à¦‡à¦®à¦¾à¦¨ (à¦†à¦ƒ) à¦à¦° à¦¦à§‹à§Ÿà¦¾" },
             {
               id: "x5Q_lcwzfhg",
               start: 4,
               end: 17,
-              label: "সূরা সাদ ৩৫ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¸à¦¾à¦¦ à§©à§« à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-              "হে আমার প্রতিপালক! আমাকে ক্ষমা করুন এবং এমন এক রাজত্ব দান করুন যা আমার পরে আর কেউ পাবে না। নিশ্চয়ই আপনিই মহাদাতা।",
+              "à¦¹à§‡ à¦†à¦®à¦¾à¦° à¦ªà§à¦°à¦¤à¦¿à¦ªà¦¾à¦²à¦•! à¦†à¦®à¦¾à¦•à§‡ à¦•à§à¦·à¦®à¦¾ à¦•à¦°à§à¦¨ à¦à¦¬à¦‚ à¦à¦®à¦¨ à¦à¦• à¦°à¦¾à¦œà¦¤à§à¦¬ à¦¦à¦¾à¦¨ à¦•à¦°à§à¦¨ à¦¯à¦¾ à¦†à¦®à¦¾à¦° à¦ªà¦°à§‡ à¦†à¦° à¦•à§‡à¦‰ à¦ªà¦¾à¦¬à§‡ à¦¨à¦¾à¥¤ à¦¨à¦¿à¦¶à§à¦šà¦¯à¦¼à¦‡ à¦†à¦ªà¦¨à¦¿à¦‡ à¦®à¦¹à¦¾à¦¦à¦¾à¦¤à¦¾à¥¤",
               loop: 1,
             },
           ],
         },
         {
-          name: "রিজিক বৃদ্ধির আমল",
+          name: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦²",
           videos: [
-            { isSubcategory: true, label: "ঋণ মুক্তির দোয়া" },
+            { isSubcategory: true, label: "à¦‹à¦£ à¦®à§à¦•à§à¦¤à¦¿à¦° à¦¦à§‹à§Ÿà¦¾" },
             {
               id: "0xGfznLD-RA",
               start: 1,
               end: 7.3,
-              label: "আলী (রা) চুক্তিবদ্ধ গোলামকে রাসূল (সাঃ) যে দোয়া শিখিয়েছিলেন (♾️)",
+              label: "à¦†à¦²à§€ (à¦°à¦¾) à¦šà§à¦•à§à¦¤à¦¿à¦¬à¦¦à§à¦§ à¦—à§‹à¦²à¦¾à¦®à¦•à§‡ à¦°à¦¾à¦¸à§‚à¦² (à¦¸à¦¾à¦ƒ) à¦¯à§‡ à¦¦à§‹à§Ÿà¦¾ à¦¶à¦¿à¦–à¦¿à§Ÿà§‡à¦›à¦¿à¦²à§‡à¦¨ (â™¾ï¸)",
               tooltip:
-              "আল্লাহুম্মাক ফিনি বি হালালিকা আন হারামিকা, ওয়া আগনিনি বিফাদলিকা আম্মান সিওয়াক। “হে আল্লাহ! আপনি আমাকে আপনার হালাল দ্বারা পরিতুষ্ট করে আপনার হারাম থেকে ফিরিয়ে রাখুন এবং আপনার অনুগ্রহ দ্বারা আপনি ছাড়া অন্য সকলের থেকে আমাকে অমুখাপেক্ষী করে দিন। তিরমিযী ৫/৫৬০, নং ৩৫৬৩",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾à¦• à¦«à¦¿à¦¨à¦¿ à¦¬à¦¿ à¦¹à¦¾à¦²à¦¾à¦²à¦¿à¦•à¦¾ à¦†à¦¨ à¦¹à¦¾à¦°à¦¾à¦®à¦¿à¦•à¦¾, à¦“à§Ÿà¦¾ à¦†à¦—à¦¨à¦¿à¦¨à¦¿ à¦¬à¦¿à¦«à¦¾à¦¦à¦²à¦¿à¦•à¦¾ à¦†à¦®à§à¦®à¦¾à¦¨ à¦¸à¦¿à¦“à§Ÿà¦¾à¦•à¥¤ â€œà¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦ªà¦¨à¦¿ à¦†à¦®à¦¾à¦•à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦¹à¦¾à¦²à¦¾à¦² à¦¦à§à¦¬à¦¾à¦°à¦¾ à¦ªà¦°à¦¿à¦¤à§à¦·à§à¦Ÿ à¦•à¦°à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦¹à¦¾à¦°à¦¾à¦® à¦¥à§‡à¦•à§‡ à¦«à¦¿à¦°à¦¿à§Ÿà§‡ à¦°à¦¾à¦–à§à¦¨ à¦à¦¬à¦‚ à¦†à¦ªà¦¨à¦¾à¦° à¦…à¦¨à§à¦—à§à¦°à¦¹ à¦¦à§à¦¬à¦¾à¦°à¦¾ à¦†à¦ªà¦¨à¦¿ à¦›à¦¾à§œà¦¾ à¦…à¦¨à§à¦¯ à¦¸à¦•à¦²à§‡à¦° à¦¥à§‡à¦•à§‡ à¦†à¦®à¦¾à¦•à§‡ à¦…à¦®à§à¦–à¦¾à¦ªà§‡à¦•à§à¦·à§€ à¦•à¦°à§‡ à¦¦à¦¿à¦¨à¥¤ à¦¤à¦¿à¦°à¦®à¦¿à¦¯à§€ à§«/à§«à§¬à§¦, à¦¨à¦‚ à§©à§«à§¬à§©",
               loop: 1,
             },
             {
               id: "UkbiXPvZPpw",
               start: 12.8,
               end: 16.2,
-              label: "আবূ হুরাইরাহ (রাঃ) সূত্রে বর্ণিত - রাসূল (সাঃ) দোয়া ",
-              tooltip: "আল্লাহুম্মা ইন্নি আউজুবিকা মিনাল ফাকরি ওয়াল কিল্লাতি ওয়াজ্জিল্লাতি হে আল্লাহ! আমি আপনার কাছে আশ্রয় চাইছি দারিদ্র্য থেকে, আপনার কম দয়া থেকে (রহমত থেকে বঞ্চিত হওয়া থেকে) ও অসম্মানী হওয়া হতে। আমি আপনার কাছে আরো আশ্রয় চাইছি জুলুম করা থেকে অথবা অত্যাচারিত হওয়া হতে। (আবু দাউদ, হাদিস : ১৫৪৪) ",
+              label: "à¦†à¦¬à§‚ à¦¹à§à¦°à¦¾à¦‡à¦°à¦¾à¦¹ (à¦°à¦¾à¦ƒ) à¦¸à§‚à¦¤à§à¦°à§‡ à¦¬à¦°à§à¦£à¦¿à¦¤ - à¦°à¦¾à¦¸à§‚à¦² (à¦¸à¦¾à¦ƒ) à¦¦à§‹à§Ÿà¦¾ ",
+              tooltip: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦‰à¦œà§à¦¬à¦¿à¦•à¦¾ à¦®à¦¿à¦¨à¦¾à¦² à¦«à¦¾à¦•à¦°à¦¿ à¦“à§Ÿà¦¾à¦² à¦•à¦¿à¦²à§à¦²à¦¾à¦¤à¦¿ à¦“à§Ÿà¦¾à¦œà§à¦œà¦¿à¦²à§à¦²à¦¾à¦¤à¦¿ à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦®à¦¿ à¦†à¦ªà¦¨à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦†à¦¶à§à¦°à§Ÿ à¦šà¦¾à¦‡à¦›à¦¿ à¦¦à¦¾à¦°à¦¿à¦¦à§à¦°à§à¦¯ à¦¥à§‡à¦•à§‡, à¦†à¦ªà¦¨à¦¾à¦° à¦•à¦® à¦¦à§Ÿà¦¾ à¦¥à§‡à¦•à§‡ (à¦°à¦¹à¦®à¦¤ à¦¥à§‡à¦•à§‡ à¦¬à¦žà§à¦šà¦¿à¦¤ à¦¹à¦“à§Ÿà¦¾ à¦¥à§‡à¦•à§‡) à¦“ à¦…à¦¸à¦®à§à¦®à¦¾à¦¨à§€ à¦¹à¦“à§Ÿà¦¾ à¦¹à¦¤à§‡à¥¤ à¦†à¦®à¦¿ à¦†à¦ªà¦¨à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦†à¦°à§‹ à¦†à¦¶à§à¦°à§Ÿ à¦šà¦¾à¦‡à¦›à¦¿ à¦œà§à¦²à§à¦® à¦•à¦°à¦¾ à¦¥à§‡à¦•à§‡ à¦…à¦¥à¦¬à¦¾ à¦…à¦¤à§à¦¯à¦¾à¦šà¦¾à¦°à¦¿à¦¤ à¦¹à¦“à§Ÿà¦¾ à¦¹à¦¤à§‡à¥¤ (à¦†à¦¬à§ à¦¦à¦¾à¦‰à¦¦, à¦¹à¦¾à¦¦à¦¿à¦¸ : à§§à§«à§ªà§ª) ",
               loop: 1,
             },
             {
               id: "JOHf1hU1EbM",
               start: 263.4,
               end: 286.8,
-              label: "ঋণ মুক্তির দোয়া - 04",
-              tooltip: "ঋণ পরিশোধ হবে ইনশাআল্লাহ ",
+              label: "à¦‹à¦£ à¦®à§à¦•à§à¦¤à¦¿à¦° à¦¦à§‹à§Ÿà¦¾ - 04",
+              tooltip: "à¦‹à¦£ à¦ªà¦°à¦¿à¦¶à§‹à¦§ à¦¹à¦¬à§‡ à¦‡à¦¨à¦¶à¦¾à¦†à¦²à§à¦²à¦¾à¦¹ ",
               loop: 1,
             },
-            { isSubcategory: true, label: "রিজিক আমল" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦†à¦®à¦²" },
             // {
               //   id: "SNuoTZTeGMM",
               //   start: 676.2,
               //   end: 693,
-              //   label: "কাদিয়াল হাজত - Quit Place",
-            //   tooltip: "কাদিয়াল হাজত ",
+              //   label: "à¦•à¦¾à¦¦à¦¿à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦œà¦¤ - Quit Place",
+            //   tooltip: "à¦•à¦¾à¦¦à¦¿à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦œà¦¤ ",
             //   loop: 3,
             // },
-            { isSubcategory: true, label: "সূরা বনী-ইসরাঈল ১১১ আয়াত" },
+            { isSubcategory: true, label: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¨à§€-à¦‡à¦¸à¦°à¦¾à¦ˆà¦² à§§à§§à§§ à¦†à¦¯à¦¼à¦¾à¦¤" },
             // Source : https://www.youtube.com/watch?v=2gVjd3HMsxI | 8:00 MIN
             {
               id: "SNfVuxCnHm8",
               start: 0,
               end: 25,
-              label: "ওয়া কুলিল হামদুলিল্লা-হিল্লাযী",
+              label: "à¦“à¦¯à¦¼à¦¾ à¦•à§à¦²à¦¿à¦² à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾-à¦¹à¦¿à¦²à§à¦²à¦¾à¦¯à§€",
               tooltip:
-              "ওয়া কুলিল হামদুলিল্লা-হিল্লাযী লাম ইয়াততাখিয ওয়ালাদান ওয়া লাম ইয়াকুন লাহু শারীকুন ফিল মুলকি ওয়া লাম ইয়াকুন লাহু ওয়ালীইয়ুম মিনায যুল্লি ওয়া কাব্বিরহু তাকবীরান : বল, ‘সমস্ত প্রশংসা আল্লাহরই, যিনি সন্তান গ্রহণ করেননি, তাঁর সার্বভৌমত্বে কোন অংশীদার নেই এবং যিনি দুর্দশাগ্রস্ত হন না; যে কারণে তাঁর অভিভাবকের প্রয়োজন হতে পারে।’ আর সসম্ভ্রমে তাঁর মাহাত্ম্য ঘোষণা কর।",
+              "à¦“à¦¯à¦¼à¦¾ à¦•à§à¦²à¦¿à¦² à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾-à¦¹à¦¿à¦²à§à¦²à¦¾à¦¯à§€ à¦²à¦¾à¦® à¦‡à¦¯à¦¼à¦¾à¦¤à¦¤à¦¾à¦–à¦¿à¦¯ à¦“à¦¯à¦¼à¦¾à¦²à¦¾à¦¦à¦¾à¦¨ à¦“à¦¯à¦¼à¦¾ à¦²à¦¾à¦® à¦‡à¦¯à¦¼à¦¾à¦•à§à¦¨ à¦²à¦¾à¦¹à§ à¦¶à¦¾à¦°à§€à¦•à§à¦¨ à¦«à¦¿à¦² à¦®à§à¦²à¦•à¦¿ à¦“à¦¯à¦¼à¦¾ à¦²à¦¾à¦® à¦‡à¦¯à¦¼à¦¾à¦•à§à¦¨ à¦²à¦¾à¦¹à§ à¦“à¦¯à¦¼à¦¾à¦²à§€à¦‡à¦¯à¦¼à§à¦® à¦®à¦¿à¦¨à¦¾à¦¯ à¦¯à§à¦²à§à¦²à¦¿ à¦“à¦¯à¦¼à¦¾ à¦•à¦¾à¦¬à§à¦¬à¦¿à¦°à¦¹à§ à¦¤à¦¾à¦•à¦¬à§€à¦°à¦¾à¦¨ : à¦¬à¦², â€˜à¦¸à¦®à¦¸à§à¦¤ à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾ à¦†à¦²à§à¦²à¦¾à¦¹à¦°à¦‡, à¦¯à¦¿à¦¨à¦¿ à¦¸à¦¨à§à¦¤à¦¾à¦¨ à¦—à§à¦°à¦¹à¦£ à¦•à¦°à§‡à¦¨à¦¨à¦¿, à¦¤à¦¾à¦à¦° à¦¸à¦¾à¦°à§à¦¬à¦­à§Œà¦®à¦¤à§à¦¬à§‡ à¦•à§‹à¦¨ à¦…à¦‚à¦¶à§€à¦¦à¦¾à¦° à¦¨à§‡à¦‡ à¦à¦¬à¦‚ à¦¯à¦¿à¦¨à¦¿ à¦¦à§à¦°à§à¦¦à¦¶à¦¾à¦—à§à¦°à¦¸à§à¦¤ à¦¹à¦¨ à¦¨à¦¾; à¦¯à§‡ à¦•à¦¾à¦°à¦£à§‡ à¦¤à¦¾à¦à¦° à¦…à¦­à¦¿à¦­à¦¾à¦¬à¦•à§‡à¦° à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨ à¦¹à¦¤à§‡ à¦ªà¦¾à¦°à§‡à¥¤â€™ à¦†à¦° à¦¸à¦¸à¦®à§à¦­à§à¦°à¦®à§‡ à¦¤à¦¾à¦à¦° à¦®à¦¾à¦¹à¦¾à¦¤à§à¦®à§à¦¯ à¦˜à§‹à¦·à¦£à¦¾ à¦•à¦°à¥¤",
               loop: 3,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=aum1O9yREYc
             {
               id: "v45_ITHAgdY",
               start: 47.5,
               end: 51,
-              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ",
-              tooltip: " প্রতিদিন 100 বার",
+              label: "à¦²à¦¾ à¦¹à¦¾à¦“à¦²à¦¾ à¦“à¦¯à¦¼à¦¾à¦²à¦¾ à¦•à§à¦“à¦¯à¦¼à¦¾à¦¤à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦¬à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦² ",
+              tooltip: " à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 100 à¦¬à¦¾à¦°",
               loop: 100,
             },
-            { isSubcategory: true, label: "হযরত মুসা (আঃ) রিযিকের দোয়া 🔃 & ♾️" },
+            { isSubcategory: true, label: "à¦¹à¦¯à¦°à¦¤ à¦®à§à¦¸à¦¾ (à¦†à¦ƒ) à¦°à¦¿à¦¯à¦¿à¦•à§‡à¦° à¦¦à§‹à§Ÿà¦¾ ðŸ”ƒ & â™¾ï¸" },
             // Source : https://www.youtube.com/watch?v=7Uga6Sjkkvs
             {
               id: "uW3SecCAI-Y",
               start: 8,
               end: 19,
-              label: "সূরা আল কাসাস | আয়াত নং ২৪",
-              tooltip: "রাব্বি ইন্নি লিমা আনযালতা ইলাইয়্যা মিন খাইরিন ফাক্বির : হে আমার রব, আপনি আমার প্রতি যে কল্যাণই নাজিল করবেন, আমি তার মুখাপেক্ষী।",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦•à¦¾à¦¸à¦¾à¦¸ | à¦†à¦¯à¦¼à¦¾à¦¤ à¦¨à¦‚ à§¨à§ª",
+              tooltip: "à¦°à¦¾à¦¬à§à¦¬à¦¿ à¦‡à¦¨à§à¦¨à¦¿ à¦²à¦¿à¦®à¦¾ à¦†à¦¨à¦¯à¦¾à¦²à¦¤à¦¾ à¦‡à¦²à¦¾à¦‡à¦¯à¦¼à§à¦¯à¦¾ à¦®à¦¿à¦¨ à¦–à¦¾à¦‡à¦°à¦¿à¦¨ à¦«à¦¾à¦•à§à¦¬à¦¿à¦° : à¦¹à§‡ à¦†à¦®à¦¾à¦° à¦°à¦¬, à¦†à¦ªà¦¨à¦¿ à¦†à¦®à¦¾à¦° à¦ªà§à¦°à¦¤à¦¿ à¦¯à§‡ à¦•à¦²à§à¦¯à¦¾à¦£à¦‡ à¦¨à¦¾à¦œà¦¿à¦² à¦•à¦°à¦¬à§‡à¦¨, à¦†à¦®à¦¿ à¦¤à¦¾à¦° à¦®à§à¦–à¦¾à¦ªà§‡à¦•à§à¦·à§€à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "হযরত ঈসা (আঃ) রিযিকের দোয়া" },
+            { isSubcategory: true, label: "à¦¹à¦¯à¦°à¦¤ à¦ˆà¦¸à¦¾ (à¦†à¦ƒ) à¦°à¦¿à¦¯à¦¿à¦•à§‡à¦° à¦¦à§‹à§Ÿà¦¾" },
             // SOURCE : https://www.youtube.com/watch?v=aum1O9yREYc
             {
               id: "QgDcyigtyX0",
               start: 4.6,
               end: 34,
-              label: "সূরা আল-মায়িদাহ ১১৪ নং আয়াত",
-              tooltip: "এই আয়াত ৭ বার পাঠ করে আসমানের দিকে ফুঁ দিলে, আল্লাহ তায়ালা তাঁর কুদরতে মানুষের প্রয়োজন অনুযায়ী ব্যবস্থা করে দেন",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦²-à¦®à¦¾à§Ÿà¦¿à¦¦à¦¾à¦¹ à§§à§§à§ª à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
+              tooltip: "à¦à¦‡ à¦†à§Ÿà¦¾à¦¤ à§­ à¦¬à¦¾à¦° à¦ªà¦¾à¦  à¦•à¦°à§‡ à¦†à¦¸à¦®à¦¾à¦¨à§‡à¦° à¦¦à¦¿à¦•à§‡ à¦«à§à¦ à¦¦à¦¿à¦²à§‡, à¦†à¦²à§à¦²à¦¾à¦¹ à¦¤à¦¾à§Ÿà¦¾à¦²à¦¾ à¦¤à¦¾à¦à¦° à¦•à§à¦¦à¦°à¦¤à§‡ à¦®à¦¾à¦¨à§à¦·à§‡à¦° à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨ à¦…à¦¨à§à¦¯à¦¾à§Ÿà§€ à¦¬à§à¦¯à¦¬à¦¸à§à¦¥à¦¾ à¦•à¦°à§‡ à¦¦à§‡à¦¨",
               loop: 7,
             },
-            { isSubcategory: true, label: "আল্লাহর গুনবাচক নামের আমল" },
+            { isSubcategory: true, label: "à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦—à§à¦¨à¦¬à¦¾à¦šà¦• à¦¨à¦¾à¦®à§‡à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=nIvk5ExTlL8
             {
               id: "nIvk5ExTlL8",
               start: 0,
               end: 1,
-              label: "ইয়া কাহহারু",
+              label: "à¦‡à¦¯à¦¼à¦¾ à¦•à¦¾à¦¹à¦¹à¦¾à¦°à§",
               tooltip:
-              "খালি মাথায়, নির্জন জায়গায় বসে ইয়া কাহহারু ১০০ বার, তারপর দোয়া",
+              "à¦–à¦¾à¦²à¦¿ à¦®à¦¾à¦¥à¦¾à§Ÿ, à¦¨à¦¿à¦°à§à¦œà¦¨ à¦œà¦¾à§Ÿà¦—à¦¾à§Ÿ à¦¬à¦¸à§‡ à¦‡à¦¯à¦¼à¦¾ à¦•à¦¾à¦¹à¦¹à¦¾à¦°à§ à§§à§¦à§¦ à¦¬à¦¾à¦°, à¦¤à¦¾à¦°à¦ªà¦° à¦¦à§‹à§Ÿà¦¾",
               loop: 100,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=8efkr3Cnf_c
             {
               id: "8efkr3Cnf_c",
               start: 146.5,
               end: 153.5,
-              label: "ওয়া তাওয়াক্কাল 'আলাল হাইয়্যিল্লাযী",
+              label: "à¦“à§Ÿà¦¾ à¦¤à¦¾à¦“à§Ÿà¦¾à¦•à§à¦•à¦¾à¦² 'à¦†à¦²à¦¾à¦² à¦¹à¦¾à¦‡à§Ÿà§à¦¯à¦¿à¦²à§à¦²à¦¾à¦¯à§€",
               tooltip:
-              "ওয়া তাওয়াক্কাল 'আলাল হাইয়্যিল্লাযী লা ইয়ামূত, ওয়াল হামদুলিল্লাহিল্লাযী লাম ইয়াত্তাখিয্‌ ওয়ালাদা| অর্থ হলো: আর আপনি সেই চিরঞ্জীবের উপর ভরসা করুন, যিনি কখনও মরবেন না, এবং বলুন: সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি | ১৫ দিন - ৭ বার করে পড়া।",
+              "à¦“à§Ÿà¦¾ à¦¤à¦¾à¦“à§Ÿà¦¾à¦•à§à¦•à¦¾à¦² 'à¦†à¦²à¦¾à¦² à¦¹à¦¾à¦‡à§Ÿà§à¦¯à¦¿à¦²à§à¦²à¦¾à¦¯à§€ à¦²à¦¾ à¦‡à¦¯à¦¼à¦¾à¦®à§‚à¦¤, à¦“à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦²à§à¦²à¦¾à¦¯à§€ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦¤à§à¦¤à¦¾à¦–à¦¿à¦¯à§â€Œ à¦“à§Ÿà¦¾à¦²à¦¾à¦¦à¦¾| à¦…à¦°à§à¦¥ à¦¹à¦²à§‹: à¦†à¦° à¦†à¦ªà¦¨à¦¿ à¦¸à§‡à¦‡ à¦šà¦¿à¦°à¦žà§à¦œà§€à¦¬à§‡à¦° à¦‰à¦ªà¦° à¦­à¦°à¦¸à¦¾ à¦•à¦°à§à¦¨, à¦¯à¦¿à¦¨à¦¿ à¦•à¦–à¦¨à¦“ à¦®à¦°à¦¬à§‡à¦¨ à¦¨à¦¾, à¦à¦¬à¦‚ à¦¬à¦²à§à¦¨: à¦¸à¦®à¦¸à§à¦¤ à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾ à¦†à¦²à§à¦²à¦¾à¦¹à¦°, à¦¯à¦¿à¦¨à¦¿ à¦•à§‹à¦¨à§‹ à¦¸à¦¨à§à¦¤à¦¾à¦¨ à¦—à§à¦°à¦¹à¦£ à¦•à¦°à§‡à¦¨à¦¨à¦¿ | à§§à§« à¦¦à¦¿à¦¨ - à§­ à¦¬à¦¾à¦° à¦•à¦°à§‡ à¦ªà§œà¦¾à¥¤",
               loop: 7,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল 🔃" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² ðŸ”ƒ" },
             // SOURCE : https://www.youtube.com/watch?v=2VyQxAlVVTw
             {
               id: "2VyQxAlVVTw",
               start: 119.5,
               end: 130.5,
-              label: "আল্ল-হুম্মা সল্লি ‘আলা মু‘হাম্মাদিন",
+              label: "à¦†à¦²à§à¦²-à¦¹à§à¦®à§à¦®à¦¾ à¦¸à¦²à§à¦²à¦¿ â€˜à¦†à¦²à¦¾ à¦®à§â€˜à¦¹à¦¾à¦®à§à¦®à¦¾à¦¦à¦¿à¦¨",
               tooltip:
-              "আল্ল-হুম্মা সল্লি ‘আলা মু‘হাম্মাদিন ‘আবদিকা ওয়া রাসু-লিক, ওয়া সল্লি ‘আলাল মুঅ্মিনি-না ওয়াল মুঅ্মিনা-ত, ওয়াল মুসলিমি-না ওয়াল মুসলিমা-ত",
+              "à¦†à¦²à§à¦²-à¦¹à§à¦®à§à¦®à¦¾ à¦¸à¦²à§à¦²à¦¿ â€˜à¦†à¦²à¦¾ à¦®à§â€˜à¦¹à¦¾à¦®à§à¦®à¦¾à¦¦à¦¿à¦¨ â€˜à¦†à¦¬à¦¦à¦¿à¦•à¦¾ à¦“à§Ÿà¦¾ à¦°à¦¾à¦¸à§-à¦²à¦¿à¦•, à¦“à§Ÿà¦¾ à¦¸à¦²à§à¦²à¦¿ â€˜à¦†à¦²à¦¾à¦² à¦®à§à¦…à§à¦®à¦¿à¦¨à¦¿-à¦¨à¦¾ à¦“à§Ÿà¦¾à¦² à¦®à§à¦…à§à¦®à¦¿à¦¨à¦¾-à¦¤, à¦“à§Ÿà¦¾à¦² à¦®à§à¦¸à¦²à¦¿à¦®à¦¿-à¦¨à¦¾ à¦“à§Ÿà¦¾à¦² à¦®à§à¦¸à¦²à¦¿à¦®à¦¾-à¦¤",
               loop: 100,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল 🔃" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² ðŸ”ƒ" },
             // SOURCE : https://www.youtube.com/watch?v=11pz4dd4I4M | https://www.youtube.com/watch?v=1QSKvrYwGNU
             {
               id: "fX2SO9OpSXA",
               start: 14,
               end: 27.8,
-              label: "আনসারি সাহাবিকে- নবীজির শেখানো দোয়া  ",
+              label: "à¦†à¦¨à¦¸à¦¾à¦°à¦¿ à¦¸à¦¾à¦¹à¦¾à¦¬à¦¿à¦•à§‡- à¦¨à¦¬à§€à¦œà¦¿à¦° à¦¶à§‡à¦–à¦¾à¦¨à§‹ à¦¦à§‹à§Ÿà¦¾  ",
               tooltip:
-              "আল্লাহুম্মা ইন্নি আউজু বিকা মিনাল হাম্মি ওয়াল হাযানি, ওয়াল আজজি ওয়াল কাসালি, ওয়াল বুখলি ওয়াল জুবনি, ওয়া দালা'ইদ-দাইনি ওয়া গালাবতির রিজাল | হে আল্লাহ! আমি আপনার আশ্রয় চাই দুঃশ্চিন্তা ও দুঃখ থেকে, অক্ষমতা ও অলসতা থেকে, কৃপণতা ও ভীরুতা থেকে, ঋণের ভার ও মানুষের দমন-পীড়ন থেকে। ওযু করে ২ রাকাত নামাজ পরে জায়নামাজে ৭০ বার পাঠ করবেন ৪০ দিন ।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦‰à¦œà§ à¦¬à¦¿à¦•à¦¾ à¦®à¦¿à¦¨à¦¾à¦² à¦¹à¦¾à¦®à§à¦®à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦¯à¦¾à¦¨à¦¿, à¦“à¦¯à¦¼à¦¾à¦² à¦†à¦œà¦œà¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦•à¦¾à¦¸à¦¾à¦²à¦¿, à¦“à¦¯à¦¼à¦¾à¦² à¦¬à§à¦–à¦²à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦œà§à¦¬à¦¨à¦¿, à¦“à¦¯à¦¼à¦¾ à¦¦à¦¾à¦²à¦¾'à¦‡à¦¦-à¦¦à¦¾à¦‡à¦¨à¦¿ à¦“à§Ÿà¦¾ à¦—à¦¾à¦²à¦¾à¦¬à¦¤à¦¿à¦° à¦°à¦¿à¦œà¦¾à¦² | à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦®à¦¿ à¦†à¦ªà¦¨à¦¾à¦° à¦†à¦¶à§à¦°à§Ÿ à¦šà¦¾à¦‡ à¦¦à§à¦ƒà¦¶à§à¦šà¦¿à¦¨à§à¦¤à¦¾ à¦“ à¦¦à§à¦ƒà¦– à¦¥à§‡à¦•à§‡, à¦…à¦•à§à¦·à¦®à¦¤à¦¾ à¦“ à¦…à¦²à¦¸à¦¤à¦¾ à¦¥à§‡à¦•à§‡, à¦•à§ƒà¦ªà¦£à¦¤à¦¾ à¦“ à¦­à§€à¦°à§à¦¤à¦¾ à¦¥à§‡à¦•à§‡, à¦‹à¦£à§‡à¦° à¦­à¦¾à¦° à¦“ à¦®à¦¾à¦¨à§à¦·à§‡à¦° à¦¦à¦®à¦¨-à¦ªà§€à§œà¦¨ à¦¥à§‡à¦•à§‡à¥¤ à¦“à¦¯à§ à¦•à¦°à§‡ à§¨ à¦°à¦¾à¦•à¦¾à¦¤ à¦¨à¦¾à¦®à¦¾à¦œ à¦ªà¦°à§‡ à¦œà¦¾à§Ÿà¦¨à¦¾à¦®à¦¾à¦œà§‡ à§­à§¦ à¦¬à¦¾à¦° à¦ªà¦¾à¦  à¦•à¦°à¦¬à§‡à¦¨ à§ªà§¦ à¦¦à¦¿à¦¨ à¥¤",
               loop: 70,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল 🔃" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² ðŸ”ƒ" },
             // SOURCE : https://www.youtube.com/watch?v=_u9T_c_qVGk
             {
               id: "_u9T_c_qVGk",
               start: 119.8,
               end: 134.6,
-              label: "আল্লাহুম্মা আনতা খালাকতানি",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾ à¦–à¦¾à¦²à¦¾à¦•à¦¤à¦¾à¦¨à¦¿",
               tooltip:
-              "আল্লাহুম্মা আনতা খালাকতানি, ওয়া আনতা তাহদিনি,ওয়া আনতা তুতইমুনি, ওয়া আনতা তাসকিনি,ওয়া আনতা তুমিতুনি, ওয়া আনতা তুহিয়িনি। ৭ বার পাঠ করবেন ।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾ à¦–à¦¾à¦²à¦¾à¦•à¦¤à¦¾à¦¨à¦¿, à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¤à¦¾à¦¹à¦¦à¦¿à¦¨à¦¿,à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¤à§à¦¤à¦‡à¦®à§à¦¨à¦¿, à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¤à¦¾à¦¸à¦•à¦¿à¦¨à¦¿,à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¤à§à¦®à¦¿à¦¤à§à¦¨à¦¿, à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¤à¦¾ à¦¤à§à¦¹à¦¿à¦¯à¦¼à¦¿à¦¨à¦¿à¥¤ à§­ à¦¬à¦¾à¦° à¦ªà¦¾à¦  à¦•à¦°à¦¬à§‡à¦¨ à¥¤",
               loop: 7,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল 🔃" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² ðŸ”ƒ" },
             // SOURCE : https://www.youtube.com/watch?v=dHCzWKy2a0o || https://www.youtube.com/watch?v=Q0zdwUmU9-g
             {
               id: "lLDH6t-N7Ro",
               start: 3,
               end: 21,
-              label: "সূরা আত-তাওবাহ ১২৯ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦¤-à¦¤à¦¾à¦“à¦¬à¦¾à¦¹ à§§à§¨à§¯ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-              " হাসবিয়াল্লা-হু লা- ইলা-হা ইল্লা- হুয়া আলাইহি তাওয়াক্‌কাল্‌তু ওয়া হুয়া রাব্বুল আ’রশিল আজি-মি। : আল্লাহই আমার জন্য যথেষ্ট। তিনি ছাড়া কোনো ইলাহ নেই। আমি তাঁরই উপর ভরসা করি এবং তিনি মহান আরশের রব।",
+              " à¦¹à¦¾à¦¸à¦¬à¦¿à§Ÿà¦¾à¦²à§à¦²à¦¾-à¦¹à§ à¦²à¦¾- à¦‡à¦²à¦¾-à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾- à¦¹à§à§Ÿà¦¾ à¦†à¦²à¦¾à¦‡à¦¹à¦¿ à¦¤à¦¾à¦“à§Ÿà¦¾à¦•à§â€Œà¦•à¦¾à¦²à§â€Œà¦¤à§ à¦“à§Ÿà¦¾ à¦¹à§à§Ÿà¦¾ à¦°à¦¾à¦¬à§à¦¬à§à¦² à¦†â€™à¦°à¦¶à¦¿à¦² à¦†à¦œà¦¿-à¦®à¦¿à¥¤ : à¦†à¦²à§à¦²à¦¾à¦¹à¦‡ à¦†à¦®à¦¾à¦° à¦œà¦¨à§à¦¯ à¦¯à¦¥à§‡à¦·à§à¦Ÿà¥¤ à¦¤à¦¿à¦¨à¦¿ à¦›à¦¾à¦¡à¦¼à¦¾ à¦•à§‹à¦¨à§‹ à¦‡à¦²à¦¾à¦¹ à¦¨à§‡à¦‡à¥¤ à¦†à¦®à¦¿ à¦¤à¦¾à¦à¦°à¦‡ à¦‰à¦ªà¦° à¦­à¦°à¦¸à¦¾ à¦•à¦°à¦¿ à¦à¦¬à¦‚ à¦¤à¦¿à¦¨à¦¿ à¦®à¦¹à¦¾à¦¨ à¦†à¦°à¦¶à§‡à¦° à¦°à¦¬à¥¤",
               loop: 7,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল 🔃" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦² ðŸ”ƒ" },
             // SOURCE : https://www.youtube.com/watch?v=Q0zdwUmU9-g
             {
               id: "dHCzWKy2a0o",
               start: 44,
               end: 50.8,
-              label: "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি",
+              label: "à¦¸à§à¦¬à¦¹à¦¾à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿",
               tooltip:
-              "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি লা ইলাহা ইল্লাল্লাহু আল্লাহু আল্লাহু আকবার",
+              "à¦¸à§à¦¬à¦¹à¦¾à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¿ à¦“à¦¯à¦¼à¦¾à¦² à¦¹à¦¾à¦®à¦¦à§à¦²à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿ à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦²à§à¦²à¦¾à¦¹à§ à¦†à¦•à¦¬à¦¾à¦°",
               loop: 7,
             },
             {
               id: "dGYQBskQBRw",
               start: 15,
               end: 21.8,
-              label: "আল্লাহুম্মাগ ফিরলি",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾à¦— à¦«à¦¿à¦°à¦²à¦¿",
               tooltip:
-              "আল্লাহুম্মাগ ফিরলি আল্লাহুম্মা মারহামনি আল্লাহুম্মা রযুকনি",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾à¦— à¦«à¦¿à¦°à¦²à¦¿ à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦®à¦¾à¦°à¦¹à¦¾à¦®à¦¨à¦¿ à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦°à¦¯à§à¦•à¦¨à¦¿",
               loop: 7,
             },
             {
               isSubcategory: true,
-              label: " স্বয়ং নবীজি (সা:) করতেন 🔃",
+              label: " à¦¸à§à¦¬à¦¯à¦¼à¦‚ à¦¨à¦¬à§€à¦œà¦¿ (à¦¸à¦¾:) à¦•à¦°à¦¤à§‡à¦¨ ðŸ”ƒ",
             },
             // SOURCE : https://www.youtube.com/watch?v=8qEEWH0_TSc | Say More
             {
               id: "8qEEWH0_TSc",
               start: 124.5,
               end: 132,
-              label: "আল্লাহুম্মাগফিরলি জাম্বি",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾à¦—à¦«à¦¿à¦°à¦²à¦¿ à¦œà¦¾à¦®à§à¦¬à¦¿",
               tooltip:
-              "আল্লাহুম্মাগফিরলি জাম্বি ওয়া ওয়াসসি'লি ফি দারি ওয়া বারিকলি ফি রিজক্বি।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾à¦—à¦«à¦¿à¦°à¦²à¦¿ à¦œà¦¾à¦®à§à¦¬à¦¿ à¦“à§Ÿà¦¾ à¦“à§Ÿà¦¾à¦¸à¦¸à¦¿'à¦²à¦¿ à¦«à¦¿ à¦¦à¦¾à¦°à¦¿ à¦“à§Ÿà¦¾ à¦¬à¦¾à¦°à¦¿à¦•à¦²à¦¿ à¦«à¦¿ à¦°à¦¿à¦œà¦•à§à¦¬à¦¿à¥¤",
               loop: 3,
             },
             
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির ৫টি আমল" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à§«à¦Ÿà¦¿ à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=jW2_PMhjVzY
             {
               id: "jW2_PMhjVzY",
               start: 360.2,
               end: 378,
-              label: "রিজিক বৃদ্ধির ৫টি আমল",
-              tooltip: "প্রতিদিন 1 বার",
+              label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à§«à¦Ÿà¦¿ à¦†à¦®à¦²",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 1 à¦¬à¦¾à¦°",
               loop: 1,
             },
-            { isSubcategory: true, label: "রিজিক বৃদ্ধির আমল" },
+            { isSubcategory: true, label: "à¦°à¦¿à¦œà¦¿à¦• à¦¬à§ƒà¦¦à§à¦§à¦¿à¦° à¦†à¦®à¦²" },
             // Source : https://www.youtube.com/watch?v=f_HwvcU-u3c
             {
               id: "f_HwvcU-u3c",
@@ -1462,16 +1419,16 @@
               id: "14uh3215Vls",
               start: 0,
               end: 30,
-              label: "দরুদ শরীফ",
-              tooltip: "দরুদ শরীফ",
+              label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+              tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
               loop: 3,
             },
             {
               id: "KCpucEqWHgI",
               start: 0,
               end: 18,
-              label: "সূরা আল ফুরকান : ৭৪ আয়াত (♾️)",
-              tooltip: "সূরা আল ফুরকান : ৭৪ আয়াত.",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦«à§à¦°à¦•à¦¾à¦¨ : à§­à§ª à¦†à¦¯à¦¼à¦¾à¦¤ (â™¾ï¸)",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦«à§à¦°à¦•à¦¾à¦¨ : à§­à§ª à¦†à¦¯à¦¼à¦¾à¦¤.",
               loop: 21,
             },
             // SOurce : https://www.youtube.com/watch?v=PCB0W8n2leA
@@ -1479,263 +1436,263 @@
               id: "TAXr0OvvFd0",
               start: 14.5,
               end: 24,
-              label: "সূরা ত্বা-হা : ৩৯ আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¤à§à¦¬à¦¾-à¦¹à¦¾ : à§©à§¯ à¦†à¦¯à¦¼à¦¾à¦¤",
               tooltip:
-              " কোনো মিষ্টি যত জিনিসে ৩ বার পরে ফু দেওয়া। তারপর উনাদের নাম উল্লেখ করা",
+              " à¦•à§‹à¦¨à§‹ à¦®à¦¿à¦·à§à¦Ÿà¦¿ à¦¯à¦¤ à¦œà¦¿à¦¨à¦¿à¦¸à§‡ à§© à¦¬à¦¾à¦° à¦ªà¦°à§‡ à¦«à§ à¦¦à§‡à¦“à§Ÿà¦¾à¥¤ à¦¤à¦¾à¦°à¦ªà¦° à¦‰à¦¨à¦¾à¦¦à§‡à¦° à¦¨à¦¾à¦® à¦‰à¦²à§à¦²à§‡à¦– à¦•à¦°à¦¾",
               loop: 3,
             },
             {
               id: "vzNIHXjRgn4",
               start: 163,
               end: 165.1,
-              label: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা",
-              tooltip: "ইন্নাল্লাহা ইয়াস-মাউ মাই-ইয়াসা",
+              label: "à¦‡à¦¨à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¾ à¦‡à§Ÿà¦¾à¦¸-à¦®à¦¾à¦‰ à¦®à¦¾à¦‡-à¦‡à§Ÿà¦¾à¦¸à¦¾",
+              tooltip: "à¦‡à¦¨à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¾ à¦‡à§Ÿà¦¾à¦¸-à¦®à¦¾à¦‰ à¦®à¦¾à¦‡-à¦‡à§Ÿà¦¾à¦¸à¦¾",
               loop: 11,
             },
             {
               id: "0vhiEaMU2Rc",
               start: 193,
               end: 204,
-              label: "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸ à¦†à¦²à§à¦•à¦¾ à¦¬à¦¿à§Ÿà¦¾à¦¨à§à¦¨à¦¿",
               tooltip:
-              "আল্লাহুম্মা ইন্নি আস আলুকা বিয়ান্নি আশহাদু আন্নাকা আনতাল্লাহ,লা ইলাহা ইল্লা আনতাল আহাদুস সামাদ আল্লাজী লাম ইয়ালিদ ওয়ালাম ইয়ুলাদ, ওয়ালাম ইয়া কুল্লাহু কুফুওয়ান আহাদ।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸ à¦†à¦²à§à¦•à¦¾ à¦¬à¦¿à§Ÿà¦¾à¦¨à§à¦¨à¦¿ à¦†à¦¶à¦¹à¦¾à¦¦à§ à¦†à¦¨à§à¦¨à¦¾à¦•à¦¾ à¦†à¦¨à¦¤à¦¾à¦²à§à¦²à¦¾à¦¹,à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦¨à¦¤à¦¾à¦² à¦†à¦¹à¦¾à¦¦à§à¦¸ à¦¸à¦¾à¦®à¦¾à¦¦ à¦†à¦²à§à¦²à¦¾à¦œà§€ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦²à¦¿à¦¦ à¦“à§Ÿà¦¾à¦²à¦¾à¦® à¦‡à§Ÿà§à¦²à¦¾à¦¦, à¦“à§Ÿà¦¾à¦²à¦¾à¦® à¦‡à§Ÿà¦¾ à¦•à§à¦²à§à¦²à¦¾à¦¹à§ à¦•à§à¦«à§à¦“à§Ÿà¦¾à¦¨ à¦†à¦¹à¦¾à¦¦à¥¤",
               loop: 11,
             },
             {
               id: "Rs_g65sSGqk",
               start: 28,
               end: 29,
-              label: "ইয়া ওয়াদুদু (313)",
-              tooltip: "ইয়া ওয়াদুদু",
+              label: "à¦‡à§Ÿà¦¾ à¦“à§Ÿà¦¾à¦¦à§à¦¦à§ (313)",
+              tooltip: "à¦‡à§Ÿà¦¾ à¦“à§Ÿà¦¾à¦¦à§à¦¦à§",
               loop: 313,
             },
             {
               id: "wMka1xyhV_w",
               start: 20.5,
               end: 21.4,
-              label: "ইয়া লাতিফু (133)",
-              tooltip: "ইয়া লাতিফু",
+              label: "à¦‡à§Ÿà¦¾ à¦²à¦¾à¦¤à¦¿à¦«à§ (133)",
+              tooltip: "à¦‡à§Ÿà¦¾ à¦²à¦¾à¦¤à¦¿à¦«à§",
               loop: 133,
             },
             {
               id: "DNgrz8oYHcI",
               start: 6.5,
               end: 9,
-              label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল",
-              tooltip: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল prayer",
+              label: "à¦¹à¦¾à¦¸à¦¬à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾ à¦¨à¦¿' à¦®à¦¾à¦² à¦“à§Ÿà¦¾à¦•à¦¿à¦²",
+              tooltip: "à¦¹à¦¾à¦¸à¦¬à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾ à¦¨à¦¿' à¦®à¦¾à¦² à¦“à§Ÿà¦¾à¦•à¦¿à¦² prayer",
               loop: 100,
             },
             {
               id: "14uh3215Vls",
               start: 0,
               end: 30,
-              label: "দরুদ শরীফ",
-              tooltip: "দরুদ শরীফ",
+              label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+              tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
               loop: 3,
             },
           ],
         },
         {
-          name: "সব সমস্যা সমাধানে",
+          name: "à¦¸à¦¬ à¦¸à¦®à¦¸à§à¦¯à¦¾ à¦¸à¦®à¦¾à¦§à¦¾à¦¨à§‡",
           videos: [
             
-            { isSubcategory: true, label: "১৪ টি সিজদার আয়াতের আমল " },
+            { isSubcategory: true, label: "à§§à§ª à¦Ÿà¦¿ à¦¸à¦¿à¦œà¦¦à¦¾à¦° à¦†à§Ÿà¦¾à¦¤à§‡à¦° à¦†à¦®à¦² " },
             // SOURCE : https://www.youtube.com/watch?v=24tQ6NtSJ74
             {
               id: "a4tNKigy-4s",
               start: 0,
               end: 19,
-              label: "সূরা আরাফ - ২০৬ নং আয়াত",
-              tooltip: "সূরা আরাফ - ২০৬ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦°à¦¾à¦« - à§¨à§¦à§¬ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦†à¦°à¦¾à¦« - à§¨à§¦à§¬ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               loop: 1,
             },
             {
               id: "a4tNKigy-4s",
               start: 0,
               end: 17,
-              label: "সূরা আর-রদ্ - ১৫ নং আয়াত",
-              tooltip: "সূরা আরাফ - ২০৬ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦°-à¦°à¦¦à§ - à§§à§« à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦†à¦°à¦¾à¦« - à§¨à§¦à§¬ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               loop: 1,
             },
           ],
         },
         {
-          name: "সমস্যা সমাধান ও দোয়া কবুলের আমল",
+          name: "à¦¸à¦®à¦¸à§à¦¯à¦¾ à¦¸à¦®à¦¾à¦§à¦¾à¦¨ à¦“ à¦¦à§‹à§Ÿà¦¾ à¦•à¦¬à§à¦²à§‡à¦° à¦†à¦®à¦²",
           videos: [
             {
               id: "6HPXBy9kLBA",
               start: 6,
               end: 11.8,
-              label: "দরুদ শরীফ",
-              tooltip: "দরুদ শরীফ",
+              label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+              tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
               loop: 100,
             },
             {
               id: "v45_ITHAgdY",
               start: 47.5,
               end: 51,
-              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল ",
+              label: "à¦²à¦¾ à¦¹à¦¾à¦“à¦²à¦¾ à¦“à¦¯à¦¼à¦¾à¦²à¦¾ à¦•à§à¦“à¦¯à¦¼à¦¾à¦¤à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦¬à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦² ",
               tooltip:
-              "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 499 বার",
+              "à¦†à¦²à§à¦²à¦¾à¦¹ à¦›à¦¾à§œà¦¾ à¦•à§‹à¦¨à§‹ à¦­à¦°à¦¸à¦¾ à¦¨à§‡à¦‡, à¦•à§‹à¦¨à§‹ à¦•à§à¦·à¦®à¦¤à¦¾ à¦¬à¦¾ à¦¶à¦•à§à¦¤à¦¿ à¦¨à§‡à¦‡ | à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 499 à¦¬à¦¾à¦°",
               loop: 499,
             },
             {
               id: "UFMf485VTiI",
               start: 45,
               end: 48.2,
-              label: "লা হাওলা ওয়ালা কুওয়াতা ইল্লা বিল্লাহিল আলিউল আজিম",
+              label: "à¦²à¦¾ à¦¹à¦¾à¦“à¦²à¦¾ à¦“à¦¯à¦¼à¦¾à¦²à¦¾ à¦•à§à¦“à¦¯à¦¼à¦¾à¦¤à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦¬à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦² à¦†à¦²à¦¿à¦‰à¦² à¦†à¦œà¦¿à¦®",
               tooltip:
-              "আল্লাহ ছাড়া কোনো ভরসা নেই, কোনো ক্ষমতা বা শক্তি নেই | প্রতিদিন 1 বার",
+              "à¦†à¦²à§à¦²à¦¾à¦¹ à¦›à¦¾à§œà¦¾ à¦•à§‹à¦¨à§‹ à¦­à¦°à¦¸à¦¾ à¦¨à§‡à¦‡, à¦•à§‹à¦¨à§‹ à¦•à§à¦·à¦®à¦¤à¦¾ à¦¬à¦¾ à¦¶à¦•à§à¦¤à¦¿ à¦¨à§‡à¦‡ | à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 1 à¦¬à¦¾à¦°",
               loop: 1,
             },
             {
               id: "6HPXBy9kLBA",
               start: 6,
               end: 11.8,
-              label: "দরুদ শরীফ",
-              tooltip: "দরুদ শরীফ",
+              label: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
+              tooltip: "à¦¦à¦°à§à¦¦ à¦¶à¦°à§€à¦«",
               loop: 100,
             },
-            { isSubcategory: true, label: "সূরা ফাতিহা ও বাকারার আমল" },
+            { isSubcategory: true, label: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦¤à¦¿à¦¹à¦¾ à¦“ à¦¬à¦¾à¦•à¦¾à¦°à¦¾à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=2BYmj7DTvAY
             {
               id: "L30c6Axa06A",
               start: 0,
               end: 51,
-              label: "সূরা ফাতিহা",
+              label: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦¤à¦¿à¦¹à¦¾",
               tooltip:
-                "নফল দুই রাকাত নামাজ পড়ে আমলগুলো করা, তারপর আল্লাহ তায়ালার কাছে দোয়া করার যে কোন সমস্যা সমাধানের জন্য",
+                "à¦¨à¦«à¦² à¦¦à§à¦‡ à¦°à¦¾à¦•à¦¾à¦¤ à¦¨à¦¾à¦®à¦¾à¦œ à¦ªà¦¡à¦¼à§‡ à¦†à¦®à¦²à¦—à§à¦²à§‹ à¦•à¦°à¦¾, à¦¤à¦¾à¦°à¦ªà¦° à¦†à¦²à§à¦²à¦¾à¦¹ à¦¤à¦¾à¦¯à¦¼à¦¾à¦²à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦¦à§‹à¦¯à¦¼à¦¾ à¦•à¦°à¦¾à¦° à¦¯à§‡ à¦•à§‹à¦¨ à¦¸à¦®à¦¸à§à¦¯à¦¾ à¦¸à¦®à¦¾à¦§à¦¾à¦¨à§‡à¦° à¦œà¦¨à§à¦¯",
               loop: 1,
             },
             {
               id: "zy3xIbbK6eE",
               start: 5,
               end: 130,
-              label: "সূরা বাকারা: আয়াত ২৮৫-২৮৬",
-              tooltip: "সূরা বাকারার শেষ দুই আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¾à¦•à¦¾à¦°à¦¾: à¦†à§Ÿà¦¾à¦¤ à§¨à§®à§«-à§¨à§®à§¬",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¾à¦•à¦¾à¦°à¦¾à¦° à¦¶à§‡à¦· à¦¦à§à¦‡ à¦†à§Ÿà¦¾à¦¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "ইসমে আজমের মাধ্যমে" },
+            { isSubcategory: true, label: "à¦‡à¦¸à¦®à§‡ à¦†à¦œà¦®à§‡à¦° à¦®à¦¾à¦§à§à¦¯à¦®à§‡" },
             // SOURCE : https://www.youtube.com/watch?v=L1TGqAt0bS4
             {
               id: "QA6jYhCXYyM",
               start: 0,
               end: 23,
-              label: "ইসমে আজম | আবু দাউদ : ১৪৯৩ (♾️)",
-              tooltip: "আল্লাহুম্মা ইন্নী আসআলুকা বিআন্নী আশহাদু আন্নাকা আনতাল্লাহু, লা ইলাহা ইল্লা আনতাল আহাদুস সামাদু, আল্লাজী লাম ইয়ালিদ, ওয়ালাম ইউলাদ ওয়ালাম ইয়াকুললাহু কুফুআন আহাদ।",
+              label: "à¦‡à¦¸à¦®à§‡ à¦†à¦œà¦® | à¦†à¦¬à§ à¦¦à¦¾à¦‰à¦¦ : à§§à§ªà§¯à§© (â™¾ï¸)",
+              tooltip: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à§€ à¦†à¦¸à¦†à¦²à§à¦•à¦¾ à¦¬à¦¿à¦†à¦¨à§à¦¨à§€ à¦†à¦¶à¦¹à¦¾à¦¦à§ à¦†à¦¨à§à¦¨à¦¾à¦•à¦¾ à¦†à¦¨à¦¤à¦¾à¦²à§à¦²à¦¾à¦¹à§, à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦¨à¦¤à¦¾à¦² à¦†à¦¹à¦¾à¦¦à§à¦¸ à¦¸à¦¾à¦®à¦¾à¦¦à§, à¦†à¦²à§à¦²à¦¾à¦œà§€ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦²à¦¿à¦¦, à¦“à§Ÿà¦¾à¦²à¦¾à¦® à¦‡à¦‰à¦²à¦¾à¦¦ à¦“à§Ÿà¦¾à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦•à§à¦²à¦²à¦¾à¦¹à§ à¦•à§à¦«à§à¦†à¦¨ à¦†à¦¹à¦¾à¦¦à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "সূরা আল-জুমুআহ ৪৬ নং আয়াতের আমল " },
+            { isSubcategory: true, label: "à¦¸à§‚à¦°à¦¾ à¦†à¦²-à¦œà§à¦®à§à¦†à¦¹ à§ªà§¬ à¦¨à¦‚ à¦†à¦¯à¦¼à¦¾à¦¤à§‡à¦° à¦†à¦®à¦² " },
             // SOURCE : https://www.youtube.com/watch?v=ZA9lDa6QrpQ
             {
               id: "Vvm3uEmlqVs",
               start: 0,
               end: 18,
-              label: "কুল্লিলা-হুম্মা ফা-তিরাছ ছামা-ওয়া-তি",
+              label: "à¦•à§à¦²à§à¦²à¦¿à¦²à¦¾-à¦¹à§à¦®à§à¦®à¦¾ à¦«à¦¾-à¦¤à¦¿à¦°à¦¾à¦› à¦›à¦¾à¦®à¦¾-à¦“à§Ÿà¦¾-à¦¤à¦¿",
               tooltip:
-                "দোয়া করার আগে পড়ুন : কুল্লিলা-হুম্মা ফা-তিরাছ ছামা-ওয়া-তি ওয়াল আরদি‘আ-লিমাল গাইবি ওয়াশশাহা-দাতি আনতা তাহকুমুবাইনা ‘ইবা-দিকা ফী মা-কা-নূফীহি ইয়াখতালিফূন।",
+                "à¦¦à§‹à§Ÿà¦¾ à¦•à¦°à¦¾à¦° à¦†à¦—à§‡ à¦ªà§œà§à¦¨ : à¦•à§à¦²à§à¦²à¦¿à¦²à¦¾-à¦¹à§à¦®à§à¦®à¦¾ à¦«à¦¾-à¦¤à¦¿à¦°à¦¾à¦› à¦›à¦¾à¦®à¦¾-à¦“à§Ÿà¦¾-à¦¤à¦¿ à¦“à§Ÿà¦¾à¦² à¦†à¦°à¦¦à¦¿â€˜à¦†-à¦²à¦¿à¦®à¦¾à¦² à¦—à¦¾à¦‡à¦¬à¦¿ à¦“à§Ÿà¦¾à¦¶à¦¶à¦¾à¦¹à¦¾-à¦¦à¦¾à¦¤à¦¿ à¦†à¦¨à¦¤à¦¾ à¦¤à¦¾à¦¹à¦•à§à¦®à§à¦¬à¦¾à¦‡à¦¨à¦¾ â€˜à¦‡à¦¬à¦¾-à¦¦à¦¿à¦•à¦¾ à¦«à§€ à¦®à¦¾-à¦•à¦¾-à¦¨à§‚à¦«à§€à¦¹à¦¿ à¦‡à§Ÿà¦¾à¦–à¦¤à¦¾à¦²à¦¿à¦«à§‚à¦¨à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "ঈসা (আঃ) এর দোয়া কবুলের আমল " },
+            { isSubcategory: true, label: "à¦ˆà¦¸à¦¾ (à¦†à¦ƒ) à¦à¦° à¦¦à§‹à§Ÿà¦¾ à¦•à¦¬à§à¦²à§‡à¦° à¦†à¦®à¦² " },
             // SOURCE : https://www.youtube.com/watch?v=k2nsi-voJdk
             {
               id: "k2nsi-voJdk",
               start: 166.8,
               end: 177.8,
-              label: "আল্লাহর বরকতময় সাতটি নাম",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦¬à¦°à¦•à¦¤à¦®à¦¯à¦¼ à¦¸à¦¾à¦¤à¦Ÿà¦¿ à¦¨à¦¾à¦®",
               tooltip:
-              "দোয়া করার আগে ওযু করে দুই রাকাত নামাজ পড়ুন : তার পর 1️⃣ یَا قَدِیم — ইয়া কদীম, 2️⃣ یَا خَفِی — ইয়া খাফী, 3️⃣ یَا رَحْمٰن — ইয়া রাহমান,4️⃣ یَا دَائِم — ইয়া দাঈম, 5️⃣ یَا وَتْر — ইয়া ওয়াতির, 6️⃣ یَا اَحَد — ইয়া আহাদ, 7️⃣ یَا صَمَد — ইয়া সমাদ ",
+              "à¦¦à§‹à§Ÿà¦¾ à¦•à¦°à¦¾à¦° à¦†à¦—à§‡ à¦“à¦¯à§ à¦•à¦°à§‡ à¦¦à§à¦‡ à¦°à¦¾à¦•à¦¾à¦¤ à¦¨à¦¾à¦®à¦¾à¦œ à¦ªà§œà§à¦¨ : à¦¤à¦¾à¦° à¦ªà¦° 1ï¸âƒ£ ÛŒÙŽØ§ Ù‚ÙŽØ¯ÙÛŒÙ… â€” à¦‡à¦¯à¦¼à¦¾ à¦•à¦¦à§€à¦®, 2ï¸âƒ£ ÛŒÙŽØ§ Ø®ÙŽÙÙÛŒ â€” à¦‡à¦¯à¦¼à¦¾ à¦–à¦¾à¦«à§€, 3ï¸âƒ£ ÛŒÙŽØ§ Ø±ÙŽØ­Ù’Ù…Ù°Ù† â€” à¦‡à¦¯à¦¼à¦¾ à¦°à¦¾à¦¹à¦®à¦¾à¦¨,4ï¸âƒ£ ÛŒÙŽØ§ Ø¯ÙŽØ§Ø¦ÙÙ… â€” à¦‡à¦¯à¦¼à¦¾ à¦¦à¦¾à¦ˆà¦®, 5ï¸âƒ£ ÛŒÙŽØ§ ÙˆÙŽØªÙ’Ø± â€” à¦‡à¦¯à¦¼à¦¾ à¦“à¦¯à¦¼à¦¾à¦¤à¦¿à¦°, 6ï¸âƒ£ ÛŒÙŽØ§ Ø§ÙŽØ­ÙŽØ¯ â€” à¦‡à¦¯à¦¼à¦¾ à¦†à¦¹à¦¾à¦¦, 7ï¸âƒ£ ÛŒÙŽØ§ ØµÙŽÙ…ÙŽØ¯ â€” à¦‡à¦¯à¦¼à¦¾ à¦¸à¦®à¦¾à¦¦ ",
               loop: 1,
             },
             {
               id: "k2nsi-voJdk",
               start: 181,
               end: 196.8,
-              label: " শক্তিশালী দোয়া",
+              label: " à¦¶à¦•à§à¦¤à¦¿à¦¶à¦¾à¦²à§€ à¦¦à§‹à¦¯à¦¼à¦¾",
               tooltip:
-              "ইয়া যাল-জালালি ওয়াল-ইকরাম, ইয়া নূরাস-সমাওয়াতি ওয়াল-আর্দি ওয়া মা বাইনাহুমা, ওয়া রব্বাল আরশিল আযীম।",
+              "à¦‡à¦¯à¦¼à¦¾ à¦¯à¦¾à¦²-à¦œà¦¾à¦²à¦¾à¦²à¦¿ à¦“à¦¯à¦¼à¦¾à¦²-à¦‡à¦•à¦°à¦¾à¦®, à¦‡à¦¯à¦¼à¦¾ à¦¨à§‚à¦°à¦¾à¦¸-à¦¸à¦®à¦¾à¦“à¦¯à¦¼à¦¾à¦¤à¦¿ à¦“à¦¯à¦¼à¦¾à¦²-à¦†à¦°à§à¦¦à¦¿ à¦“à¦¯à¦¼à¦¾ à¦®à¦¾ à¦¬à¦¾à¦‡à¦¨à¦¾à¦¹à§à¦®à¦¾, à¦“à¦¯à¦¼à¦¾ à¦°à¦¬à§à¦¬à¦¾à¦² à¦†à¦°à¦¶à¦¿à¦² à¦†à¦¯à§€à¦®à¥¤",
               loop: 1,
             },
             {
               isSubcategory: true,
-              label: "সাইদুল মুরসী (রহ.) এর দোয়া কবুলের আমল ",
+              label: "à¦¸à¦¾à¦‡à¦¦à§à¦² à¦®à§à¦°à¦¸à§€ (à¦°à¦¹.) à¦à¦° à¦¦à§‹à§Ÿà¦¾ à¦•à¦¬à§à¦²à§‡à¦° à¦†à¦®à¦² ",
             },
             // SOURCE : https://www.youtube.com/watch?v=RGN-6gENCt4
             {
               id: "RGN-6gENCt4",
               start: 97.6,
               end: 104.5,
-              label: "আল্লাহুম্মা আনতা মালীকুম মুখতাদির",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾ à¦®à¦¾à¦²à§€à¦•à§à¦® à¦®à§à¦–à¦¤à¦¾à¦¦à¦¿à¦°",
               tooltip:
-              "আল্লাহুম্মা আনতা মালীকুম মুখতাদির, মা তাশাউ মিন আমরিন ইয়াকূন। অর্থ: “হে আল্লাহ! আপনি পরম মালিক ও সর্বশক্তিমান। আপনি যা ইচ্ছা করেন, তাই ঘটে।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾ à¦®à¦¾à¦²à§€à¦•à§à¦® à¦®à§à¦–à¦¤à¦¾à¦¦à¦¿à¦°, à¦®à¦¾ à¦¤à¦¾à¦¶à¦¾à¦‰ à¦®à¦¿à¦¨ à¦†à¦®à¦°à¦¿à¦¨ à¦‡à§Ÿà¦¾à¦•à§‚à¦¨à¥¤ à¦…à¦°à§à¦¥: â€œà¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦ªà¦¨à¦¿ à¦ªà¦°à¦® à¦®à¦¾à¦²à¦¿à¦• à¦“ à¦¸à¦°à§à¦¬à¦¶à¦•à§à¦¤à¦¿à¦®à¦¾à¦¨à¥¤ à¦†à¦ªà¦¨à¦¿ à¦¯à¦¾ à¦‡à¦šà§à¦›à¦¾ à¦•à¦°à§‡à¦¨, à¦¤à¦¾à¦‡ à¦˜à¦Ÿà§‡à¥¤",
               loop: 3,
             },
-            { isSubcategory: true, label: "ইয়া আরহামার রাহিমিনের আমল" },
+            { isSubcategory: true, label: "à¦‡à¦¯à¦¼à¦¾ à¦†à¦°à¦¹à¦¾à¦®à¦¾à¦° à¦°à¦¾à¦¹à¦¿à¦®à¦¿à¦¨à§‡à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=DNSOBS65SD8
             {
               id: "DNSOBS65SD8",
               start: 192.6,
               end: 195,
-              label: "ইয়া আরহামার রাহিমিন",
-              tooltip: "২ রাকাত নফল নামাজ পড়ার পরে। ইয়া আরহামার রাহিমিন",
+              label: "à¦‡à¦¯à¦¼à¦¾ à¦†à¦°à¦¹à¦¾à¦®à¦¾à¦° à¦°à¦¾à¦¹à¦¿à¦®à¦¿à¦¨",
+              tooltip: "à§¨ à¦°à¦¾à¦•à¦¾à¦¤ à¦¨à¦«à¦² à¦¨à¦¾à¦®à¦¾à¦œ à¦ªà§œà¦¾à¦° à¦ªà¦°à§‡à¥¤ à¦‡à¦¯à¦¼à¦¾ à¦†à¦°à¦¹à¦¾à¦®à¦¾à¦° à¦°à¦¾à¦¹à¦¿à¦®à¦¿à¦¨",
               loop: 3,
             },
-            { isSubcategory: true, label: "সূরা আল ইমরান - ১৭৩ নং আয়াতের আমল" },
+            { isSubcategory: true, label: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦‡à¦®à¦°à¦¾à¦¨ - à§§à§­à§© à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤à§‡à¦° à¦†à¦®à¦²" },
             // SOURCE : https://www.youtube.com/watch?v=2gVjd3HMsxI || 5:40 MIN ||
             {
               id: "nPi9zcXdcKs",
               start: 18.2,
               end: 24,
-              label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল",
+              label: "à¦¹à¦¾à¦¸à¦¬à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾ à¦¨à¦¿' à¦®à¦¾à¦² à¦“à§Ÿà¦¾à¦•à¦¿à¦²",
               tooltip:
-              "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল : আল্লাহ আমাদের জন্য যথেষ্ট, এবং তিনিই সর্বোত্তম কার্যনির্বাহী",
+              "à¦¹à¦¾à¦¸à¦¬à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾ à¦¨à¦¿' à¦®à¦¾à¦² à¦“à§Ÿà¦¾à¦•à¦¿à¦² : à¦†à¦²à§à¦²à¦¾à¦¹ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦œà¦¨à§à¦¯ à¦¯à¦¥à§‡à¦·à§à¦Ÿ, à¦à¦¬à¦‚ à¦¤à¦¿à¦¨à¦¿à¦‡ à¦¸à¦°à§à¦¬à§‹à¦¤à§à¦¤à¦® à¦•à¦¾à¦°à§à¦¯à¦¨à¦¿à¦°à§à¦¬à¦¾à¦¹à§€",
               loop: 1000,
             },
-            { isSubcategory: true, label: "মহানবী সাঃ বিপদ ও দুশ্চিন্তার সময় পড়তেন" },
+            { isSubcategory: true, label: "à¦®à¦¹à¦¾à¦¨à¦¬à§€ à¦¸à¦¾à¦ƒ à¦¬à¦¿à¦ªà¦¦ à¦“ à¦¦à§à¦¶à§à¦šà¦¿à¦¨à§à¦¤à¦¾à¦° à¦¸à¦®à¦¯à¦¼ à¦ªà¦¡à¦¼à¦¤à§‡à¦¨" },
             // SOURCE : https://www.youtube.com/watch?v=jW2_PMhjVzY
             {
               id: "2ePe6dTkoGg",
               start: 30.4,
               end: 39.2,
-              label: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা(♾️)",
-              tooltip: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগি-স : তিরমিজী হাদিস নম্বরঃ ৩৫২৪",
+              label: "à¦‡à§Ÿà¦¾ à¦¹à¦¾à¦‡à§Ÿà§à¦¯à§ à¦‡à§Ÿà¦¾ à¦•à¦¾à¦‡à§Ÿà§à¦¯à§à¦® à¦¬à¦¿à¦°à¦¾à¦¹à¦®à¦¾à¦¤à¦¿à¦•à¦¾(â™¾ï¸)",
+              tooltip: "à¦‡à§Ÿà¦¾ à¦¹à¦¾à¦‡à§Ÿà§à¦¯à§ à¦‡à§Ÿà¦¾ à¦•à¦¾à¦‡à§Ÿà§à¦¯à§à¦® à¦¬à¦¿à¦°à¦¾à¦¹à¦®à¦¾à¦¤à¦¿à¦•à¦¾ à¦†à¦¸à§à¦¤à¦¾à¦—à¦¿-à¦¸ : à¦¤à¦¿à¦°à¦®à¦¿à¦œà§€ à¦¹à¦¾à¦¦à¦¿à¦¸ à¦¨à¦®à§à¦¬à¦°à¦ƒ à§©à§«à§¨à§ª",
               loop: 3,
             },
             // SOURCE : https://www.youtube.com/watch?v=yWRSWMLI05o
-            //{ id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল", tooltip: "১০০০ বার পড়ার পর দোয়া করা।", loop: 1000 },
+            //{ id: "DNgrz8oYHcI", start: 6.5, end: 9, label: "à¦¹à¦¾à¦¸à¦¬à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾ à¦¨à¦¿' à¦®à¦¾à¦² à¦“à§Ÿà¦¾à¦•à¦¿à¦²", tooltip: "à§§à§¦à§¦à§¦ à¦¬à¦¾à¦° à¦ªà§œà¦¾à¦° à¦ªà¦° à¦¦à§‹à§Ÿà¦¾ à¦•à¦°à¦¾à¥¤", loop: 1000 },
           ],
         },
         {
           name: "OTHERS",
           videos: [
-            { isSubcategory: true, label: "আল্লাহভীতি ও সংযমশীলতা" },
+            { isSubcategory: true, label: "à¦†à¦²à§à¦²à¦¾à¦¹à¦­à§€à¦¤à¦¿ à¦“ à¦¸à¦‚à¦¯à¦®à¦¶à§€à¦²à¦¤à¦¾" },
             {
               id: "gS3G6DK3ffo",
               start: 15,
               end: 28,
-              label: "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা (♾️)",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸à¦†à¦²à§à¦•à¦¾à¦² à¦¹à§à¦¦à¦¾ (â™¾ï¸)",
               tooltip:
-              "আল্লাহুম্মা ইন্নি আসআলুকাল হুদা, ওয়াত তুকা, ওয়াল আফাফা ওয়াল গিনা - (মুসলিম ৭০৭৯) : হে আল্লাহ! আমি তোমার নিকটে সৎপথ, সংযমশীলতা, চারিত্রিক পবিত্রতা ও অভাবশূন্যতা প্রার্থনা করছি।",
+              "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¿ à¦†à¦¸à¦†à¦²à§à¦•à¦¾à¦² à¦¹à§à¦¦à¦¾, à¦“à¦¯à¦¼à¦¾à¦¤ à¦¤à§à¦•à¦¾, à¦“à¦¯à¦¼à¦¾à¦² à¦†à¦«à¦¾à¦«à¦¾ à¦“à¦¯à¦¼à¦¾à¦² à¦—à¦¿à¦¨à¦¾ - (à¦®à§à¦¸à¦²à¦¿à¦® à§­à§¦à§­à§¯) : à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦®à¦¿ à¦¤à§‹à¦®à¦¾à¦° à¦¨à¦¿à¦•à¦Ÿà§‡ à¦¸à§Žà¦ªà¦¥, à¦¸à¦‚à¦¯à¦®à¦¶à§€à¦²à¦¤à¦¾, à¦šà¦¾à¦°à¦¿à¦¤à§à¦°à¦¿à¦• à¦ªà¦¬à¦¿à¦¤à§à¦°à¦¤à¦¾ à¦“ à¦…à¦­à¦¾à¦¬à¦¶à§‚à¦¨à§à¦¯à¦¤à¦¾ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾ à¦•à¦°à¦›à¦¿à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "পিতামাতার জন্য দোয়া" },
+            { isSubcategory: true, label: "à¦ªà¦¿à¦¤à¦¾à¦®à¦¾à¦¤à¦¾à¦° à¦œà¦¨à§à¦¯ à¦¦à§‹à§Ÿà¦¾" },
             // SOURCE : https://www.youtube.com/watch?v=KxtIah0s6q4
             {
               id: "cHG2JO4xHC4",
               start: 5.5,
               end: 11,
-              label: "সূরা বনি ইসরাইল - ২৪ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¨à¦¿ à¦‡à¦¸à¦°à¦¾à¦‡à¦² - à§¨à§ª à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-              "হে আমার রব! তাদের প্ৰতি দয়া করুন যেভাবে শৈশবে তারা আমাকে প্রতিপালন করেছিলেন। - ৩ বার",
+              "à¦¹à§‡ à¦†à¦®à¦¾à¦° à¦°à¦¬! à¦¤à¦¾à¦¦à§‡à¦° à¦ªà§à§°à¦¤à¦¿ à¦¦à¦¯à¦¼à¦¾ à¦•à¦°à§à¦¨ à¦¯à§‡à¦­à¦¾à¦¬à§‡ à¦¶à§ˆà¦¶à¦¬à§‡ à¦¤à¦¾à¦°à¦¾ à¦†à¦®à¦¾à¦•à§‡ à¦ªà§à¦°à¦¤à¦¿à¦ªà¦¾à¦²à¦¨ à¦•à¦°à§‡à¦›à¦¿à¦²à§‡à¦¨à¥¤ - à§© à¦¬à¦¾à¦°",
               loop: 3,
             },
             {
               id: "7tXv0tYNJe8",
               start: 0,
               end: 12,
-              label: "সূরা ইব্রাহিম - ৪১ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦‡à¦¬à§à¦°à¦¾à¦¹à¦¿à¦® - à§ªà§§ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-                "রাব্বানাগফিরলী ওয়া লিওয়ালিদাইয়া ওয়ালিলমু'মিনীনা ইয়াওমা ইয়াকূমুল হিছা-ব। : হে আমাদের প্রতিপালক! যেদিন হিসাব অনুষ্ঠিত হবে, সেদিন আমাকে, আমার পিতামাতাকে এবং সকল মুমিনকে ক্ষমা করুন। - ৩ বার",
+                "à¦°à¦¾à¦¬à§à¦¬à¦¾à¦¨à¦¾à¦—à¦«à¦¿à¦°à¦²à§€ à¦“à¦¯à¦¼à¦¾ à¦²à¦¿à¦“à¦¯à¦¼à¦¾à¦²à¦¿à¦¦à¦¾à¦‡à¦¯à¦¼à¦¾ à¦“à¦¯à¦¼à¦¾à¦²à¦¿à¦²à¦®à§'à¦®à¦¿à¦¨à§€à¦¨à¦¾ à¦‡à¦¯à¦¼à¦¾à¦“à¦®à¦¾ à¦‡à¦¯à¦¼à¦¾à¦•à§‚à¦®à§à¦² à¦¹à¦¿à¦›à¦¾-à¦¬à¥¤ : à¦¹à§‡ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà§à¦°à¦¤à¦¿à¦ªà¦¾à¦²à¦•! à¦¯à§‡à¦¦à¦¿à¦¨ à¦¹à¦¿à¦¸à¦¾à¦¬ à¦…à¦¨à§à¦·à§à¦ à¦¿à¦¤ à¦¹à¦¬à§‡, à¦¸à§‡à¦¦à¦¿à¦¨ à¦†à¦®à¦¾à¦•à§‡, à¦†à¦®à¦¾à¦° à¦ªà¦¿à¦¤à¦¾à¦®à¦¾à¦¤à¦¾à¦•à§‡ à¦à¦¬à¦‚ à¦¸à¦•à¦² à¦®à§à¦®à¦¿à¦¨à¦•à§‡ à¦•à§à¦·à¦®à¦¾ à¦•à¦°à§à¦¨à¥¤ - à§© à¦¬à¦¾à¦°",
                 loop: 3,
               },
             // SOURCE : https://www.youtube.com/watch?v=OHhcuL4eGbA&t=27s
@@ -1747,43 +1704,43 @@
               tooltip: "Read for the Sick Person - 7 Times",
               loop: 7,
             },
-            { isSubcategory: true, label: "দুশ্চিন্তা/হতাশা দূর করার দোয়া " },
-            // { isSubcategory: true, label: "শয়তানের কুমন্ত্রণা থেকে বাঁচার" },
+            { isSubcategory: true, label: "à¦¦à§à¦¶à§à¦šà¦¿à¦¨à§à¦¤à¦¾/à¦¹à¦¤à¦¾à¦¶à¦¾ à¦¦à§‚à¦° à¦•à¦°à¦¾à¦° à¦¦à§‹à§Ÿà¦¾ " },
+            // { isSubcategory: true, label: "à¦¶à¦¯à¦¼à¦¤à¦¾à¦¨à§‡à¦° à¦•à§à¦®à¦¨à§à¦¤à§à¦°à¦£à¦¾ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦°" },
             {
               id: "jNPhGaAcpSk",
               start: 0,
               end: 90,
-              label: "সূরা দুহা (♾️)",
-              tooltip: "সূরা দুহা",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¦à§à¦¹à¦¾ (â™¾ï¸)",
+              tooltip: "à¦¸à§‚à¦°à¦¾ à¦¦à§à¦¹à¦¾",
               loop: 1,
             },
-            { isSubcategory: true, label: "কৃতজ্ঞতা ও নেক আমলের দোয়া" },
-            // { isSubcategory: true, label: "নবী সুলাইমান (আঃ) এর দোয়া" },
+            { isSubcategory: true, label: "à¦•à§ƒà¦¤à¦œà§à¦žà¦¤à¦¾ à¦“ à¦¨à§‡à¦• à¦†à¦®à¦²à§‡à¦° à¦¦à§‹à¦¯à¦¼à¦¾" },
+            // { isSubcategory: true, label: "à¦¨à¦¬à§€ à¦¸à§à¦²à¦¾à¦‡à¦®à¦¾à¦¨ (à¦†à¦ƒ) à¦à¦° à¦¦à§‹à§Ÿà¦¾" },
             {
               id: "GmXnJmuB3Sc",
               start: 0,
               end: 38,
-              label: "সূরা আন-নামল - ১৯ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦¨-à¦¨à¦¾à¦®à¦² - à§§à§¯ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-                "নবী সুলাইমান (আঃ) এর দোয়া: হে আমার প্রতিপালক! আমাকে এমনভাবে সাহায্য করুন যেন আমি আপনার সেই নেয়ামতের জন্য কৃতজ্ঞতা প্রকাশ করতে পারি যা আপনি আমাকে ও আমার পিতামাতাকে দান করেছেন এবং এমন নেক আমল করতে পারি যা আপনি পছন্দ করেন। আর আপনার রহমত দ্বারা আমাকে আপনার সৎকর্মশীল বান্দাদের অন্তর্ভুক্ত করুন।",
+                "à¦¨à¦¬à§€ à¦¸à§à¦²à¦¾à¦‡à¦®à¦¾à¦¨ (à¦†à¦ƒ) à¦à¦° à¦¦à§‹à§Ÿà¦¾: à¦¹à§‡ à¦†à¦®à¦¾à¦° à¦ªà§à¦°à¦¤à¦¿à¦ªà¦¾à¦²à¦•! à¦†à¦®à¦¾à¦•à§‡ à¦à¦®à¦¨à¦­à¦¾à¦¬à§‡ à¦¸à¦¾à¦¹à¦¾à¦¯à§à¦¯ à¦•à¦°à§à¦¨ à¦¯à§‡à¦¨ à¦†à¦®à¦¿ à¦†à¦ªà¦¨à¦¾à¦° à¦¸à§‡à¦‡ à¦¨à§‡à¦¯à¦¼à¦¾à¦®à¦¤à§‡à¦° à¦œà¦¨à§à¦¯ à¦•à§ƒà¦¤à¦œà§à¦žà¦¤à¦¾ à¦ªà§à¦°à¦•à¦¾à¦¶ à¦•à¦°à¦¤à§‡ à¦ªà¦¾à¦°à¦¿ à¦¯à¦¾ à¦†à¦ªà¦¨à¦¿ à¦†à¦®à¦¾à¦•à§‡ à¦“ à¦†à¦®à¦¾à¦° à¦ªà¦¿à¦¤à¦¾à¦®à¦¾à¦¤à¦¾à¦•à§‡ à¦¦à¦¾à¦¨ à¦•à¦°à§‡à¦›à§‡à¦¨ à¦à¦¬à¦‚ à¦à¦®à¦¨ à¦¨à§‡à¦• à¦†à¦®à¦² à¦•à¦°à¦¤à§‡ à¦ªà¦¾à¦°à¦¿ à¦¯à¦¾ à¦†à¦ªà¦¨à¦¿ à¦ªà¦›à¦¨à§à¦¦ à¦•à¦°à§‡à¦¨à¥¤ à¦†à¦° à¦†à¦ªà¦¨à¦¾à¦° à¦°à¦¹à¦®à¦¤ à¦¦à§à¦¬à¦¾à¦°à¦¾ à¦†à¦®à¦¾à¦•à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦¸à§Žà¦•à¦°à§à¦®à¦¶à§€à¦² à¦¬à¦¾à¦¨à§à¦¦à¦¾à¦¦à§‡à¦° à¦…à¦¨à§à¦¤à¦°à§à¦­à§à¦•à§à¦¤ à¦•à¦°à§à¦¨à¥¤",
                 loop: 1,
               },
               {
                 id: "IQtvaAVEg8k",
                 start: 0,
                 end: 9.1,
-                label: "হারাম করার ইচ্ছার বিরুদ্ধে দোয়া",
-                tooltip: "হারাম করার ইচ্ছার বিরুদ্ধে দোয়া",
+                label: "à¦¹à¦¾à¦°à¦¾à¦® à¦•à¦°à¦¾à¦° à¦‡à¦šà§à¦›à¦¾à¦° à¦¬à¦¿à¦°à§à¦¦à§à¦§à§‡ à¦¦à§‹à§Ÿà¦¾",
+                tooltip: "à¦¹à¦¾à¦°à¦¾à¦® à¦•à¦°à¦¾à¦° à¦‡à¦šà§à¦›à¦¾à¦° à¦¬à¦¿à¦°à§à¦¦à§à¦§à§‡ à¦¦à§‹à§Ÿà¦¾",
                 loop: 1,
               },
-              { isSubcategory: true, label: "বদ নজর থেকে বাঁচার আমল" },
+              { isSubcategory: true, label: "à¦¬à¦¦ à¦¨à¦œà¦° à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦†à¦®à¦²" },
               // SOURCE : https://www.youtube.com/watch?v=5VjlfxCIFno
               {
                 id: "73LSGdGcTYM",
                 start: 0,
                 end: 6.2,
-                label: "বদ নজর থেকে বাঁচার দোয়া",
-                tooltip: "প্রতিদিন 3 বার - সুনানুত তিরমিযী ৪/৩৯৬, নং ২০৬০",
+                label: "à¦¬à¦¦ à¦¨à¦œà¦° à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦¦à§‹à¦¯à¦¼à¦¾",
+                tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 3 à¦¬à¦¾à¦° - à¦¸à§à¦¨à¦¾à¦¨à§à¦¤ à¦¤à¦¿à¦°à¦®à¦¿à¦¯à§€ à§ª/à§©à§¯à§¬, à¦¨à¦‚ à§¨à§¦à§¬à§¦",
                 loop: 3,
               },
               // SOURCE : https://www.youtube.com/watch?v=Y7iSAqQvZFc
@@ -1791,8 +1748,8 @@
               id: "rVPOXjlg0Qw",
               start: 22,
               end: 96,
-              label: "সূরা ফালাক ও নাসের আমল 🔃",
-              tooltip: "হাতে ও বুকে ফু দিয়ে শরীর বন্ধ করা 🔃 ",
+              label: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦²à¦¾à¦• à¦“ à¦¨à¦¾à¦¸à§‡à¦° à¦†à¦®à¦² ðŸ”ƒ",
+              tooltip: "à¦¹à¦¾à¦¤à§‡ à¦“ à¦¬à§à¦•à§‡ à¦«à§ à¦¦à¦¿à§Ÿà§‡ à¦¶à¦°à§€à¦° à¦¬à¦¨à§à¦§ à¦•à¦°à¦¾ ðŸ”ƒ ",
               loop: 3,
             },
             // SOURCE : https://www.youtube.com/watch?v=o6GkFn7HLZk | 3:34 Min
@@ -1800,38 +1757,38 @@
               id: "L30c6Axa06A",
               start: 0,
               end: 51,
-              label: "সূরা ফাতিহার আমল 🔃",
+              label: "à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦¤à¦¿à¦¹à¦¾à¦° à¦†à¦®à¦² ðŸ”ƒ",
               tooltip:
-              "নিজের রুকইয়া - সূরা ফাতিহা ৩ বার করে মোট ৯ বার শরীরে ফু দেয় । ৩ দিন আমল করা । ",
+              "à¦¨à¦¿à¦œà§‡à¦° à¦°à§à¦•à¦‡à§Ÿà¦¾ - à¦¸à§‚à¦°à¦¾ à¦«à¦¾à¦¤à¦¿à¦¹à¦¾ à§© à¦¬à¦¾à¦° à¦•à¦°à§‡ à¦®à§‹à¦Ÿ à§¯ à¦¬à¦¾à¦° à¦¶à¦°à§€à¦°à§‡ à¦«à§ à¦¦à§‡à§Ÿ à¥¤ à§© à¦¦à¦¿à¦¨ à¦†à¦®à¦² à¦•à¦°à¦¾ à¥¤ ",
               loop: 3,
             },
-            { isSubcategory: true, label: "শয়তান জিন থেকে রক্ষার আমল" },
+            { isSubcategory: true, label: "à¦¶à¦¯à¦¼à¦¤à¦¾à¦¨ à¦œà¦¿à¦¨ à¦¥à§‡à¦•à§‡ à¦°à¦•à§à¦·à¦¾à¦° à¦†à¦®à¦²" },
             // Source : https://www.youtube.com/watch?v=4rhszUGUq-c
             {
               id: "fNj4DeOqRvc",
               start: 0,
               end: 17,
-              label: "সূরা আল-মুমিনুন ৯৭ ও ৯৮ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦²-à¦®à§à¦®à¦¿à¦¨à§à¦¨ à§¯à§­ à¦“ à§¯à§® à¦¨à¦‚ à¦†à¦¯à¦¼à¦¾à¦¤",
               tooltip:
-              "ওয়া কুল রাব্বি আউযু বিকা মিন হামাযাতিশ শায়াতিন।, ওয়া আউযু বিকা রাব্বি আইয়্যাহদুরুন। : হে আমার পালনকর্তা, আমি তোমার কাছে আশ্রয় প্রার্থনা করছি শয়তানের কুমন্ত্রণা থেকে,  আর আমি আপনার নিকট আশ্রয় প্রার্থনা করছি যেন তারা (শয়তান) আমার কাছে আসতে না পারে।",
+              "à¦“à§Ÿà¦¾ à¦•à§à¦² à¦°à¦¾à¦¬à§à¦¬à¦¿ à¦†à¦‰à¦¯à§ à¦¬à¦¿à¦•à¦¾ à¦®à¦¿à¦¨ à¦¹à¦¾à¦®à¦¾à¦¯à¦¾à¦¤à¦¿à¦¶ à¦¶à¦¾à§Ÿà¦¾à¦¤à¦¿à¦¨à¥¤, à¦“à§Ÿà¦¾ à¦†à¦‰à¦¯à§ à¦¬à¦¿à¦•à¦¾ à¦°à¦¾à¦¬à§à¦¬à¦¿ à¦†à¦‡à§Ÿà§à¦¯à¦¾à¦¹à¦¦à§à¦°à§à¦¨à¥¤ : à¦¹à§‡ à¦†à¦®à¦¾à¦° à¦ªà¦¾à¦²à¦¨à¦•à¦°à§à¦¤à¦¾, à¦†à¦®à¦¿ à¦¤à§‹à¦®à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦†à¦¶à§à¦°à¦¯à¦¼ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾ à¦•à¦°à¦›à¦¿ à¦¶à¦¯à¦¼à¦¤à¦¾à¦¨à§‡à¦° à¦•à§à¦®à¦¨à§à¦¤à§à¦°à¦£à¦¾ à¦¥à§‡à¦•à§‡,  à¦†à¦° à¦†à¦®à¦¿ à¦†à¦ªà¦¨à¦¾à¦° à¦¨à¦¿à¦•à¦Ÿ à¦†à¦¶à§à¦°à¦¯à¦¼ à¦ªà§à¦°à¦¾à¦°à§à¦¥à¦¨à¦¾ à¦•à¦°à¦›à¦¿ à¦¯à§‡à¦¨ à¦¤à¦¾à¦°à¦¾ (à¦¶à¦¯à¦¼à¦¤à¦¾à¦¨) à¦†à¦®à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦†à¦¸à¦¤à§‡ à¦¨à¦¾ à¦ªà¦¾à¦°à§‡à¥¤",
               loop: 1,
             },
             {
               id: "n3-Ri8SKre4",
               start: 1484,
               end: 1550,
-              label: "সূরা আল মুমিনূন ১১৫-১১৮ নং আয়াত",
-              tooltip: " প্রতিদিন 1 বার - কানে বলে গায়ে ফু দেওয়া",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦®à§à¦®à¦¿à¦¨à§‚à¦¨ à§§à§§à§«-à§§à§§à§® à¦¨à¦‚ à¦†à¦¯à¦¼à¦¾à¦¤",
+              tooltip: " à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 1 à¦¬à¦¾à¦° - à¦•à¦¾à¦¨à§‡ à¦¬à¦²à§‡ à¦—à¦¾à§Ÿà§‡ à¦«à§ à¦¦à§‡à¦“à§Ÿà¦¾",
               loop: 1,
             },
-            { isSubcategory: true, label: "বিপদ থেকে বাঁচার আমল" },
+            { isSubcategory: true, label: "à¦¬à¦¿à¦ªà¦¦ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦†à¦®à¦²" },
             {
               id: "FFefhd3C7jc",
               start: 86.3,
               end: 92,
-              label: "বিপদমুক্ত থাকার দোয়া - তিরমিজি : ৩৩৮৮(🔃)",
+              label: "à¦¬à¦¿à¦ªà¦¦à¦®à§à¦•à§à¦¤ à¦¥à¦¾à¦•à¦¾à¦° à¦¦à§‹à§Ÿà¦¾ - à¦¤à¦¿à¦°à¦®à¦¿à¦œà¦¿ : à§©à§©à§®à§®(ðŸ”ƒ)",
               tooltip:
-              "বিসমিল্লাহিল্লাজি লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়ালা ফিস সামা-ই ওয়া হুয়াস সামিউল আলিম : আল্লাহর নামে, যার নামের বরকতে আকাশ ও মাটির কোনো কিছুই কোনো অনিষ্ট করতে পারে না। তিনি সর্বশ্রোতা, সর্বজ্ঞানী - 3 বার",
+              "à¦¬à¦¿à¦¸à¦®à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦²à§à¦²à¦¾à¦œà¦¿ à¦²à¦¾ à¦‡à¦¯à¦¼à¦¾à¦¦à§à¦°à¦°à§ à¦®à¦¾à¦†à¦¸à¦®à¦¿à¦¹à¦¿ à¦¶à¦¾à¦‡à¦‰à¦¨ à¦«à¦¿à¦² à¦†à¦°à¦¦à¦¿ à¦“à¦¯à¦¼à¦¾à¦²à¦¾ à¦«à¦¿à¦¸ à¦¸à¦¾à¦®à¦¾-à¦‡ à¦“à¦¯à¦¼à¦¾ à¦¹à§à¦¯à¦¼à¦¾à¦¸ à¦¸à¦¾à¦®à¦¿à¦‰à¦² à¦†à¦²à¦¿à¦® : à¦†à¦²à§à¦²à¦¾à¦¹à¦° à¦¨à¦¾à¦®à§‡, à¦¯à¦¾à¦° à¦¨à¦¾à¦®à§‡à¦° à¦¬à¦°à¦•à¦¤à§‡ à¦†à¦•à¦¾à¦¶ à¦“ à¦®à¦¾à¦Ÿà¦¿à¦° à¦•à§‹à¦¨à§‹ à¦•à¦¿à¦›à§à¦‡ à¦•à§‹à¦¨à§‹ à¦…à¦¨à¦¿à¦·à§à¦Ÿ à¦•à¦°à¦¤à§‡ à¦ªà¦¾à¦°à§‡ à¦¨à¦¾à¥¤ à¦¤à¦¿à¦¨à¦¿ à¦¸à¦°à§à¦¬à¦¶à§à¦°à§‹à¦¤à¦¾, à¦¸à¦°à§à¦¬à¦œà§à¦žà¦¾à¦¨à§€ - 3 à¦¬à¦¾à¦°",
               loop: 3,
             },
             //Source : https://www.youtube.com/watch?v=xLo4uHF0ejQ | 1 Min
@@ -1839,17 +1796,17 @@
               id: "xLo4uHF0ejQ",
               start: 106,
               end: 136.8,
-              label: "রিজিকের নিশ্চয়তা ও সব বিপদ থেকে হেফাজতের দোয়া (🔃)",
+              label: "à¦°à¦¿à¦œà¦¿à¦•à§‡à¦° à¦¨à¦¿à¦¶à§à¦šà¦¯à¦¼à¦¤à¦¾ à¦“ à¦¸à¦¬ à¦¬à¦¿à¦ªà¦¦ à¦¥à§‡à¦•à§‡ à¦¹à§‡à¦«à¦¾à¦œà¦¤à§‡à¦° à¦¦à§‹à§Ÿà¦¾ (ðŸ”ƒ)",
               tooltip:
-                "আল্লাহুম্মা আনতা রব্বী লা ইলাহা ইল্লা আনতা, ‘আলাইকা তাওয়াক্কালতু, ওয়া আনতা রব্বুল ‘আরশিল কারীম। মা শা-আল্লাহু কা-না, ওয়া মা লাম ইয়াশা’ লাম ইয়াকুন। লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহিল ‘আলিয়্যিল ‘আযীম। আ‘লামু আন্নাল্লাহা ‘আলা কুল্লি শাই’ইন কাদীর। ওয়া আন্নাল্লাহা কাদ আহাতা বি-কুল্লি শাই’ইন ‘ইলমা। 1 বার",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦†à¦¨à¦¤à¦¾ à¦°à¦¬à§à¦¬à§€ à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦†à¦¨à¦¤à¦¾, â€˜à¦†à¦²à¦¾à¦‡à¦•à¦¾ à¦¤à¦¾à¦“à¦¯à¦¼à¦¾à¦•à§à¦•à¦¾à¦²à¦¤à§, à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à¦¤à¦¾ à¦°à¦¬à§à¦¬à§à¦² â€˜à¦†à¦°à¦¶à¦¿à¦² à¦•à¦¾à¦°à§€à¦®à¥¤ à¦®à¦¾ à¦¶à¦¾-à¦†à¦²à§à¦²à¦¾à¦¹à§ à¦•à¦¾-à¦¨à¦¾, à¦“à¦¯à¦¼à¦¾ à¦®à¦¾ à¦²à¦¾à¦® à¦‡à¦¯à¦¼à¦¾à¦¶à¦¾â€™ à¦²à¦¾à¦® à¦‡à¦¯à¦¼à¦¾à¦•à§à¦¨à¥¤ à¦²à¦¾ à¦¹à¦¾à¦“à¦²à¦¾ à¦“à¦¯à¦¼à¦¾ à¦²à¦¾ à¦•à§à¦“à¦¯à¦¼à¦¾à¦¤à¦¾ à¦‡à¦²à§à¦²à¦¾ à¦¬à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦² â€˜à¦†à¦²à¦¿à¦¯à¦¼à§à¦¯à¦¿à¦² â€˜à¦†à¦¯à§€à¦®à¥¤ à¦†â€˜à¦²à¦¾à¦®à§ à¦†à¦¨à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¾ â€˜à¦†à¦²à¦¾ à¦•à§à¦²à§à¦²à¦¿ à¦¶à¦¾à¦‡â€™à¦‡à¦¨ à¦•à¦¾à¦¦à§€à¦°à¥¤ à¦“à¦¯à¦¼à¦¾ à¦†à¦¨à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à¦¾ à¦•à¦¾à¦¦ à¦†à¦¹à¦¾à¦¤à¦¾ à¦¬à¦¿-à¦•à§à¦²à§à¦²à¦¿ à¦¶à¦¾à¦‡â€™à¦‡à¦¨ â€˜à¦‡à¦²à¦®à¦¾à¥¤ 1 à¦¬à¦¾à¦°",
               loop: 1,
             },
             {
               id: "BxNUCjRT6cc",
               start: 30,
               end: 33.5,
-              label: "যেকোন বিপদ থেকে বাঁচার দোয়া",
-              tooltip: "প্রতিদিন 1 বার",
+              label: "à¦¯à§‡à¦•à§‹à¦¨ à¦¬à¦¿à¦ªà¦¦ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦¦à§‹à§Ÿà¦¾",
+              tooltip: "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 1 à¦¬à¦¾à¦°",
               loop: 1,
             },
             // Source : https://www.youtube.com/watch?v=58zUKbOA8bI
@@ -1857,9 +1814,9 @@
               id: "58zUKbOA8bI",
               start: 129.8,
               end: 139,
-              label: "প্রাকৃতিক দুর্যোগ থেকে বাঁচার দোয়া",
+              label: "à¦ªà§à¦°à¦¾à¦•à§ƒà¦¤à¦¿à¦• à¦¦à§à¦°à§à¦¯à§‹à¦— à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦¦à§‹à§Ÿà¦¾",
               tooltip:
-                "আল্লাহুম্মা লা তাকতুলনা বি গদাবিকা, ওলা তুহলিকনা বি আজাবিকা, ওয়া ‘আফিনা কবলা যালিক। : “হে আল্লাহ! তোমার গজব দ্বারা আমাদের ধ্বংস করো না, তোমার শাস্তি দ্বারা আমাদের হালাক করো না, এবং এর আগেই আমাদেরকে নিরাপত্তা ও সুস্থতা দান করো।",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦²à¦¾ à¦¤à¦¾à¦•à¦¤à§à¦²à¦¨à¦¾ à¦¬à¦¿ à¦—à¦¦à¦¾à¦¬à¦¿à¦•à¦¾, à¦“à¦²à¦¾ à¦¤à§à¦¹à¦²à¦¿à¦•à¦¨à¦¾ à¦¬à¦¿ à¦†à¦œà¦¾à¦¬à¦¿à¦•à¦¾, à¦“à¦¯à¦¼à¦¾ â€˜à¦†à¦«à¦¿à¦¨à¦¾ à¦•à¦¬à¦²à¦¾ à¦¯à¦¾à¦²à¦¿à¦•à¥¤ : â€œà¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦¤à§‹à¦®à¦¾à¦° à¦—à¦œà¦¬ à¦¦à§à¦¬à¦¾à¦°à¦¾ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦§à§à¦¬à¦‚à¦¸ à¦•à¦°à§‹ à¦¨à¦¾, à¦¤à§‹à¦®à¦¾à¦° à¦¶à¦¾à¦¸à§à¦¤à¦¿ à¦¦à§à¦¬à¦¾à¦°à¦¾ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¹à¦¾à¦²à¦¾à¦• à¦•à¦°à§‹ à¦¨à¦¾, à¦à¦¬à¦‚ à¦à¦° à¦†à¦—à§‡à¦‡ à¦†à¦®à¦¾à¦¦à§‡à¦°à¦•à§‡ à¦¨à¦¿à¦°à¦¾à¦ªà¦¤à§à¦¤à¦¾ à¦“ à¦¸à§à¦¸à§à¦¥à¦¤à¦¾ à¦¦à¦¾à¦¨ à¦•à¦°à§‹à¥¤",
               loop: 1,
             },
             // Source : https://www.youtube.com/watch?v=_CUrlEQvJY4
@@ -1867,20 +1824,20 @@
               id: "_CUrlEQvJY4",
               start: 179.5,
               end: 186,
-              label: "পরিবার–সন্তান–ধনসম্পদ হেফাজতের দোয়া (♾️)",
+              label: "à¦ªà¦°à¦¿à¦¬à¦¾à¦°â€“à¦¸à¦¨à§à¦¤à¦¾à¦¨â€“à¦§à¦¨à¦¸à¦®à§à¦ªà¦¦ à¦¹à§‡à¦«à¦¾à¦œà¦¤à§‡à¦° à¦¦à§‹à§Ÿà¦¾ (â™¾ï¸)",
               tooltip:
-                "বিসমিল্লাহি আলা দ্বীনি, ওয়া নাফসী, ওয়া ওয়ালাদী, ওয়া আহলী, ওয়া মালী।",
+                "à¦¬à¦¿à¦¸à¦®à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿ à¦†à¦²à¦¾ à¦¦à§à¦¬à§€à¦¨à¦¿, à¦“à¦¯à¦¼à¦¾ à¦¨à¦¾à¦«à¦¸à§€, à¦“à¦¯à¦¼à¦¾ à¦“à¦¯à¦¼à¦¾à¦²à¦¾à¦¦à§€, à¦“à¦¯à¦¼à¦¾ à¦†à¦¹à¦²à§€, à¦“à¦¯à¦¼à¦¾ à¦®à¦¾à¦²à§€à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "শত্রু থেকে বাঁচার আমল" },
+            { isSubcategory: true, label: "à¦¶à¦¤à§à¦°à§ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦à¦šà¦¾à¦° à¦†à¦®à¦²" },
             // Source : https://www.youtube.com/watch?v=Pm819brsxi4
             {
               id: "Pm819brsxi4",
               start: 42,
               end: 48.8,
-              label: "আল্লাহুম্মা ইন্না নাঝ'আলুকা",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¾ à¦¨à¦¾à¦'à¦†à¦²à§à¦•à¦¾",
               tooltip:
-                "আল্লাহুম্মা ইন্না নাঝ'আলুকা ফী নুহুরিহিম ওয়া না'উজুবিকা মিন শুরুরিহিম। অর্থ: হে আল্লাহ! আমরা তোমাকে তাদের সামনে রাখছি এবং তাদের অনিষ্টতা থেকে তোমার কাছে আশ্রয় চাই।",
+                "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾ à¦‡à¦¨à§à¦¨à¦¾ à¦¨à¦¾à¦'à¦†à¦²à§à¦•à¦¾ à¦«à§€ à¦¨à§à¦¹à§à¦°à¦¿à¦¹à¦¿à¦® à¦“à¦¯à¦¼à¦¾ à¦¨à¦¾'à¦‰à¦œà§à¦¬à¦¿à¦•à¦¾ à¦®à¦¿à¦¨ à¦¶à§à¦°à§à¦°à¦¿à¦¹à¦¿à¦®à¥¤ à¦…à¦°à§à¦¥: à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹! à¦†à¦®à¦°à¦¾ à¦¤à§‹à¦®à¦¾à¦•à§‡ à¦¤à¦¾à¦¦à§‡à¦° à¦¸à¦¾à¦®à¦¨à§‡ à¦°à¦¾à¦–à¦›à¦¿ à¦à¦¬à¦‚ à¦¤à¦¾à¦¦à§‡à¦° à¦…à¦¨à¦¿à¦·à§à¦Ÿà¦¤à¦¾ à¦¥à§‡à¦•à§‡ à¦¤à§‹à¦®à¦¾à¦° à¦•à¦¾à¦›à§‡ à¦†à¦¶à§à¦°à¦¯à¦¼ à¦šà¦¾à¦‡à¥¤",
               loop: 1,
             },
             // Source : https://www.youtube.com/watch?v=cxYnDb_kmHo || https://www.hadithbd.com/books/detail/?book=4&chapter=955
@@ -1888,18 +1845,18 @@
               id: "cxYnDb_kmHo",
               start: 4,
               end: 7,
-              label: "আল্লাহুম্মাকফিনীহিম বিমা শি-তা (♾️)",
+              label: "à¦†à¦²à§à¦²à¦¾à¦¹à§à¦®à§à¦®à¦¾à¦•à¦«à¦¿à¦¨à§€à¦¹à¦¿à¦® à¦¬à¦¿à¦®à¦¾ à¦¶à¦¿-à¦¤à¦¾ (â™¾ï¸)",
               tooltip:
-                "প্রতিদিন 1 বার : হে আল্লাহ আমাকে তাদের থেকে রক্ষা করুন যেভাবে আপনি চান।",
+                "à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 1 à¦¬à¦¾à¦° : à¦¹à§‡ à¦†à¦²à§à¦²à¦¾à¦¹ à¦†à¦®à¦¾à¦•à§‡ à¦¤à¦¾à¦¦à§‡à¦° à¦¥à§‡à¦•à§‡ à¦°à¦•à§à¦·à¦¾ à¦•à¦°à§à¦¨ à¦¯à§‡à¦­à¦¾à¦¬à§‡ à¦†à¦ªà¦¨à¦¿ à¦šà¦¾à¦¨à¥¤",
               loop: 1,
             },
             {
               id: "nPi9zcXdcKs",
               start: 18.2,
               end: 24,
-              label: "সূরা আল ইমরান - ১৭৩ নং আয়াত (♾️)",
+              label: "à¦¸à§‚à¦°à¦¾ à¦†à¦² à¦‡à¦®à¦°à¦¾à¦¨ - à§§à§­à§© à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤ (â™¾ï¸)",
               tooltip:
-                "হাসবুনাল্লাহু ওয়া নি' মাল ওয়াকিল : আল্লাহ আমাদের জন্য যথেষ্ট, এবং তিনিই সর্বোত্তম কার্যনির্বাহী",
+                "à¦¹à¦¾à¦¸à¦¬à§à¦¨à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾ à¦¨à¦¿' à¦®à¦¾à¦² à¦“à§Ÿà¦¾à¦•à¦¿à¦² : à¦†à¦²à§à¦²à¦¾à¦¹ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦œà¦¨à§à¦¯ à¦¯à¦¥à§‡à¦·à§à¦Ÿ, à¦à¦¬à¦‚ à¦¤à¦¿à¦¨à¦¿à¦‡ à¦¸à¦°à§à¦¬à§‹à¦¤à§à¦¤à¦® à¦•à¦¾à¦°à§à¦¯à¦¨à¦¿à¦°à§à¦¬à¦¾à¦¹à§€",
               loop: 1,
             },
             // Source : https://www.youtube.com/watch?v=5624bmeRbC8
@@ -1907,54 +1864,54 @@
               id: "T_B2wjaMcZs",
               start: 0,
               end: 6,
-              label: "সূরা হিজর আয়াত নং : ৯৫ - শত্রু",
-              tooltip: "  ইন্না-কাফাইনা-কাল মুছতাহঝিঈন - প্রতিদিন 70 বার",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¹à¦¿à¦œà¦° à¦†à§Ÿà¦¾à¦¤ à¦¨à¦‚ : à§¯à§« - à¦¶à¦¤à§à¦°à§",
+              tooltip: "  à¦‡à¦¨à§à¦¨à¦¾-à¦•à¦¾à¦«à¦¾à¦‡à¦¨à¦¾-à¦•à¦¾à¦² à¦®à§à¦›à¦¤à¦¾à¦¹à¦à¦¿à¦ˆà¦¨ - à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ 70 à¦¬à¦¾à¦°",
               loop: 70,
             },
-            { isSubcategory: true, label: "অবাধ্য সন্তান বাধ্য হওয়ার আমল" },
+            { isSubcategory: true, label: "à¦…à¦¬à¦¾à¦§à§à¦¯ à¦¸à¦¨à§à¦¤à¦¾à¦¨ à¦¬à¦¾à¦§à§à¦¯ à¦¹à¦“à¦¯à¦¼à¦¾à¦° à¦†à¦®à¦²" },
             // Source : https://www.youtube.com/watch?v=9wJ3S2RpXWY
             {
               id: "SNfVuxCnHm8",
               start: 0,
               end: 25,
-              label: "সূরা বনী-ইসরাঈল - ১১১ নং আয়াত",
+              label: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¨à§€-à¦‡à¦¸à¦°à¦¾à¦ˆà¦² - à§§à§§à§§ à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤",
               tooltip:
-                "ওয়া কুলিল হামদু লিল্লাহিল্লাযী লাম ইয়াত্তাখিয ওয়ালাদা, ওয়া লাম ইয়াকুল্লাহূ শারীকুন ফিল মুল্কি, ওয়া লাম ইয়াকুল্লাহূ ওয়ালিই্যুম মিনাজ্‌যুল্লি, ওয়া কাব্বিরহূ তাকবীরা। বলুন, সমস্ত প্রশংসা আল্লাহর, যিনি কোনো সন্তান গ্রহণ করেননি, তাঁর রাজত্বে তাঁর কোনো শরিক নেই এবং দুর্বলতা থেকে রক্ষা করার জন্য তাঁর কোনো অভিভাবকেরও প্রয়োজন নেই। আর তাঁরই মহিমা ঘোষণা করুন যথাযথভাবে | যখন কথা বলা শুরু করবে। প্রতিদিন ১ বার",
+                "à¦“à§Ÿà¦¾ à¦•à§à¦²à¦¿à¦² à¦¹à¦¾à¦®à¦¦à§ à¦²à¦¿à¦²à§à¦²à¦¾à¦¹à¦¿à¦²à§à¦²à¦¾à¦¯à§€ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦¤à§à¦¤à¦¾à¦–à¦¿à¦¯ à¦“à§Ÿà¦¾à¦²à¦¾à¦¦à¦¾, à¦“à§Ÿà¦¾ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦•à§à¦²à§à¦²à¦¾à¦¹à§‚ à¦¶à¦¾à¦°à§€à¦•à§à¦¨ à¦«à¦¿à¦² à¦®à§à¦²à§à¦•à¦¿, à¦“à§Ÿà¦¾ à¦²à¦¾à¦® à¦‡à§Ÿà¦¾à¦•à§à¦²à§à¦²à¦¾à¦¹à§‚ à¦“à§Ÿà¦¾à¦²à¦¿à¦‡à§à¦¯à§à¦® à¦®à¦¿à¦¨à¦¾à¦œà§â€Œà¦¯à§à¦²à§à¦²à¦¿, à¦“à§Ÿà¦¾ à¦•à¦¾à¦¬à§à¦¬à¦¿à¦°à¦¹à§‚ à¦¤à¦¾à¦•à¦¬à§€à¦°à¦¾à¥¤ à¦¬à¦²à§à¦¨, à¦¸à¦®à¦¸à§à¦¤ à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾ à¦†à¦²à§à¦²à¦¾à¦¹à¦°, à¦¯à¦¿à¦¨à¦¿ à¦•à§‹à¦¨à§‹ à¦¸à¦¨à§à¦¤à¦¾à¦¨ à¦—à§à¦°à¦¹à¦£ à¦•à¦°à§‡à¦¨à¦¨à¦¿, à¦¤à¦¾à¦à¦° à¦°à¦¾à¦œà¦¤à§à¦¬à§‡ à¦¤à¦¾à¦à¦° à¦•à§‹à¦¨à§‹ à¦¶à¦°à¦¿à¦• à¦¨à§‡à¦‡ à¦à¦¬à¦‚ à¦¦à§à¦°à§à¦¬à¦²à¦¤à¦¾ à¦¥à§‡à¦•à§‡ à¦°à¦•à§à¦·à¦¾ à¦•à¦°à¦¾à¦° à¦œà¦¨à§à¦¯ à¦¤à¦¾à¦à¦° à¦•à§‹à¦¨à§‹ à¦…à¦­à¦¿à¦­à¦¾à¦¬à¦•à§‡à¦°à¦“ à¦ªà§à¦°à¦¯à¦¼à§‹à¦œà¦¨ à¦¨à§‡à¦‡à¥¤ à¦†à¦° à¦¤à¦¾à¦à¦°à¦‡ à¦®à¦¹à¦¿à¦®à¦¾ à¦˜à§‹à¦·à¦£à¦¾ à¦•à¦°à§à¦¨ à¦¯à¦¥à¦¾à¦¯à¦¥à¦­à¦¾à¦¬à§‡ | à¦¯à¦–à¦¨ à¦•à¦¥à¦¾ à¦¬à¦²à¦¾ à¦¶à§à¦°à§ à¦•à¦°à¦¬à§‡à¥¤ à¦ªà§à¦°à¦¤à¦¿à¦¦à¦¿à¦¨ à§§ à¦¬à¦¾à¦°",
               loop: 1,
             },
-            { isSubcategory: true, label: " জান্নাতে প্রবেশের আমল " },
+            { isSubcategory: true, label: " à¦œà¦¾à¦¨à§à¦¨à¦¾à¦¤à§‡ à¦ªà§à¦°à¦¬à§‡à¦¶à§‡à¦° à¦†à¦®à¦² " },
             // SOURCE : https://www.youtube.com/watch?v=HcfjT5Rtzl0
             {
               id: "HcfjT5Rtzl0",
               start: 166,
               end: 178,
-              label: "হযরত আবু বকর (আ:) - এর চারটি আমল ",
+              label: "à¦¹à¦¯à¦°à¦¤ à¦†à¦¬à§ à¦¬à¦•à¦° (à¦†:) - à¦à¦° à¦šà¦¾à¦°à¦Ÿà¦¿ à¦†à¦®à¦² ",
               tooltip: "-",
               loop: 1,
             },
-            { isSubcategory: true, label: " অলৌকিক চারটি গুণ " },
+            { isSubcategory: true, label: " à¦…à¦²à§Œà¦•à¦¿à¦• à¦šà¦¾à¦°à¦Ÿà¦¿ à¦—à§à¦£ " },
             // SOURCE : https://www.youtube.com/watch?v=HcfjT5Rtzl0
             {
               id: "XobREy2_wyY",
               start: 125,
               end: 136,
-              label: "নবীজির চারটি গুণের এর আমল ",
+              label: "à¦¨à¦¬à§€à¦œà¦¿à¦° à¦šà¦¾à¦°à¦Ÿà¦¿ à¦—à§à¦£à§‡à¦° à¦à¦° à¦†à¦®à¦² ",
               tooltip:
-                "✔️ সত্য কথা বলা, ✔️ আমানতদারি রক্ষা করা, ✔️ চরিত্র ও লজ্জাশীলতা রক্ষা করা, ✔️ হালাল উপার্জন ও হালাল ভক্ষণ করা",
+                "âœ”ï¸ à¦¸à¦¤à§à¦¯ à¦•à¦¥à¦¾ à¦¬à¦²à¦¾, âœ”ï¸ à¦†à¦®à¦¾à¦¨à¦¤à¦¦à¦¾à¦°à¦¿ à¦°à¦•à§à¦·à¦¾ à¦•à¦°à¦¾, âœ”ï¸ à¦šà¦°à¦¿à¦¤à§à¦° à¦“ à¦²à¦œà§à¦œà¦¾à¦¶à§€à¦²à¦¤à¦¾ à¦°à¦•à§à¦·à¦¾ à¦•à¦°à¦¾, âœ”ï¸ à¦¹à¦¾à¦²à¦¾à¦² à¦‰à¦ªà¦¾à¦°à§à¦œà¦¨ à¦“ à¦¹à¦¾à¦²à¦¾à¦² à¦­à¦•à§à¦·à¦£ à¦•à¦°à¦¾",
               loop: 1,
             },
-            { isSubcategory: true, label: "বাজারে প্রবেশের দু'আ" },
+            { isSubcategory: true, label: "à¦¬à¦¾à¦œà¦¾à¦°à§‡ à¦ªà§à¦°à¦¬à§‡à¦¶à§‡à¦° à¦¦à§'à¦†" },
             {
               id: "HcY-e7-lBBQ",
               start: 9.7,
               end: 29,
-              label: "১০ লক্ষ নেকি পাওয়ার দোয়া (তিরমিজি: ৩৪২৮)",
-              tooltip: "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শরিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ইয়ুহয়ি ওয়াহুয়া ইয়ামুতু ওয়াহুয়া আলা কুল্লি শাইয়িন কাদির।",
+              label: "à§§à§¦ à¦²à¦•à§à¦· à¦¨à§‡à¦•à¦¿ à¦ªà¦¾à¦“à¦¯à¦¼à¦¾à¦° à¦¦à§‹à¦¯à¦¼à¦¾ (à¦¤à¦¿à¦°à¦®à¦¿à¦œà¦¿: à§©à§ªà§¨à§®)",
+              tooltip: "à¦²à¦¾ à¦‡à¦²à¦¾à¦¹à¦¾ à¦‡à¦²à§à¦²à¦¾à¦²à§à¦²à¦¾à¦¹à§ à¦“à§Ÿà¦¾à¦¹à¦¦à¦¾à¦¹à§ à¦²à¦¾ à¦¶à¦°à¦¿à¦•à¦¾ à¦²à¦¾à¦¹à§, à¦²à¦¾à¦¹à§à¦² à¦®à§à¦²à¦•à§ à¦“à§Ÿà¦¾ à¦²à¦¾à¦¹à§à¦² à¦¹à¦¾à¦®à¦¦à§ à¦‡à§Ÿà§à¦¹à§Ÿà¦¿ à¦“à§Ÿà¦¾à¦¹à§à§Ÿà¦¾ à¦‡à§Ÿà¦¾à¦®à§à¦¤à§ à¦“à§Ÿà¦¾à¦¹à§à§Ÿà¦¾ à¦†à¦²à¦¾ à¦•à§à¦²à§à¦²à¦¿ à¦¶à¦¾à¦‡à§Ÿà¦¿à¦¨ à¦•à¦¾à¦¦à¦¿à¦°à¥¤",
               loop: 1,
             },
-            { isSubcategory: true, label: "নেককার জীবনসঙ্গী পাওয়ার আমল " },
+            { isSubcategory: true, label: "à¦¨à§‡à¦•à¦•à¦¾à¦° à¦œà§€à¦¬à¦¨à¦¸à¦™à§à¦—à§€ à¦ªà¦¾à¦“à¦¯à¦¼à¦¾à¦° à¦†à¦®à¦² " },
             // SOURCE : https://www.youtube.com/watch?v=ox8Lulch3h8
-            // { id: "cHG2JO4xHC4", start: 5.5, end: 11, label: "সূরা বনি ইসরাইল - ২৪ নং আয়াত", tooltip: "সূরা বনি ইসরাইল - ২৪ নং আয়াত - ৩ বার", loop: 3 },
+            // { id: "cHG2JO4xHC4", start: 5.5, end: 11, label: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¨à¦¿ à¦‡à¦¸à¦°à¦¾à¦‡à¦² - à§¨à§ª à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤", tooltip: "à¦¸à§‚à¦°à¦¾ à¦¬à¦¨à¦¿ à¦‡à¦¸à¦°à¦¾à¦‡à¦² - à§¨à§ª à¦¨à¦‚ à¦†à§Ÿà¦¾à¦¤ - à§© à¦¬à¦¾à¦°", loop: 3 },
           ],
         },
       ];
@@ -2090,7 +2047,7 @@
               const totalDuration = calculateSectionDuration(sIdx);
               const timeDisplay = formatTime(totalDuration);
               
-              header.innerHTML = `<span>${section.name} <span style="color: var(--accent); font-size: 0.85em;">(${timeDisplay})</span></span> <span style="font-size:0.8em">▼</span>`;
+              header.innerHTML = `<span>${section.name} <span style="color: var(--accent); font-size: 0.85em;">(${timeDisplay})</span></span> <span style="font-size:0.8em">â–¼</span>`;
               header.onclick = () => toggleSection(sIdx);
               
               // Add drag-and-drop functionality
@@ -2120,7 +2077,7 @@
                       const isFav = favorites.includes(vid.id);
                       li.innerHTML = `<span>${vid.label}</span>
                         ${vid.loop > 1 ? `<span class="video-loop-badge">x${vid.loop}</span>` : ''}
-                        <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav('${vid.id}', this)">❤</button>`;
+                        <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav('${vid.id}', this)">â¤</button>`;
                   }
                   ul.appendChild(li);
               });
@@ -2522,7 +2479,7 @@
           const container = document.getElementById('toastContainer');
           const toast = document.createElement('div');
           toast.className = 'toast';
-          toast.innerHTML = `<span>⚠️</span> <span>${message}</span>`;
+          toast.innerHTML = `<span>âš ï¸</span> <span>${message}</span>`;
           container.appendChild(toast);
           
           // Trigger animation
@@ -2709,7 +2666,7 @@
               div.className = 'video-item';
               div.style.display = 'flex';
               div.onclick = () => { playFromHistory(item.id); };
-              div.innerHTML = `<span>🕒 ${item.label}</span>`;
+              div.innerHTML = `<span>ðŸ•’ ${item.label}</span>`;
               container.appendChild(div);
           });
           playlist.appendChild(container);
@@ -2767,7 +2724,7 @@
 
       function applyFavFilter() {
            const btn = document.getElementById('favFilterBtn');
-           btn.textContent = isFavFilterActive ? "❤️ Show All" : "❤️ Show Favorites Only";
+           btn.textContent = isFavFilterActive ? "â¤ï¸ Show All" : "â¤ï¸ Show Favorites Only";
            
            document.querySelectorAll('.video-item').forEach(item => {
                // Subcategories should be hidden in fav mode unless they have visible children? 
@@ -2845,7 +2802,7 @@
                   updateSleepCountdown(endTime, btn);
               }, 1000);
           } else {
-              btn.textContent = `🌙 Sleep`;
+              btn.textContent = `ðŸŒ™ Sleep`;
               btn.classList.remove('active');
           }
       }
@@ -2854,7 +2811,7 @@
           const left = endTime - Date.now();
           if (left <= 0) {
               clearInterval(sleepTimer);
-              btn.textContent = `🌙 Sleep`;
+              btn.textContent = `ðŸŒ™ Sleep`;
               btn.classList.remove('active');
               window.sleepIndex = 0; // Reset cycle
               stop();
@@ -2862,7 +2819,7 @@
           } else {
               const m = Math.floor(left / 60000);
               const s = Math.floor((left % 60000) / 1000);
-              btn.textContent = `🌙 ${m}:${s < 10 ? '0'+s : s}`;
+              btn.textContent = `ðŸŒ™ ${m}:${s < 10 ? '0'+s : s}`;
           }
       }
 
@@ -2871,6 +2828,15 @@
           const backdrop = document.getElementById('sidebarBackdrop');
           sidebar.classList.toggle('active');
           backdrop.classList.toggle('active');
+      }
+
+      function toggleSaver() {
+          const ov = document.getElementById('saverOverlay');
+          if (ov.style.display === 'flex') {
+              ov.style.display = 'none';
+          } else {
+              ov.style.display = 'flex';
+          }
       }
 
       // HABIT TRACKER
@@ -2892,11 +2858,11 @@
           }
           
           let badges = "";
-          if(streak >= 3) badges += `<span class='streak-badge' title='3 Day Streak'>🥉</span>`;
-          if(streak >= 7) badges += `<span class='streak-badge' title='7 Day Streak'>🥈</span>`;
-          if(streak >= 30) badges += `<span class='streak-badge' title='30 Day Streak'>🥇</span>`;
+          if(streak >= 3) badges += `<span class='streak-badge' title='3 Day Streak'>ðŸ¥‰</span>`;
+          if(streak >= 7) badges += `<span class='streak-badge' title='7 Day Streak'>ðŸ¥ˆ</span>`;
+          if(streak >= 30) badges += `<span class='streak-badge' title='30 Day Streak'>ðŸ¥‡</span>`;
           
-          document.getElementById('habitStreakDisplay').innerHTML = `🔥 ${streak} Day Streak ${badges}`;
+          document.getElementById('habitStreakDisplay').innerHTML = `ðŸ”¥ ${streak} Day Streak ${badges}`;
       }
       updateHabitStreak();
 
@@ -3020,7 +2986,7 @@
               label.style.cssText = `flex: 1; color: var(--text-main); ${item.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}`;
               
               const deleteBtn = document.createElement('button');
-              deleteBtn.textContent = '🗑️';
+              deleteBtn.textContent = 'ðŸ—‘ï¸';
               deleteBtn.style.cssText = 'background: none; border: none; cursor: pointer; opacity: 0.5; font-size: 1rem; padding: 4px;';
               deleteBtn.onmouseover = () => deleteBtn.style.opacity = '1';
               deleteBtn.onmouseout = () => deleteBtn.style.opacity = '0.5';
@@ -3130,6 +3096,7 @@
               else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
          }
          else if (e.code === 'KeyS') { toggleSleepTimer(); }
+         else if (e.code === 'KeyB') { toggleSaver(); }
       });
 
       // AUTO PLAY & CUSTOM LOOP
@@ -3154,10 +3121,11 @@
             <h3>Keyboard Shortcuts</h3>
             <ul class="shortcuts-list">
                 <li><span class="key-badge">Space</span> Play/Pause</li>
-                <li><span class="key-badge">→</span> Next Video</li>
-                <li><span class="key-badge">←</span> Previous Video</li>
+                <li><span class="key-badge">â†’</span> Next Video</li>
+                <li><span class="key-badge">â†</span> Previous Video</li>
                 <li><span class="key-badge">S</span> Toggle Sleep Timer</li>
                 <li><span class="key-badge">F</span> Toggle Fullscreen</li>
+                <li><span class="key-badge">B</span> Toggle Battery Saver</li>
             </ul>
             <button class="btn btn-primary" onclick="document.getElementById('shortcutsModal').style.display='none'">Close</button>
         </div>
@@ -3167,5 +3135,4 @@
     <div class="toast-container" id="toastContainer"></div>
 </body>
 </html>
-
 
