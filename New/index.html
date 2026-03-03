@@ -18,6 +18,7 @@
             --border: rgba(255, 255, 255, 0.1);
             --sidebar-width: 320px;
             --sidebar-width-sm: 280px;
+            --media-panel-max: 680px;
         }
         .sidebar { width: var(--sidebar-width); flex: 0 0 var(--sidebar-width); min-height: 0; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
         .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
@@ -87,7 +88,7 @@
         .main-content { flex: 1; min-width: 0; min-height: 0; width: 100%; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 20px; gap: 20px; align-items: center; }
         .media-layout-row {
             width: 100%;
-            max-width: 900px;
+            max-width: min(100%, 980px);
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
             gap: 0;
@@ -99,7 +100,10 @@
         }
         .media-panel {
             min-width: 0;
-            padding: 16px;
+            width: 100%;
+            max-width: var(--media-panel-max);
+            margin: 0 auto;
+            padding: clamp(14px, 2vw, 22px);
             border-right: 1px solid rgba(255,255,255,0.1);
             background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
         }
@@ -122,7 +126,18 @@
             100% { transform: translateX(-50%); }
         }
         .panel-chip { font-size: 0.78rem; color: var(--accent); border: 1px solid rgba(255,255,255,0.22); padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.04); }
-        .player-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); }
+        .player-card {
+            position: relative;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/9;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+        }
         .progress-side-card {
             padding: 16px 16px 18px;
             display: flex;
@@ -171,7 +186,11 @@
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
-        #player { width: 100%; height: 100%; }
+        #player { position: absolute; inset: 0; width: 100%; height: 100%; }
+        #player iframe { width: 100% !important; height: 100% !important; }
+        @supports not (aspect-ratio: 16/9) {
+            .player-card { height: 0; padding-top: 56.25%; }
+        }
         .info-row { text-align: center; }
         .video-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px 0; color: var(--text-main); }
         .tooltip { font-size: 0.95rem; color: var(--text-sec); font-style: italic; min-height: 1.4rem; }
@@ -199,6 +218,14 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         
+        @media (min-width: 1201px) {
+            .media-layout-row {
+                max-width: 1080px;
+                grid-template-columns: minmax(0, 1fr) minmax(310px, 370px);
+            }
+            .media-panel { --media-panel-max: 740px; }
+        }
+
         /* Tablet and below - 900px */
         @media (max-width: 900px) {
             body { height: auto; min-height: 100dvh; overflow-y: auto; }
@@ -219,26 +246,25 @@
             .player-card {
                 border-radius: 8px;
                 width: 100%;
-                max-width: 100%;
-                height: 240px;
-                min-height: 240px;
-                max-height: 240px;
-                aspect-ratio: auto;
-                position: sticky;
-                top: 8px;
-                z-index: 15;
+                height: auto;
             }
             .media-layout-row { grid-template-columns: 1fr; max-width: 100%; border-radius: 12px; }
             .media-panel, .progress-side-card { width: 100%; max-width: 100%; }
-            .media-panel { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .media-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                margin: 0;
+                padding: 14px 12px;
+            }
             .progress-side-card { margin: 0; border-radius: 0; border: none; border-top: 1px solid rgba(255,255,255,0.12); box-shadow: none; animation: none; }
             .controls-card { padding: 16px; }
             .progress-container { min-height: 160px; }
             .panel-title.marquee-title { max-width: 72%; }
         }
-        
+
         @media (min-width: 901px) and (max-width: 1024px) {
             .media-layout-row { grid-template-columns: minmax(0, 1fr) minmax(260px, 300px); }
+            .media-panel { --media-panel-max: 620px; }
         }
         
         /* Mobile landscape and small tablets - 768px */
@@ -262,6 +288,12 @@
             
             .modal-content { max-width: 90%; padding: 20px; }
             .panel-title.marquee-title { max-width: 68%; }
+            .media-panel { padding: 12px 10px; }
+            .player-card {
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
         }
         
         /* Small phones - 480px */
@@ -279,12 +311,11 @@
             .main-content { padding: 8px; gap: 15px; }
             .player-card {
                 border-radius: 8px;
-                height: 200px;
-                min-height: 200px;
-                max-height: 200px;
-                top: 6px;
+                width: 100%;
+                height: auto;
+                max-width: 100%;
             }
-            .media-panel, .progress-side-card { padding: 10px; }
+            .media-panel, .progress-side-card { padding: 10px 8px; }
             .progress-side-card { margin: 0; }
             
             .controls-card { padding: 12px; gap: 12px; }
@@ -311,18 +342,17 @@
             
             .actions-row { 
                 gap: 6px;
-                flex-wrap: nowrap;
-                overflow-x: auto;
+                flex-wrap: wrap;
+                overflow-x: visible;
                 justify-content: center;
                 padding-bottom: 2px;
-                -webkit-overflow-scrolling: touch;
             }
-            .actions-row::-webkit-scrollbar { display: none; }
             .btn { 
-                padding: 8px 10px; 
+                padding: 8px 10px;
                 font-size: 0.8rem;
-                flex: 0 0 auto;
-                min-width: 0;
+                flex: 1 1 calc(50% - 6px);
+                min-width: 118px;
+                max-width: 150px;
                 justify-content: center;
                 white-space: nowrap;
             }
@@ -351,6 +381,44 @@
             
             #customLoopInput { width: 45px; font-size: 0.85rem; }
             .panel-title.marquee-title { max-width: 64%; }
+        }
+
+        @media (max-width: 380px) {
+            .player-card {
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
+            .btn {
+                flex: 1 1 100%;
+                max-width: none;
+                min-width: 0;
+            }
+        }
+
+        /* Responsive mobile card sizing */
+        @media (max-width: 900px) {
+            .main-content {
+                align-items: stretch !important;
+            }
+            .main-content > div {
+                display: block !important;
+            }
+            .player-card {
+                width: min(356px, calc(100vw - 16px)) !important;
+                height: auto !important;
+                max-width: 100% !important;
+                aspect-ratio: 16/9 !important;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .controls-card,
+            .media-panel .controls-card {
+                width: min(356px, calc(100vw - 16px)) !important;
+                max-width: 100% !important;
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
         
         /* Landscape mode optimization for phones */
