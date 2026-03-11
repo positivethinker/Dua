@@ -100,10 +100,8 @@
     <h1>🛠️ Admin Dashboard – DUA AND DARUD PLAYER</h1>
     <div class="header-actions">
       <a href="index.html" class="btn btn-outline">← Back to Player</a>
-      <button class="btn btn-outline" onclick="restoreBackup()" title="Restore from last backup">📋 Restore Backup</button>
       <button class="btn btn-primary" onclick="showImportModal()">📥 Import JSON</button>
       <button class="btn btn-primary" onclick="exportData()">📤 Export JSON</button>
-      <button class="btn btn-outline" onclick="showSupabaseSettings()" title="Configure Supabase URL/Key">⚙️ Supabase Settings</button>
       <button class="btn btn-outline" onclick="pushToSupabase()" title="Push local data to Supabase">☁️ Sync to Supabase</button>
     </div>
   </div>
@@ -210,39 +208,12 @@
       <h3>Import Data</h3>
       <p class="import-info">Paste the exported JSON from the player, or use "Copy data for Admin" on the player page.</p>
       <div class="form-group">
-        <label>Import mode</label>
-        <div style="display: flex; gap: 16px; margin-bottom: 8px;">
-          <label><input type="radio" name="importMode" value="replace" checked /> Replace all</label>
-          <label><input type="radio" name="importMode" value="merge" /> Merge (add new topics/videos)</label>
-        </div>
-      </div>
-      <div class="form-group">
         <label>JSON Data</label>
         <textarea id="importJsonInput" class="import-textarea" placeholder='[{"name":"Topic","videos":[...]}]'></textarea>
       </div>
       <div class="form-actions">
         <button class="btn btn-primary" onclick="doImport()">Import</button>
         <button class="btn btn-outline" onclick="closeModal('importModal')">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="supabaseModal">
-    <div class="modal-content">
-      <h3>Supabase Settings</h3>
-      <p class="import-info">Optional: set Supabase URL + Anon key to enable cloud sync. If left blank, the app uses localStorage only.</p>
-      <div class="form-group">
-        <label>Supabase URL</label>
-        <input type="text" id="supabaseUrlInput" placeholder="https://xxxx.supabase.co" />
-      </div>
-      <div class="form-group">
-        <label>Supabase Anon Key</label>
-        <input type="text" id="supabaseAnonKeyInput" placeholder="sb_publishable_..." />
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-primary" onclick="saveSupabaseSettings()">Save</button>
-        <button class="btn btn-danger" onclick="clearSupabaseSettings()">Disable</button>
-        <button class="btn btn-outline" onclick="closeModal('supabaseModal')">Close</button>
       </div>
     </div>
   </div>
@@ -278,33 +249,24 @@
     </div>
   </div>
 
-  <script src="assets/js/config.js"></script>
   <script src="assets/js/data.js"></script>
   <script>
     // Password Protection System
-    // Supabase Configuration (set via Supabase Settings; otherwise local-only)
-    const SUPABASE_URL = (window.DUA_SUPABASE?.url || '').trim();
-    const SUPABASE_ANON_KEY = (window.DUA_SUPABASE?.anonKey || '').trim();
-    const _supabase = (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY)
-      ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      : null;
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://behfqjrslzptquvyftes.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_oTCRST7zxpY9ylk3I2xbOA_asKWH3nB';
+    const _supabase = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
     const ADMIN_PASSWORD_KEY = 'duaAdminPassword';
     const ADMIN_SESSION_KEY = 'duaAdminSession';
-    const DEFAULT_PASSWORD = 'admin123';
-    const PASSWORD_FIRST_RUN_KEY = 'duaAdminPasswordSet';
+    const DEFAULT_PASSWORD = 'admin123'; // Change this to your desired password
     let isAuthenticated = false;
 
-    // Initialize password on first load - prompt to set new password if still default
+    // Initialize password on first load
     function initPassword() {
       const storedPassword = localStorage.getItem(ADMIN_PASSWORD_KEY);
-      const passwordSet = localStorage.getItem(PASSWORD_FIRST_RUN_KEY);
       if (!storedPassword) {
         localStorage.setItem(ADMIN_PASSWORD_KEY, DEFAULT_PASSWORD);
-      }
-      // If still using default and never changed, show change prompt after login
-      if (passwordSet !== 'true' && (storedPassword || DEFAULT_PASSWORD) === DEFAULT_PASSWORD) {
-        window._forcePasswordChange = true;
       }
     }
 
@@ -327,23 +289,10 @@
         sessionStorage.setItem(ADMIN_SESSION_KEY, 'authenticated');
         document.getElementById('passwordError').style.display = 'none';
         unlockDashboard();
-        if (window._forcePasswordChange) {
-          setTimeout(() => promptPasswordChange(), 500);
-        }
       } else {
         document.getElementById('passwordError').style.display = 'block';
         document.getElementById('passwordInput').value = '';
         document.getElementById('passwordInput').focus();
-      }
-    }
-
-    function promptPasswordChange() {
-      const newPass = prompt('Security: Please set a new admin password (default "admin123" is unsafe):');
-      if (newPass && newPass.length >= 6) {
-        localStorage.setItem(ADMIN_PASSWORD_KEY, newPass);
-        localStorage.setItem(PASSWORD_FIRST_RUN_KEY, 'true');
-        window._forcePasswordChange = false;
-        showToast('Password updated. Use it next time.');
       }
     }
 
@@ -385,36 +334,12 @@
     let currentTopicIndex = -1;
     let editingItemIndex = -1;
     let editingTopicIndex = -1;
-    function mergeMissingDefaultSections(sections) {
-      const defaults = (typeof defaultVideoSections !== "undefined")
-        ? JSON.parse(JSON.stringify(defaultVideoSections))
-        : [{ name: "নতুন টপিক", videos: [] }];
-      if (!Array.isArray(sections)) return defaults;
-      const existing = new Set(
-        sections
-          .map(s => (s && typeof s.name === 'string' ? s.name.trim() : ''))
-          .filter(Boolean)
-      );
-      const merged = sections.slice();
-      defaults.forEach(def => {
-        if (!existing.has(def.name)) merged.push(def);
-      });
-      return merged;
-    }
-
-    function parseNameLines(raw) {
-      const lines = raw.match(/name\s*:\s*"([^"]+)"/g) || [];
-      return lines.map(line => {
-        const m = line.match(/name\s*:\s*"([^"]+)"/);
-        return m ? { name: m[1], videos: [] } : null;
-      }).filter(Boolean);
-    }
 
     async function loadData() {
       if (!isAuthenticated) return;
       
       // 1. Try Supabase
-      if (_supabase) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
           try {
               const { data: sections, error: sError } = await _supabase
                   .from('sections')
@@ -448,7 +373,6 @@
                                   order_index: v.order_index
                               }))
                       }));
-                      data = mergeMissingDefaultSections(data);
                       renderTopicList();
                       if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
                         renderTopicContent(currentTopicIndex);
@@ -467,14 +391,14 @@
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-          data = mergeMissingDefaultSections(JSON.parse(stored));
+          data = JSON.parse(stored);
         } else {
-          data = mergeMissingDefaultSections([]);
-          // Don't auto-save when empty - prevents overwriting player data
+          data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+          saveData();
         }
       } catch (e) {
-        data = mergeMissingDefaultSections([]);
-        // Don't auto-save on error
+        data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+        saveData();
       }
       renderTopicList();
       if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
@@ -486,7 +410,7 @@
     }
 
     function setupRealtime() {
-        if (!_supabase) return;
+        if (!_supabase || SUPABASE_URL === 'https://behfqjrslzptquvyftes.supabase.co') return;
 
         _supabase
             .channel('admin-db-changes')
@@ -502,20 +426,9 @@
             .subscribe();
     }
 
-    function setupLocalStorageSync() {
-      window.addEventListener('storage', (e) => {
-        if (e.key !== STORAGE_KEY) return;
-        if (!isAuthenticated) return;
-        const anyModalOpen = document.querySelector('.modal.show');
-        if (anyModalOpen) return;
-        loadData();
-      });
-    }
-
     function saveData() {
       if (!requireAuth()) return;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      try { (new BroadcastChannel('duaDarudSync')).postMessage('saved'); } catch (e) {}
       showToast('Saved to player');
     }
 
@@ -598,7 +511,7 @@
       if (!name) { showToast('Enter topic name'); return; }
       
       let topicId = null;
-      if (_supabase) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
           try {
               if (editingTopicIndex >= 0) {
                   const topic = data[editingTopicIndex];
@@ -673,7 +586,7 @@
       };
 
       let dbId = null;
-      if (_supabase && topic.id) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
           try {
               if (editingItemIndex >= 0) {
                   const item = topic.videos[editingItemIndex];
@@ -740,7 +653,7 @@
       };
 
       let dbId = null;
-      if (_supabase && topic.id) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
           try {
               if (editingItemIndex >= 0) {
                   const item = topic.videos[editingItemIndex];
@@ -770,9 +683,9 @@
     async function deleteCurrentTopic() {
       if (!requireAuth()) return;
       if (currentTopicIndex < 0 || !confirm('Delete this entire topic and all its videos?')) return;
-      backupBeforeDestructive();
+      
       const topic = data[currentTopicIndex];
-      if (_supabase && topic.id) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
           try {
               const { error } = await _supabase.from('sections').delete().eq('id', topic.id);
               if (error) throw error;
@@ -821,7 +734,7 @@
       const draggedItem = items.splice(draggedItemIndex, 1)[0];
       items.splice(index, 0, draggedItem);
 
-      if (_supabase && data[currentTopicIndex].id) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && data[currentTopicIndex].id) {
         try {
           // Re-index all items in this section for consistency
           for (let i = 0; i < items.length; i++) {
@@ -870,7 +783,7 @@
       if (!targetTopic.videos) targetTopic.videos = [];
       targetTopic.videos.push(item);
       
-      if (_supabase && item.db_id && targetTopic.id) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && item.db_id && targetTopic.id) {
         try {
           // Update section_id and order_index
           await _supabase.from('videos').update({ 
@@ -897,9 +810,9 @@
     async function deleteItem(idx) {
       if (!requireAuth()) return;
       if (!confirm('Delete this item?')) return;
-      backupBeforeDestructive();
+      
       const item = data[currentTopicIndex].videos[idx];
-      if (_supabase && item.db_id) {
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && item.db_id) {
           try {
               const { error } = await _supabase.from('videos').delete().eq('id', item.db_id);
               if (error) throw error;
@@ -921,97 +834,14 @@
       document.getElementById('importModal').classList.add('show');
     }
 
-    function showSupabaseSettings() {
-      if (!requireAuth()) return;
-      const url = (localStorage.getItem('SUPABASE_URL') || '').trim();
-      const key = (localStorage.getItem('SUPABASE_ANON_KEY') || '').trim();
-      document.getElementById('supabaseUrlInput').value = url;
-      document.getElementById('supabaseAnonKeyInput').value = key;
-      document.getElementById('supabaseModal').classList.add('show');
-    }
-
-    function saveSupabaseSettings() {
-      if (!requireAuth()) return;
-      const url = (document.getElementById('supabaseUrlInput').value || '').trim();
-      const key = (document.getElementById('supabaseAnonKeyInput').value || '').trim();
-      if (!url || !key) {
-        showToast('Enter both URL and Anon key (or Disable)');
-        return;
-      }
-      localStorage.setItem('SUPABASE_URL', url);
-      localStorage.setItem('SUPABASE_ANON_KEY', key);
-      showToast('Saved. Reloading...');
-      setTimeout(() => location.reload(), 400);
-    }
-
-    function clearSupabaseSettings() {
-      if (!requireAuth()) return;
-      if (!confirm('Disable Supabase sync on this device?')) return;
-      localStorage.removeItem('SUPABASE_URL');
-      localStorage.removeItem('SUPABASE_ANON_KEY');
-      showToast('Disabled. Reloading...');
-      setTimeout(() => location.reload(), 400);
-    }
-
-    function backupBeforeDestructive() {
-      try {
-        localStorage.setItem(STORAGE_KEY + '_backup', JSON.stringify(data));
-      } catch (e) {}
-    }
-
-    function restoreBackup() {
-      if (!requireAuth()) return;
-      try {
-        const backup = localStorage.getItem(STORAGE_KEY + '_backup');
-        if (!backup) { showToast('No backup found'); return; }
-        if (!confirm('Restore from last backup? Current data will be replaced.')) return;
-        data = JSON.parse(backup);
-        data = mergeMissingDefaultSections(data);
-        saveData();
-        loadData();
-        currentTopicIndex = 0;
-        selectTopic(0);
-        showToast('Restored from backup');
-      } catch (e) { showToast('Restore failed'); }
-    }
-
     function doImport() {
       if (!requireAuth()) return;
       const raw = document.getElementById('importJsonInput').value.trim();
       if (!raw) { showToast('Paste JSON first'); return; }
-      const mode = document.querySelector('input[name="importMode"]:checked')?.value || 'replace';
       try {
-        const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed)) throw new Error('Expected array');
-        parsed.forEach(t => { if (!t.videos) t.videos = []; });
-        if (mode === 'replace') {
-          if (!confirm('Replace ALL current data? A backup will be saved.')) return;
-          backupBeforeDestructive();
-          data = mergeMissingDefaultSections(parsed);
-        } else {
-          backupBeforeDestructive();
-          const existingNames = new Set((data || []).map(s => (s.name || '').trim()).filter(Boolean));
-          parsed.forEach(section => {
-            if (!section || !section.name) return;
-            const name = section.name.trim();
-            if (existingNames.has(name)) {
-              const idx = data.findIndex(d => (d.name || '').trim() === name);
-              if (idx >= 0) {
-                const existingVideos = data[idx].videos || [];
-                const existingLabels = new Set(existingVideos.map(v => v.isSubcategory ? 'sub:' + (v.label || '') : (v.id || '') + ':' + (v.label || '')));
-                (section.videos || []).forEach(v => {
-                  const key = v.isSubcategory ? 'sub:' + (v.label || '') : (v.id || '') + ':' + (v.label || '');
-                  if (!existingLabels.has(key)) { existingVideos.push(v); existingLabels.add(key); }
-                });
-                data[idx].videos = existingVideos;
-              }
-            } else {
-              data.push(section);
-              existingNames.add(name);
-            }
-          });
-          data = mergeMissingDefaultSections(data);
-        }
+        data = JSON.parse(raw);
+        if (!Array.isArray(data)) throw new Error('Expected array');
+        data.forEach(t => { if (!t.videos) t.videos = []; });
         saveData();
         loadData();
         currentTopicIndex = 0;
@@ -1019,19 +849,6 @@
         closeModal('importModal');
         showToast('Imported successfully');
       } catch (e) {
-        const parsedByLines = parseNameLines(raw);
-        if (parsedByLines.length > 0) {
-          if (mode === 'replace' && !confirm('Replace all with parsed data? Backup will be saved.')) return;
-          backupBeforeDestructive();
-          data = mergeMissingDefaultSections(parsedByLines);
-          saveData();
-          loadData();
-          currentTopicIndex = 0;
-          selectTopic(0);
-          closeModal('importModal');
-          showToast('Imported from name lines');
-          return;
-        }
         showToast('Invalid JSON: ' + e.message);
       }
     }
@@ -1048,8 +865,8 @@
 
     async function pushToSupabase() {
         if (!requireAuth()) return;
-        if (!_supabase) {
-            showToast('Supabase not configured (use Supabase Settings)');
+        if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+            showToast('Supabase not configured');
             return;
         }
 
@@ -1118,7 +935,6 @@
       loadData();
       if (data.length && currentTopicIndex < 0) selectTopic(0);
       setupRealtime();
-      setupLocalStorageSync();
     });
   </script>
 </body>
