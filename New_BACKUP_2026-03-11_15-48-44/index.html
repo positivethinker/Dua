@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dua Player Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0e17;
+            --bg-sec: rgba(30, 41, 59, 0.7); /* Glassy */
+            --text-main: #f8fafc;
+            --text-sec: #94a3b8;
+            --accent: #ffd700; /* Gold */
+            --accent-glow: rgba(255, 215, 0, 0.15);
+            --border: rgba(255, 255, 255, 0.1);
+            --sidebar-width: 320px;
+            --sidebar-width-sm: 280px;
+            --media-panel-max: 680px;
+        }
+        .sidebar { width: var(--sidebar-width); flex: 0 0 var(--sidebar-width); min-height: 0; background: var(--bg-sec); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+        .controls-card { width: 100%; max-width: 900px; background: var(--bg-sec); border-radius: 12px; padding: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        .active { border-color: var(--accent); color: var(--accent); }
+        .theme-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: inline-block; margin-left: 5px; }
+        .theme-btn.active { border-color: #fff; }
+        .fav-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #475569; margin-left: auto; padding: 2px 6px; z-index: 10; transition: color 0.2s; }
+        .fav-btn.active { color: #f43f5e; }
+        .fav-filter-btn { background: none; border: 1px solid var(--border); color: var(--text-sec); border-radius: 6px; padding: 6px 12px; margin: 10px 20px 0 20px; cursor: pointer; font-size: 0.85rem; width: calc(100% - 40px); }
+        .fav-filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        * { box-sizing: border-box; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); min-height: 100vh; min-height: 100dvh; height: 100dvh; overflow: hidden; display: flex; }
+        .logo { padding: 20px; border-bottom: 1px solid var(--border); }
+        .logo h1 { font-family: 'Playfair Display', serif; margin: 0; font-size: 1.5rem; background: linear-gradient(45deg, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .habit-streak { font-size: 0.8rem; color: #f59e0b; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+        .streak-badge { background: #f59e0b; color: #000; font-size: 0.6rem; padding: 1px 4px; border-radius: 4px; margin-left: 5px; font-weight: bold; }
+        .progress-container {
+            width: 100%;
+            margin-top: 10px;
+            min-height: 215px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at center, rgba(255,255,255,0.07) 0 20%, rgba(255,255,255,0.02) 21% 42%, transparent 43%),
+                linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .radial-progress-svg { width: min(100%, 235px); height: auto; transform: rotate(-90deg); overflow: visible; }
+        .loop-ring-track { fill: none; stroke: rgba(255,255,255,0.1); }
+        .loop-ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 0.35s linear; }
+        .radial-progress-center {
+            position: absolute;
+            width: 102px;
+            height: 102px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.14), rgba(0,0,0,0.28));
+            border: 1px solid rgba(255,255,255,0.15);
+            text-align: center;
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+            perspective: 800px;
+        }
+        .radial-progress-center-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .radial-progress-center.is-flipped .radial-progress-center-inner { transform: rotateY(180deg); }
+        .radial-progress-face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .radial-progress-face-back { transform: rotateY(180deg); padding: 8px; box-sizing: border-box; }
+        .radial-progress-face-back .radial-progress-label,
+        .radial-progress-face-back .radial-progress-value,
+        .radial-progress-face-back .radial-progress-percent {
+            font-size: 8px;
+            line-height: 1.1;
+            max-width: 84px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .radial-progress-label { font-size: 0.7rem; color: var(--text-sec); letter-spacing: 0.06em; text-transform: uppercase; }
+        .radial-progress-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; margin-top: 3px; }
+        .radial-progress-percent { font-size: 0.8rem; color: var(--accent); margin-top: 6px; font-weight: 600; }
+        .playlist { flex: 1; overflow-y: auto; padding: 10px; }
+        .section-item { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #182235; }
+        .section-item.playing { border-color: var(--accent); }
+        .section-header { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); transition: background 0.2s; font-weight: 500; font-size: 0.95rem; border-bottom: 1px solid var(--border); cursor: move; }
+        .section-header:hover { background: rgba(255,215,0,0.05); }
+        .section-header.active { background: rgba(255,215,0,0.05); color: var(--accent); }
+        .section-item.dragging { opacity: 0.5; }
+        .section-item.drag-over { border-top: 3px solid var(--accent); }
+        .video-list { list-style: none; margin: 0; padding: 0; display: none; background: rgba(0,0,0,0.2); }
+        .video-list.open { display: block; }
+        .video-item { padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: var(--text-sec); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .video-item:hover { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
+        .video-item.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
+        .video-loop-badge { font-size: 0.75rem; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin-left: auto; color: var(--accent); }
+        .main-content { flex: 1; min-width: 0; min-height: 0; width: 100%; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 20px; gap: 20px; align-items: center; }
+        .media-layout-row {
+            width: 100%;
+            max-width: min(100%, 980px);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+            gap: 0;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: linear-gradient(180deg, rgba(18,24,38,0.92), rgba(11,16,27,0.92));
+            box-shadow: 0 18px 42px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+        .media-panel {
+            min-width: 0;
+            width: 100%;
+            max-width: var(--media-panel-max);
+            margin: 0 auto;
+            padding: clamp(14px, 2vw, 22px);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+        }
+        .media-panel .controls-card { margin-top: 14px; max-width: 100%; padding: 14px; }
+        .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .panel-title { font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; color: #9fb0c8; font-weight: 700; }
+        .panel-title.marquee-title {
+            max-width: 65%;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .panel-title.marquee-title span {
+            display: inline-block;
+            padding-right: 20px;
+            animation: panelMarquee 12s linear infinite;
+        }
+        @keyframes panelMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .panel-chip { font-size: 0.78rem; color: var(--accent); border: 1px solid rgba(255,255,255,0.22); padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.04); }
+        .player-card {
+            position: relative;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/9;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+        }
+        .progress-side-card {
+            padding: 16px 16px 18px;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            margin: 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow: 0 16px 34px rgba(0,0,0,0.34);
+            animation: floatSideCard 5.5s ease-in-out infinite;
+        }
+        @keyframes floatSideCard {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+        .progress-side-card .progress-container { margin-top: 0; min-height: 205px; }
+        .progress-side-card .stats-row {
+            margin-top: 12px;
+            margin-bottom: 14px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            align-items: stretch;
+        }
+        .progress-side-card .stat-badge { width: 100%; justify-content: space-between; padding: 8px 10px; flex-wrap: wrap; row-gap: 6px; }
+        .progress-side-card #customLoopInput { width: 56px; margin-left: 0; text-align: center; }
+        .progress-side-card .stat-value { margin-left: auto; }
+        .progress-caption {
+            margin-top: 10px;
+            text-align: left;
+            font-size: 0.8rem;
+            color: var(--text-sec);
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+        .progress-caption span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: progressCaptionMarquee 25s linear infinite;
+        }
+        @keyframes progressCaptionMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        #player { position: absolute; inset: 0; width: 100%; height: 100%; }
+        #player iframe { width: 100% !important; height: 100% !important; }
+        @supports not (aspect-ratio: 16/9) {
+            .player-card { height: 0; padding-top: 56.25%; }
+        }
+        .info-row { text-align: center; }
+        .video-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px 0; color: var(--text-main); }
+        .tooltip { font-size: 0.95rem; color: var(--text-sec); font-style: italic; min-height: 1.4rem; }
+        .stats-row { display: flex; justify-content: center; gap: 30px; margin-top: 10px; flex-wrap: wrap; }
+        .stat-badge { background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); }
+        .stat-value { font-weight: 700; color: var(--accent); font-size: 1.1rem; }
+        .actions-row { display: flex; justify-content: center; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 24px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: transform 0.1s, opacity 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--accent); color: #0f172a; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); }
+        .mobile-toggle { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 100; padding: 12px; border-radius: 50%; width: 56px; height: 56px; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); background: var(--accent); color: #000; font-size: 1.5rem; border: none; cursor: pointer; transition: transform 0.2s;}
+        .mobile-toggle:active { transform: scale(0.95); }
+        
+        /* Sidebar backdrop for mobile */
+        .sidebar-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 49; }
+        .sidebar-backdrop.active { display: block; }
+        
+        /* Prevent text selection on buttons */
+        .btn, .speed-btn, .fav-filter-btn, .mobile-toggle, .tasbih-btn, .theme-btn, .bg-thumb, .ambience-btn { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        
+        @media (min-width: 1201px) {
+            .media-layout-row {
+                max-width: 1080px;
+                grid-template-columns: minmax(0, 1fr) minmax(310px, 370px);
+            }
+            .media-panel { --media-panel-max: 740px; }
+        }
+
+        /* Tablet and below - 900px */
+        @media (max-width: 900px) {
+            body { height: auto; min-height: 100dvh; overflow-y: auto; }
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: min(86vw, var(--sidebar-width));
+                flex-basis: min(86vw, var(--sidebar-width));
+                transform: translateX(-100%);
+                z-index: 50;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            }
+            .sidebar.active { transform: translateX(0); }
+            .mobile-toggle { display: flex; }
+            .main-content { padding: 10px; align-items: stretch; overflow-y: auto; }
+            .player-card {
+                border-radius: 8px;
+                width: 100%;
+                height: auto;
+            }
+            .media-layout-row { grid-template-columns: 1fr; max-width: 100%; border-radius: 12px; }
+            .media-panel, .progress-side-card { width: 100%; max-width: 100%; }
+            .media-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                margin: 0;
+                padding: 14px 12px;
+            }
+            .progress-side-card { margin: 0; border-radius: 0; border: none; border-top: 1px solid rgba(255,255,255,0.12); box-shadow: none; animation: none; }
+            .controls-card { padding: 16px; }
+            .progress-container { min-height: 160px; }
+            .panel-title.marquee-title { max-width: 72%; }
+        }
+
+        @media (min-width: 901px) and (max-width: 1024px) {
+            .media-layout-row { grid-template-columns: minmax(0, 1fr) minmax(260px, 300px); }
+            .media-panel { --media-panel-max: 620px; }
+        }
+        
+        /* Mobile landscape and small tablets - 768px */
+        @media (max-width: 768px) {
+            .logo h1 { font-size: 1.3rem; }
+            .video-title { font-size: 1.1rem; }
+            .tooltip { font-size: 0.85rem; }
+            
+            .stats-row { gap: 15px; }
+            .stat-badge { padding: 6px 12px; font-size: 0.85rem; }
+            .stat-value { font-size: 1rem; }
+            
+            .actions-row { gap: 10px; flex-wrap: wrap; }
+            .btn { padding: 10px 16px; font-size: 0.9rem; }
+            
+            .speed-control { flex-wrap: wrap; }
+            .speed-btn { padding: 6px 12px; }
+            
+            .tasbih-display { font-size: 3rem; }
+            .tasbih-btn { width: 70px; height: 70px; font-size: 1.3rem; }
+            
+            .modal-content { max-width: 90%; padding: 20px; }
+            .panel-title.marquee-title { max-width: 68%; }
+            .media-panel { padding: 12px 10px; }
+            .player-card {
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
+        }
+        
+        /* Small phones - 480px */
+        @media (max-width: 480px) {
+            .sidebar { width: min(88vw, var(--sidebar-width-sm)); flex-basis: min(88vw, var(--sidebar-width-sm)); }
+            .sidebar.active { transform: translateX(0); }
+            
+            .logo { padding: 15px; }
+            .logo h1 { font-size: 1.2rem; }
+            .habit-streak { font-size: 0.75rem; }
+            
+            .search-container { padding: 8px 15px; }
+            .search-input { padding: 8px; font-size: 0.9rem; }
+            
+            .main-content { padding: 8px; gap: 15px; }
+            .player-card {
+                border-radius: 8px;
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
+            .media-panel, .progress-side-card { padding: 10px 8px; }
+            .progress-side-card { margin: 0; }
+            
+            .controls-card { padding: 12px; gap: 12px; }
+            .progress-container { min-height: 145px; }
+            .radial-progress-center {
+                width: 84px;
+                height: 84px;
+            }
+            .radial-progress-value { font-size: 1.2rem; }
+            .radial-progress-percent { font-size: 0.75rem; }
+            .video-title { font-size: 1rem; margin-bottom: 6px; }
+            .tooltip { font-size: 0.8rem; }
+            
+            .stats-row { 
+                flex-direction: column; 
+                gap: 8px; 
+                align-items: stretch;
+            }
+            .stat-badge { 
+                justify-content: space-between; 
+                width: 100%;
+                padding: 8px 12px;
+            }
+            
+            .actions-row { 
+                gap: 6px;
+                flex-wrap: wrap;
+                overflow-x: visible;
+                justify-content: center;
+                padding-bottom: 2px;
+            }
+            .btn { 
+                padding: 8px 10px;
+                font-size: 0.8rem;
+                flex: 1 1 calc(50% - 6px);
+                min-width: 118px;
+                max-width: 150px;
+                justify-content: center;
+                white-space: nowrap;
+            }
+            .speed-control { justify-content: center; }
+            .speed-label { width: 100%; margin-right: 0; text-align: center; }
+            
+            .speed-control { gap: 4px; }
+            .speed-btn { padding: 6px 10px; font-size: 0.75rem; }
+            
+            .tasbih-card { padding: 15px; }
+            .tasbih-display { font-size: 2.5rem; margin: 15px 0; }
+            .tasbih-btn { width: 60px; height: 60px; font-size: 1.2rem; margin: 0 5px; }
+            
+            .mobile-toggle { 
+                width: 52px; 
+                height: 52px; 
+                bottom: 15px; 
+                right: 15px;
+                font-size: 1.3rem;
+            }
+            
+            .section-header { padding: 10px 12px; font-size: 0.9rem; }
+            .video-item { padding: 8px 12px; font-size: 0.85rem; }
+            
+            .fav-filter-btn { padding: 8px 12px; font-size: 0.8rem; }
+            
+            #customLoopInput { width: 45px; font-size: 0.85rem; }
+            .panel-title.marquee-title { max-width: 64%; }
+        }
+
+        @media (max-width: 380px) {
+            .player-card {
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
+            .btn {
+                flex: 1 1 100%;
+                max-width: none;
+                min-width: 0;
+            }
+        }
+
+        /* Responsive mobile card sizing */
+        @media (max-width: 900px) {
+            .main-content {
+                align-items: stretch !important;
+            }
+            .main-content > div {
+                display: block !important;
+            }
+            .player-card {
+                width: min(356px, calc(100vw - 16px)) !important;
+                height: auto !important;
+                max-width: 100% !important;
+                aspect-ratio: 16/9 !important;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .controls-card,
+            .media-panel .controls-card {
+                width: min(356px, calc(100vw - 16px)) !important;
+                max-width: 100% !important;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        
+        /* Landscape mode optimization for phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-content { padding: 5px; gap: 10px; }
+            .controls-card { padding: 10px; gap: 10px; }
+            .video-title { font-size: 0.95rem; margin-bottom: 4px; }
+            .tooltip { font-size: 0.75rem; min-height: 0; }
+            .stats-row { margin-top: 5px; gap: 10px; }
+            .actions-row { margin-top: 5px; gap: 8px; }
+            .btn { padding: 8px 12px; font-size: 0.8rem; }
+            .mobile-toggle { width: 48px; height: 48px; bottom: 10px; right: 10px; }
+            .logo { padding: 10px; }
+            .logo h1 { font-size: 1.1rem; }
+        }
+        .search-container { padding: 10px 20px; border-bottom: 1px solid var(--border); }
+        .search-input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text-main); font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+        .search-input:focus { border-color: var(--accent); }
+        
+        .tasbih-card { background: var(--bg-sec); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; display: none; }
+        .tasbih-card.visible { display: block; }
+        .tasbih-display { font-size: 4rem; font-weight: 700; color: var(--accent); margin: 20px 0; font-family: 'Playfair Display', serif; }
+        .tasbih-btn { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--accent); background: rgba(56, 189, 248, 0.1); color: var(--accent); font-size: 1.5rem; cursor: pointer; transition: all 0.1s; margin: 0 10px; }
+        .tasbih-btn:active { transform: scale(0.95); background: var(--accent); color: #000; }
+        
+        .speed-control { display: flex; gap: 5px; align-items: center; justify-content: center; margin-top: 10px; }
+        .speed-btn { padding: 4px 10px; font-size: 0.8rem; background: transparent; border: 1px solid var(--border); color: var(--text-sec); border-radius: 4px; cursor: pointer; }
+        .speed-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
+        .speed-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); }
+
+        
+        
+        .note-area { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text-sec); padding: 10px; border-radius: 8px; margin-top: 15px; font-family: 'Inter', sans-serif; resize: vertical; min-height: 60px; display: none; }
+        .note-area:focus { outline: none; border-color: var(--accent); color: var(--text-main); }
+
+        .bg-picker { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; justify-content: center; }
+        .bg-thumb { width: 24px; height: 24px; border-radius: 4px; cursor: pointer; border: 1px solid var(--border); background-size: cover; }
+        
+        /* Moods & Ambience */
+
+        
+        .ambience-controls { display: flex; gap: 8px; justify-content: center; margin-top: 5px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; }
+        .ambience-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; position: relative; }
+        .ambience-btn.active { opacity: 1; transform: scale(1.1); }
+        .ambience-btn::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--accent); border-radius: 50%; display: none; }
+        .ambience-btn.active::after { display: block; }
+        
+        
+        /* Shortcuts Modal */
+        .modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; display:none; justify-content:center; align-items:center; }
+        .modal-content { background: var(--bg-sec); padding: 30px; border-radius: 12px; border: 1px solid var(--border); max-width: 400px; text-align: center; }
+        .key-badge { background: #334155; padding: 2px 6px; border-radius: 4px; font-family: monospace; border: 1px solid #475569; }
+        
+        
+        .section-item.locked {
+            opacity: 0.6;
+            filter: grayscale(100%);
+            pointer-events: none; /* Prevent clicks mostly, but we handle click in JS for warning */
+            position: relative;
+        }
+        .section-item.locked .section-header {
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.5);
+        }
+        .section-item.locked .section-header::after {
+            content: '🔒';
+            position: absolute;
+            right: 40px; /* Adjust based on expand icon position */
+            font-size: 1.2rem;
+        }
+        
+        /* Warning Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: rgba(220, 38, 38, 0.9); /* Red warning */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .logo-sub { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+        .filter-row { display: flex; gap: 10px; margin: 0 20px 10px 20px; }
+        .filter-row .fav-filter-btn { margin: 0; flex: 1; }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); text-align: center; }
+        .sidebar-footer a { color: var(--text-sec); text-decoration: none; font-size: 0.8rem; margin-right: 15px; }
+        .sidebar-footer .admin-copy-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.8rem; }
+        .sidebar-footer .util-btns { margin-top: 10px; font-size: 0.75rem; }
+        .sidebar-footer .util-btns button { background: none; border: 1px solid #334155; color: #94a3b8; border-radius: 4px; cursor: pointer; }
+        .theme-picker { margin-top: 10px; display: flex; justify-content: center; gap: 8px; }
+        .theme-btn.cyan { background: #38bdf8; }
+        .theme-btn.gold { background: #eab308; }
+        .theme-btn.emerald { background: #10b981; }
+        .theme-btn.rose { background: #f43f5e; }
+        .theme-btn.violet { background: #8b5cf6; }
+        .bg-thumb.default { background: #0f172a; }
+        .bg-thumb.ocean { background: linear-gradient(to bottom, #1e3c72, #2a5298); }
+        .bg-thumb.forest { background: linear-gradient(to bottom, #11998e, #38ef7d); }
+        .bg-thumb.sunset { background: linear-gradient(to bottom, #200122, #6f0000); }
+        
+        .speed-label { font-size: 0.8rem; color: var(--text-sec); margin-right: 5px; }
+        .custom-loop-input { width: 50px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; padding: 2px 4px; margin-left: 5px; font-weight: 600; }
+        .note-toggle-btn { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; }
+        .note-toggle-row { text-align: center; margin-top: 5px; }
+        .checklist-card { max-width: 900px; }
+        .checklist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .checklist-title { margin: 0; color: var(--text-main); font-size: 1.1rem; }
+        .checklist-timer { font-size: 0.75rem; color: var(--text-sec); }
+        .checklist-items { margin-bottom: 12px; }
+        .checklist-input-row { display: flex; gap: 8px; }
+        .checklist-input { flex: 1; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-family: 'Inter', sans-serif; outline: none; }
+        .checklist-add-btn { padding: 8px 16px; }
+        .shortcuts-list { list-style: none; padding: 0; text-align: left; }
+        .shortcuts-list li { margin: 10px 0; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <h1>Dua Player</h1>
+            <div class="logo-sub">Modern Edition</div>
+            <div class="habit-streak" id="habitStreakDisplay" title="Daily Streak">🔥 0 Day Streak</div>
+        </div>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="🔍 Search Duas..." oninput="handleSearch(this.value)" id="searchInput">
+        </div>
+
+
+        <div class="filter-row">
+             <button class="fav-filter-btn" onclick="toggleFavFilter()" id="favFilterBtn">❤️ Favorites</button>
+             <button class="fav-filter-btn" onclick="toggleHistoryView()" id="historyBtn">🕒 History</button>
+        </div>
+        <div class="playlist" id="playlist"></div>
+        <div class="sidebar-footer">
+             <a href="admin.html">🛠️ Admin</a>
+             <button onclick="copyDataForAdmin()" class="admin-copy-btn">📋 Copy Data</button>
+             <div class="util-btns">
+                 <button onclick="backupData()">Backup</button>
+                 <button onclick="document.getElementById('restoreInput').click()">Restore</button>
+                 <button onclick="showShortcuts()">⌨ Keys</button>
+                 <input type="file" id="restoreInput" class="hidden" onchange="restoreData(this)" accept=".json">
+             </div>
+             <div class="theme-picker">
+                 <div class="theme-btn cyan" onclick="setTheme('#38bdf8')"></div>
+                 <div class="theme-btn gold" onclick="setTheme('#eab308')"></div>
+                 <div class="theme-btn emerald" onclick="setTheme('#10b981')"></div>
+                 <div class="theme-btn rose" onclick="setTheme('#f43f5e')"></div>
+                 <div class="theme-btn violet" onclick="setTheme('#8b5cf6')"></div>
+             </div>
+             <div class="bg-picker">
+                 <div class="bg-thumb default" onclick="setBg('none')" title="Default Dark"></div>
+                 <div class="bg-thumb ocean" onclick="setBg('ocean')" title="Ocean"></div>
+                 <div class="bg-thumb forest" onclick="setBg('forest')" title="Forest"></div>
+                 <div class="bg-thumb sunset" onclick="setBg('sunset')" title="Sunset"></div>
+             </div>
+        </div>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="media-layout-row">
+            <div class="media-panel">
+                <div class="panel-head">
+                    <div class="panel-title marquee-title" id="nowPlayingPanelTitle"><span id="nowPlayingPanelTitleText">Ready To Play   Ready To Play</span></div>
+                    <div class="panel-chip" id="loopChip">Loop 1/1</div>
+                </div>
+                <div class="player-card">
+                    <div id="player"></div>
+                </div>
+                <div class="controls-card">
+                    <div class="info-row">
+                        <h2 class="video-title" id="videoTitle">Ready to Play</h2>
+                        <div class="tooltip" id="tooltip">Select a section from the playlist to begin</div>
+                    </div>
+                    
+                    <!-- Water Drop Timer Removed -->
+                    
+                    <div class="speed-control">
+                        <span class="speed-label">Speed:</span>
+                        <button class="speed-btn" onclick="setSpeed(0.75)">0.75x</button>
+                        <button class="speed-btn active" onclick="setSpeed(1)" id="btn-speed-1">1x</button>
+                        <button class="speed-btn" onclick="setSpeed(1.25)">1.25x</button>
+                        <button class="speed-btn" onclick="setSpeed(1.5)">1.5x</button>
+                    </div>
+                    <div class="actions-row">
+                        <button class="btn btn-secondary" onclick="toggleAutoPlay()" id="autoPlayBtn" title="Auto-Play Next Video">🔄 Auto</button>
+                        <button class="btn btn-secondary" onclick="toggleSleepTimer()" id="sleepBtn">🌙 Sleep</button>
+                        <button class="btn btn-secondary" onclick="playAllSections()">▶ Play All</button>
+                        <button class="btn btn-primary" onclick="skipVideo()">Skip ⏭</button>
+                    </div>
+                    <textarea class="note-area" id="personalNote" placeholder="Write a personal note for this Dua..." oninput="saveNote()"></textarea>
+                    <div class="note-toggle-row">
+                        <button onclick="toggleNote()" class="note-toggle-btn">📝 Add/View Note</button>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-side-card">
+                <div class="panel-head">
+                    <div class="panel-title">Session Progress</div>
+                    <div class="panel-chip">Live</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-badge">
+                        <span>Repeat</span>
+                        <span class="stat-value"><span id="currentLoop">0</span>/<span id="maxLoop">-</span></span>
+                        <input type="number" id="customLoopInput" class="custom-loop-input" min="1" placeholder="Set" title="Custom Loop Count" onchange="updateCustomLoop()">
+                    </div>
+                </div>
+                <div class="progress-container" id="progressContainer">
+                    <!-- Circular progress will be dynamically generated -->
+                </div>
+                <div class="progress-caption" id="progressCaption"><span id="progressCaptionText">Select a section from the playlist to begin</span></div>
+            </div>
+        </div>
+        
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script>
+      // Supabase Configuration
+      const SUPABASE_URL = (window.DUA_SUPABASE?.url || '').trim();
+      const SUPABASE_ANON_KEY = (window.DUA_SUPABASE?.anonKey || '').trim();
+      const _supabase = (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY)
+          ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+          : null;
+
+      // defaultVideoSections loaded from assets/js/data.js
+      let videoSections;
+      // Only adds default SECTIONS whose names are missing; does NOT merge videos into existing sections.
+      // So if you have section "প্রতিদিন" with 2 custom videos, the result keeps only those 2 (default's 20 are not merged in).
+      function mergeMissingDefaultSections(sections) {
+          if (!Array.isArray(sections)) return JSON.parse(JSON.stringify(defaultVideoSections));
+          const existing = new Set(
+              sections
+                  .map(s => (s && typeof s.name === "string" ? s.name.trim() : ""))
+                  .filter(Boolean)
+          );
+          const merged = Array.isArray(sections) ? sections.slice() : [];
+          defaultVideoSections.forEach(def => {
+              if (!existing.has(def.name)) merged.push(JSON.parse(JSON.stringify(def)));
+          });
+          return merged;
+      }
+
+      async function initializeData() {
+          // 1. Try Supabase
+          if (_supabase) {
+              try {
+                  const { data: sections, error: sError } = await _supabase
+                      .from('sections')
+                      .select('*')
+                      .order('order_index');
+                  
+                  if (!sError && sections && sections.length > 0) {
+                      const { data: videos, error: vError } = await _supabase
+                          .from('videos')
+                          .select('*')
+                          .order('order_index');
+                      
+                      if (!vError && videos) {
+                          videoSections = sections.map(s => ({
+                              name: s.name,
+                              videos: videos
+                                  .filter(v => v.section_id === s.id)
+                                  .map(v => ({
+                                      id: v.youtube_id,
+                                      start: v.start_time,
+                                      end: v.end_time,
+                                      label: v.label,
+                                      tooltip: v.tooltip,
+                                      loop: v.loop_count,
+                                      isSubcategory: v.is_subcategory
+                                  }))
+                          }));
+                          try { localStorage.setItem("duaDarudVideoSections", JSON.stringify(videoSections)); } catch (e) {}
+                      }
+                  }
+              } catch (e) { console.error("Supabase load failed", e); }
+          }
+
+          // 2. Try LocalStorage if Supabase failed or not configured
+          if (!videoSections) {
+              try {
+                  const stored = localStorage.getItem("duaDarudVideoSections");
+                  if (stored) {
+                      const parsed = JSON.parse(stored);
+                      if (Array.isArray(parsed) && parsed.length > 0) {
+                          videoSections = mergeMissingDefaultSections(parsed);
+                      }
+                  }
+              } catch (e) {}
+          }
+
+          // 3. Fallback to default
+          if (!videoSections) videoSections = JSON.parse(JSON.stringify(defaultVideoSections));
+          videoSections = mergeMissingDefaultSections(videoSections);
+
+          renderPlaylist();
+      }
+
+      function setupRealtime() {
+          if (!_supabase) return;
+
+          _supabase
+              .channel('schema-db-changes')
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'sections' }, () => initializeData())
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, () => initializeData())
+              .subscribe();
+      }
+
+      function setupLocalStorageSync() {
+          window.addEventListener('storage', (e) => {
+              if (e.key !== 'duaDarudVideoSections') return;
+              try {
+                  const parsed = JSON.parse(e.newValue || '[]');
+                  if (!Array.isArray(parsed)) return;
+                  videoSections = mergeMissingDefaultSections(parsed);
+                  renderPlaylist();
+              } catch (err) {
+                  console.error('LocalStorage sync failed', err);
+              }
+          });
+          try {
+              const channel = new BroadcastChannel('duaDarudSync');
+              channel.onmessage = () => {
+                  const stored = localStorage.getItem('duaDarudVideoSections');
+                  if (stored) {
+                      try {
+                          const parsed = JSON.parse(stored);
+                          if (Array.isArray(parsed) && parsed.length > 0) {
+                              videoSections = mergeMissingDefaultSections(parsed);
+                              renderPlaylist();
+                          }
+                      } catch (e) {}
+                  }
+              };
+          } catch (e) {}
+      }
+
+      let player, playerReady = false;
+      let currentState = { sectionIndex: -1, videoIndex: -1, loopCount: 0, maxLoops: 0, isPlaying: false, isAllMode: false, allSectionIndex: 0 };
+      let timers = { section: null, all: null, loopCheck: null, radialRotate: null };
+      const LOOP_CHECK_INTERVAL_MS = 250;
+      let isHandlingVideoEnd = false;
+      let radialCenterFace = 'front';
+
+      function setNowPlayingPanelTitle(text) {
+          const titleEl = document.getElementById("nowPlayingPanelTitleText");
+          if (!titleEl) return;
+          const label = (text || "Ready To Play").trim();
+          titleEl.textContent = `${label}   ${label}`;
+      }
+
+      function clearRadialRotateTimer() {
+          clearInterval(timers.radialRotate);
+          timers.radialRotate = null;
+          radialCenterFace = 'front';
+          const center = document.getElementById('radialProgressCenter');
+          if (center) center.classList.remove('is-flipped');
+      }
+
+      function startRadialRotateTimer() {
+          clearRadialRotateTimer();
+          const center = document.getElementById('radialProgressCenter');
+          if (!center) return;
+          timers.radialRotate = setInterval(() => {
+              radialCenterFace = radialCenterFace === 'front' ? 'back' : 'front';
+              center.classList.toggle('is-flipped', radialCenterFace === 'back');
+          }, 5000);
+      }
+
+      function onYouTubeIframeAPIReady() {
+          // `origin` must be omitted when running from `file://` (origin becomes "null" and can break playback).
+          const playerVars = { modestbranding: 1, rel: 0, autoplay: 0, playsinline: 1, iv_load_policy: 3 };
+          if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+              playerVars.origin = window.location.origin;
+          }
+
+          player = new YT.Player("player", {
+              height: "100%",
+              width: "100%",
+              videoId: "",
+              playerVars,
+              events: {
+                  onReady: () => { playerReady = true; initializeData(); setupRealtime(); setupLocalStorageSync(); },
+                  onStateChange: onPlayerStateChange
+              }
+          });
+      }
+
+      function calculateSectionDuration(sectionIndex) {
+          let totalSeconds = 0;
+          const section = videoSections[sectionIndex];
+          if (!section) return 0;
+          
+          section.videos.forEach(video => {
+              if (video.isSubcategory) return; // Skip subcategories
+              const duration = video.end - video.start;
+              const loops = video.loop || 1;
+              totalSeconds += duration * loops;
+          });
+          
+          return totalSeconds;
+      }
+
+      function renderPlaylist() {
+          const container = document.getElementById("playlist");
+          container.innerHTML = "";
+          videoSections.forEach((section, sIdx) => {
+              const div = document.createElement("div");
+              div.className = "section-item";
+              
+              // Check lock status
+              if (isSectionLocked(sIdx)) {
+                  div.classList.add("locked");
+                  div.onclick = (e) => {
+                      // Prevent interaction if locked (except drag which is handled separately, but let's block clicks)
+                      // Actually toggleSection handles click on header. 
+                      // If we click the div body (which shouldn't happen if header covers it or list is closed), safe.
+                      // But let's rely on toggleSection for the header click.
+                  };
+              }
+
+              const header = document.createElement("div");
+              header.className = "section-header";
+              
+              // Calculate total duration for this section
+              const totalDuration = calculateSectionDuration(sIdx);
+              const timeDisplay = formatTime(totalDuration);
+              
+              header.innerHTML = `<span>${section.name} <span style="color: var(--accent); font-size: 0.85em;">(${timeDisplay})</span></span> <span style="font-size:0.8em">▼</span>`;
+              header.onclick = () => toggleSection(sIdx);
+              
+              // Add drag-and-drop functionality
+              div.draggable = !isSectionLocked(sIdx); // Disable drag if locked? Maybe better allowed but definitely disable play
+              div.dataset.sectionIndex = sIdx;
+              
+              div.addEventListener('dragstart', handleDragStart);
+              div.addEventListener('dragover', handleDragOver);
+              div.addEventListener('drop', handleDrop);
+              div.addEventListener('dragend', handleDragEnd);
+              div.addEventListener('dragleave', handleDragLeave);
+              
+              const ul = document.createElement("ul");
+              ul.className = "video-list";
+              ul.id = `list-${sIdx}`;
+              section.videos.forEach((vid, vIdx) => {
+                  const li = document.createElement("li");
+                  li.className = "video-item";
+                  li.id = `vid-${sIdx}-${vIdx}`;
+                  if (vid.isSubcategory) {
+                      li.style.fontWeight = "bold"; li.style.color = "#94a3b8"; li.style.borderTop = "1px solid #334155"; li.style.background = "#0f172a"; li.style.cursor = "default"; li.textContent = vid.label;
+                  } else {
+                      li.onclick = (e) => { 
+                          if(e.target.classList.contains('fav-btn')) return;
+                          playSingleSection(sIdx, vIdx); 
+                      };
+                      const isFav = favorites.includes(vid.id);
+                      li.innerHTML = `<span>${vid.label}</span>
+                        ${vid.loop > 1 ? `<span class="video-loop-badge">x${vid.loop}</span>` : ''}
+                        <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav('${vid.id}', this)">❤</button>`;
+                  }
+                  ul.appendChild(li);
+              });
+              div.appendChild(header); div.appendChild(ul); container.appendChild(div);
+          });
+      }
+
+      // Drag and Drop handlers
+      let draggedElement = null;
+      
+      function handleDragStart(e) {
+          if (e.target.classList.contains('locked')) {
+              e.preventDefault();
+              return;
+          }
+          draggedElement = e.currentTarget;
+          e.currentTarget.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+      }
+      
+      function handleDragOver(e) {
+          if (e.preventDefault) e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          
+          const target = e.currentTarget;
+          if (draggedElement !== target) {
+              target.classList.add('drag-over');
+          }
+          return false;
+      }
+      
+      function handleDragLeave(e) {
+          e.currentTarget.classList.remove('drag-over');
+      }
+      
+      function handleDrop(e) {
+          if (e.stopPropagation) e.stopPropagation();
+          e.preventDefault();
+          
+          const target = e.currentTarget;
+          target.classList.remove('drag-over');
+          
+          if (draggedElement !== target) {
+              const draggedIndex = parseInt(draggedElement.dataset.sectionIndex);
+              const targetIndex = parseInt(target.dataset.sectionIndex);
+              
+              // Reorder array
+              const draggedSection = videoSections[draggedIndex];
+              videoSections.splice(draggedIndex, 1);
+              videoSections.splice(targetIndex, 0, draggedSection);
+              
+              localStorage.setItem('duaDarudVideoSections', JSON.stringify(videoSections));
+              renderPlaylist();
+          }
+          
+          return false;
+      }
+      
+      function handleDragEnd(e) {
+          e.currentTarget.classList.remove('dragging');
+          document.querySelectorAll('.section-item').forEach(item => {
+              item.classList.remove('drag-over');
+          });
+      }
+
+      function toggleSection(idx, forceOpen = false) {
+          // Check lock
+          if (isSectionLocked(idx)) {
+              showToast(`Section locked for ${getLockRemainingTime(idx)}`);
+              return;
+          }
+          
+          const list = document.getElementById(`list-${idx}`);
+          if (!list) return;
+          const wasOpen = list.classList.contains("open");
+          if (forceOpen && wasOpen) return; 
+
+          document.querySelectorAll(".video-list").forEach(el => el.classList.remove("open"));
+          document.querySelectorAll(".section-header").forEach(el => el.classList.remove("active"));
+          if (forceOpen || !wasOpen) { 
+              list.classList.add("open"); 
+              list.previousElementSibling.classList.add("active"); 
+              // Auto scroll section into view
+              if (!wasOpen || forceOpen) {
+                  list.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }
+          }
+      }
+
+      function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
+
+      function playSingleSection(sIdx, vIdx = 0) {
+          // Check lock
+          if (isSectionLocked(sIdx)) {
+              showToast(`Section locked for ${getLockRemainingTime(sIdx)}`);
+              return;
+          }
+
+          currentState.isAllMode = false; currentState.sectionIndex = sIdx;
+          let validIdx = vIdx;
+          while(validIdx < videoSections[sIdx].videos.length && videoSections[sIdx].videos[validIdx].isSubcategory) validIdx++;
+          if(validIdx >= videoSections[sIdx].videos.length) return;
+          startVideo(sIdx, validIdx);
+          if (window.innerWidth <= 900) toggleSidebar(); 
+      }
+
+      function playAllSections() {
+          currentState.isAllMode = true; currentState.allSectionIndex = 0;
+          playSingleSection(0, 0);
+      }
+
+      function startVideo(sIdx, vIdx) {
+          const video = videoSections[sIdx].videos[vIdx];
+          currentState.sectionIndex = sIdx; currentState.videoIndex = vIdx;
+          currentState.loopCount = 0; currentState.maxLoops = video.loop || 1;
+          isHandlingVideoEnd = false;
+          
+          // Reset custom loop input when video changes
+          document.getElementById('customLoopInput').value = '';
+          
+          document.querySelectorAll(".video-item").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll(".section-item").forEach(el => el.classList.remove("playing"));
+
+          toggleSection(sIdx, true); // Ensure section is expanded and scrolled to
+
+          const el = document.getElementById(`vid-${sIdx}-${vIdx}`);
+          if(el) {
+              el.classList.add("active");
+              el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              el.closest('.section-item').classList.add("playing");
+          }
+          document.getElementById("videoTitle").textContent = video.label;
+          setNowPlayingPanelTitle(video.label);
+          document.getElementById("tooltip").textContent = video.tooltip || "";
+          const progressCaptionText = document.getElementById("progressCaptionText");
+          if (progressCaptionText) progressCaptionText.textContent = video.tooltip || "Loop completion for the current dua";
+          updateStats();
+          loadNote(video.id);
+          
+          addToHistory(video.id, video.label); 
+
+          // Create segmented progress bar
+          createProgressSegments(currentState.maxLoops);
+
+          if(player && player.loadVideoById) { player.loadVideoById({ videoId: video.id, startSeconds: video.start }); }
+      }
+      
+      function createProgressSegments(loopCount) {
+          const container = document.getElementById('progressContainer');
+          if (!container) return;
+
+          const loops = Math.max(1, parseInt(loopCount, 10) || 1);
+          container.innerHTML = '';
+
+          const size = 320;
+          const center = size / 2;
+          const outerRadius = 128;
+          const minInnerRadius = 44;
+          const radiusStep = loops === 1 ? 0 : (outerRadius - minInnerRadius) / (loops - 1);
+          const strokeWidth = loops === 1 ? 12 : Math.max(3, Math.min(10, radiusStep - 2));
+          const palette = ['#34d399', '#60a5fa', '#f59e0b', '#22d3ee', '#f472b6', '#a78bfa'];
+          const svgNs = 'http://www.w3.org/2000/svg';
+
+          const svg = document.createElementNS(svgNs, 'svg');
+          svg.setAttribute('class', 'radial-progress-svg');
+          svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+
+          for (let i = 0; i < loops; i++) {
+              const radius = outerRadius - (i * radiusStep);
+              const circumference = 2 * Math.PI * radius;
+              const color = palette[i % palette.length];
+
+              const track = document.createElementNS(svgNs, 'circle');
+              track.setAttribute('class', 'loop-ring-track');
+              track.setAttribute('cx', center);
+              track.setAttribute('cy', center);
+              track.setAttribute('r', radius);
+              track.setAttribute('stroke-width', strokeWidth);
+              svg.appendChild(track);
+
+              const fill = document.createElementNS(svgNs, 'circle');
+              fill.setAttribute('class', 'loop-ring-fill');
+              fill.setAttribute('cx', center);
+              fill.setAttribute('cy', center);
+              fill.setAttribute('r', radius);
+              fill.setAttribute('stroke-width', strokeWidth);
+              fill.setAttribute('stroke', color);
+              fill.setAttribute('stroke-dasharray', circumference.toString());
+              fill.setAttribute('stroke-dashoffset', circumference.toString());
+              fill.dataset.loopIndex = i.toString();
+              fill.dataset.circumference = circumference.toString();
+              svg.appendChild(fill);
+          }
+
+          const centerInfo = document.createElement('div');
+          centerInfo.className = 'radial-progress-center';
+          centerInfo.id = 'radialProgressCenter';
+          centerInfo.innerHTML = `
+              <div class="radial-progress-center-inner">
+                  <div class="radial-progress-face radial-progress-face-front">
+                      <div class="radial-progress-label">Loop</div>
+                      <div class="radial-progress-value" id="radialLoopValue">1/${loops}</div>
+                      <div class="radial-progress-percent" id="radialLoopPercent">--:--</div>
+                  </div>
+                  <div class="radial-progress-face radial-progress-face-back">
+                      <div class="radial-progress-label">Section Left</div>
+                      <div class="radial-progress-value" id="radialSectionRemain">--:--</div>
+                      <div class="radial-progress-percent">Total remaining</div>
+                  </div>
+              </div>
+          `;
+
+          container.appendChild(svg);
+          container.appendChild(centerInfo);
+          updateRadialProgress(0);
+          startRadialRotateTimer();
+      }
+
+      function getCurrentSectionRemainingSeconds() {
+          let totalSeconds = 0;
+          const currentSection = videoSections[currentState.sectionIndex];
+          if (!currentSection || currentState.videoIndex < 0) return 0;
+
+          const currentVid = currentSection.videos[currentState.videoIndex];
+          if (currentVid && !currentVid.isSubcategory) {
+              const curTime = player.getCurrentTime ? player.getCurrentTime() : currentVid.start;
+              const segDuration = currentVid.end - currentVid.start;
+              let currentLoopRem = 0;
+              if (curTime < currentVid.end) currentLoopRem = currentVid.end - curTime;
+              const loopsLeft = Math.max(0, currentState.maxLoops - currentState.loopCount - 1);
+              totalSeconds += currentLoopRem + (loopsLeft * segDuration);
+          }
+
+          for (let i = currentState.videoIndex + 1; i < currentSection.videos.length; i++) {
+              const vid = currentSection.videos[i];
+              if (vid.isSubcategory) continue;
+              const dur = vid.end - vid.start;
+              const loops = vid.loop || 1;
+              totalSeconds += (dur * loops);
+          }
+          return Math.max(0, totalSeconds);
+      }
+
+      function updateRadialProgress(currentPct, remainingSeconds = null) {
+          const rings = document.querySelectorAll('.loop-ring-fill');
+          rings.forEach((ring, idx) => {
+              const circumference = parseFloat(ring.dataset.circumference || '0');
+              let fillPct = 0;
+
+              if (idx < currentState.loopCount) fillPct = 100;
+              else if (idx === currentState.loopCount) fillPct = Math.max(0, Math.min(100, currentPct));
+
+              ring.style.strokeDashoffset = (circumference * (1 - (fillPct / 100))).toString();
+          });
+
+          const valueEl = document.getElementById('radialLoopValue');
+          const pctEl = document.getElementById('radialLoopPercent');
+          const sectionEl = document.getElementById('radialSectionRemain');
+          if (valueEl) {
+              const currentLoop = Math.min(currentState.loopCount + 1, Math.max(1, currentState.maxLoops));
+              valueEl.textContent = `${currentLoop}/${Math.max(1, currentState.maxLoops)}`;
+          }
+          if (pctEl) {
+              pctEl.textContent = remainingSeconds === null ? '--:--' : formatTime(Math.max(0, remainingSeconds));
+          }
+          if (sectionEl) {
+              sectionEl.textContent = formatTime(getCurrentSectionRemainingSeconds());
+          }
+      }
+      
+      function onPlayerStateChange(event) {
+          if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.BUFFERING) {
+              startLoopCheck();
+          } else {
+              clearInterval(timers.loopCheck);
+          }
+          if (event.data === YT.PlayerState.ENDED) handleVideoEnd();
+      }
+
+      function startLoopCheck() {
+          clearInterval(timers.loopCheck);
+          timers.loopCheck = setInterval(() => {
+              if(!player || !player.getCurrentTime) return;
+              const cur = player.getCurrentTime();
+              const v = videoSections[currentState.sectionIndex].videos[currentState.videoIndex];
+              if (cur >= v.end) { handleVideoEnd(); return; }
+              const remaining = Math.max(0, v.end - cur);
+              
+              // Update radial loop progress
+              const duration = v.end - v.start;
+              const elapsed = cur - v.start;
+              const pct = Math.min(100, Math.max(0, (elapsed / duration) * 100));
+              updateRadialProgress(pct, remaining);
+
+              updateTotalTimer();
+          }, LOOP_CHECK_INTERVAL_MS);
+      }
+
+      function updateTotalTimer() {
+          // If the badge is hidden and we are not in 'All Mode', we might not need to update, 
+          // but if the user manually showed it or we want to support it, we calculate.
+          // Note: The badge is shown in playAllSections().
+          
+          let totalSeconds = 0;
+          
+          // 1. Remaining time in current video (current loop remainder + future loops)
+          if (videoSections[currentState.sectionIndex]) {
+             const currentVid = videoSections[currentState.sectionIndex].videos[currentState.videoIndex];
+             if (currentVid && !currentVid.isSubcategory) {
+                 const curTime = player.getCurrentTime ? player.getCurrentTime() : currentVid.start;
+                 const segDuration = currentVid.end - currentVid.start;
+                 
+                 // Current loop remainder
+                 let currentLoopRem = 0;
+                 if (curTime < currentVid.end) {
+                     currentLoopRem = currentVid.end - curTime;
+                 }
+                 
+                 // Future loops
+                 const loopsLeft = Math.max(0, currentState.maxLoops - currentState.loopCount - 1);
+                 
+                 totalSeconds += currentLoopRem + (loopsLeft * segDuration);
+             }
+          }
+
+          // 2. Subsequent videos in current section
+          const currentSection = videoSections[currentState.sectionIndex];
+          if (currentSection) {
+              for (let i = currentState.videoIndex + 1; i < currentSection.videos.length; i++) {
+                  const vid = currentSection.videos[i];
+                  if (vid.isSubcategory) continue;
+                  const dur = vid.end - vid.start;
+                  const loops = vid.loop || 1;
+                  totalSeconds += (dur * loops);
+              }
+          }
+
+          // 3. Subsequent sections (ONLY if in isAllMode)
+          if (currentState.isAllMode) {
+              for (let s = currentState.sectionIndex + 1; s < videoSections.length; s++) {
+                  const sec = videoSections[s];
+                  for (let v = 0; v < sec.videos.length; v++) {
+                      const vid = sec.videos[v];
+                      if (vid.isSubcategory) continue;
+                      const dur = vid.end - vid.start;
+                      const loops = vid.loop || 1;
+                      totalSeconds += (dur * loops);
+                  }
+              }
+          }
+
+      }
+
+      function handleVideoEnd() {
+          if (isHandlingVideoEnd) return;
+          isHandlingVideoEnd = true;
+
+          currentState.loopCount++; updateStats();
+          const v = videoSections[currentState.sectionIndex].videos[currentState.videoIndex];
+          
+          // Check Custom Loop
+          let max = currentState.maxLoops;
+          const custom = parseInt(document.getElementById('customLoopInput').value);
+          if (custom && custom > 0) max = custom;
+
+          if (currentState.loopCount < max) { player.seekTo(v.start, true); player.playVideo(); }
+          else nextVideo();
+
+          setTimeout(() => { isHandlingVideoEnd = false; }, 180);
+      }
+
+
+      // --- SECTION LOCK FEATURE ---
+      function getSectionLocks() {
+          try {
+              return JSON.parse(localStorage.getItem('duaSectionLocks') || '{}');
+          } catch (e) { return {}; }
+      }
+
+      function saveSectionLocks(locks) {
+          localStorage.setItem('duaSectionLocks', JSON.stringify(locks));
+      }
+
+      function getSectionName(sIdx) {
+          return (videoSections[sIdx] && videoSections[sIdx].name) ? String(videoSections[sIdx].name).trim() : '';
+      }
+
+      function lockSection(sIdx) {
+          const locks = getSectionLocks();
+          const threeHours = 3 * 60 * 60 * 1000;
+          const name = getSectionName(sIdx);
+          if (name) locks[name] = Date.now() + threeHours;
+          saveSectionLocks(locks);
+          renderPlaylist();
+      }
+
+      function isSectionLocked(sIdx) {
+          const name = getSectionName(sIdx);
+          if (!name) return false;
+          const locks = getSectionLocks();
+          if (!locks[name]) return false;
+          if (Date.now() > locks[name]) {
+              delete locks[name];
+              saveSectionLocks(locks);
+              return false;
+          }
+          return true;
+      }
+      
+      function getLockRemainingTime(sIdx) {
+          const name = getSectionName(sIdx);
+          if (!name) return null;
+          const locks = getSectionLocks();
+          if (!locks[name]) return null;
+          const remaining = locks[name] - Date.now();
+          if (remaining <= 0) return null;
+          const h = Math.floor(remaining / (1000 * 60 * 60));
+          const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+          return `${h}h ${m}m`;
+      }
+
+      function showToast(message) {
+          const container = document.getElementById('toastContainer');
+          const toast = document.createElement('div');
+          toast.className = 'toast';
+          toast.innerHTML = `<span>⚠️</span> <span>${message}</span>`;
+          container.appendChild(toast);
+          
+          // Trigger animation
+          requestAnimationFrame(() => toast.classList.add('show'));
+          
+          // Remove after 3 seconds
+          setTimeout(() => {
+              toast.classList.remove('show');
+              setTimeout(() => toast.remove(), 300);
+          }, 3000);
+      }
+      
+      // Update check for locks on load
+      setInterval(() => {
+          // periodically refresh to unlock expired sections
+          const locks = getSectionLocks();
+          let changed = false;
+          Object.keys(locks).forEach(key => {
+              if (Date.now() > locks[key]) {
+                  delete locks[key];
+                  changed = true;
+              }
+          });
+          if (changed) {
+              saveSectionLocks(locks);
+              renderPlaylist();
+          }
+      }, 60000); // Check every minute
+
+      // ---------------------------
+
+      function nextVideo() {
+          let sIdx = currentState.sectionIndex; let vIdx = currentState.videoIndex + 1;
+          const section = videoSections[sIdx];
+          
+          // Find next valid video
+          // Note: using while loop to check subcategories
+          // We need to check if we are going out of bounds
+          if (vIdx >= section.videos.length) {
+              // End of section reached immediately
+              finishSection(sIdx);
+              return;
+          }
+          
+          while(vIdx < section.videos.length && section.videos[vIdx].isSubcategory) vIdx++;
+          
+          if(vIdx < section.videos.length) {
+              startVideo(sIdx, vIdx);
+          } else {
+              // End of section reached after skipping subcategories
+              finishSection(sIdx);
+          }
+      }
+      
+      function finishSection(sIdx) {
+          // Lock this section
+          lockSection(sIdx);
+          
+          // Auto Play Logic: Move to next section
+          if (currentState.isAllMode || isAutoPlayActive) {
+              let nextSec = sIdx + 1;
+              // Skip locked sections in auto-play
+              while (nextSec < videoSections.length && isSectionLocked(nextSec)) {
+                  nextSec++;
+              }
+              
+              if (nextSec < videoSections.length) {
+                  playSingleSection(nextSec, 0);
+              } else {
+                  stop();
+              }
+          } else {
+              stop();
+          }
+      }
+
+      function skipVideo() { nextVideo(); }
+      function stop() { 
+          if(player && player.stopVideo) player.stopVideo(); 
+          document.getElementById("videoTitle").textContent = "Completed"; 
+          setNowPlayingPanelTitle("Completed");
+          const progressCaptionText = document.getElementById("progressCaptionText");
+          if (progressCaptionText) progressCaptionText.textContent = "Playback completed";
+          clearInterval(timers.loopCheck);
+          clearRadialRotateTimer();
+      }
+      function updateStats() {
+          const displayLoop = Math.min(currentState.loopCount + 1, Math.max(1, currentState.maxLoops));
+          document.getElementById("currentLoop").textContent = displayLoop;
+          document.getElementById("maxLoop").textContent = currentState.maxLoops;
+          const chip = document.getElementById("loopChip");
+          if (chip) chip.textContent = `Loop ${displayLoop}/${Math.max(1, currentState.maxLoops)}`;
+          updateRadialProgress(0);
+      }
+      function formatTime(s) { 
+          const h = Math.floor(s / 3600);
+          const m = Math.floor((s % 3600) / 60); 
+          const sec = Math.floor(s % 60); 
+          if(h > 0) return `${h}:${m < 10 ? '0'+m : m}:${sec < 10 ? '0'+sec : sec}`;
+          return `${m}:${sec < 10 ? '0'+sec : sec}`; 
+      }
+      function copyDataForAdmin() { navigator.clipboard.writeText(JSON.stringify(videoSections, null, 2)); alert("Data copied!"); }
+      
+      // SEARCH, TASBIH, SPEED Logic
+      function handleSearch(query) {
+          const q = query.toLowerCase();
+          document.querySelectorAll('.video-item').forEach(item => {
+              const text = item.textContent.toLowerCase();
+              if (text.includes(q)) {
+                  item.style.display = 'flex';
+                  // Open parent list if hidden
+                  const list = item.parentElement;
+                  if (!list.classList.contains('open') && q.length > 0) {
+                      list.classList.add('open');
+                      list.previousElementSibling.classList.add('active');
+                  }
+              } else {
+                  item.style.display = 'none';
+              }
+          });
+          
+          // Hide empty sections
+          document.querySelectorAll('.section-item').forEach(sec => {
+              const visibleItems = sec.querySelectorAll('.video-item[style="display: flex;"]');
+              const allItems = sec.querySelectorAll('.video-item');
+              // If query is empty, show all
+              if(q.length === 0) {
+                  allItems.forEach(i => i.style.display = 'flex');
+                  sec.style.display = 'block';
+                  return;
+              }
+              // Check if any visible
+              let hasVisible = false;
+              allItems.forEach(i => { if(i.style.display !== 'none') hasVisible = true; });
+              sec.style.display = hasVisible ? 'block' : 'none';
+          });
+      }
+
+
+
+      // HISTORY
+      let isHistoryActive = false;
+      let playHistory = JSON.parse(localStorage.getItem('duaHistory') || '[]');
+
+      function addToHistory(videoId, label) {
+          // Remove if exists to push to top
+          playHistory = playHistory.filter(h => h.id !== videoId);
+          playHistory.unshift({ id: videoId, label: label, date: Date.now() });
+          if(playHistory.length > 20) playHistory.pop(); // Keep last 20
+          localStorage.setItem('duaHistory', JSON.stringify(playHistory));
+          if(isHistoryActive) renderHistory();
+      }
+
+      function toggleHistoryView() {
+          isHistoryActive = !isHistoryActive;
+          const btn = document.getElementById('historyBtn');
+          const playlist = document.getElementById('playlist');
+          
+          if (isHistoryActive) {
+              btn.classList.add('active');
+              // Disable Fav
+              isFavFilterActive = false; document.getElementById('favFilterBtn').classList.remove('active');
+              renderHistory();
+          } else {
+              btn.classList.remove('active');
+              location.reload(); // Simplest way to restore full playlist view correctly without complex DOM restoration logic for now
+          }
+      }
+
+      function renderHistory() {
+          const playlist = document.getElementById('playlist');
+          playlist.innerHTML = ""; // clear
+          
+          if(playHistory.length === 0) {
+              playlist.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-sec);'>No history yet</div>";
+              return;
+          }
+          
+          // Group by "Recent" generally, or just listing
+          const container = document.createElement('div');
+          
+          playHistory.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'video-item';
+              div.style.display = 'flex';
+              div.onclick = () => { playFromHistory(item.id); };
+              div.innerHTML = `<span>🕐 ${item.label}</span>`;
+              container.appendChild(div);
+          });
+          playlist.appendChild(container);
+      }
+      
+      function playFromHistory(vidId) {
+          // We need to find the section indices to start properly
+          for(let s=0; s<videoSections.length; s++) {
+              for(let v=0; v<videoSections[s].videos.length; v++) {
+                  if(videoSections[s].videos[v].id === vidId) {
+                      startVideo(s, v);
+                      return;
+                  }
+              }
+          }
+      }
+
+
+
+      // SPEED
+      function setSpeed(rate) {
+          if (player && player.setPlaybackRate) {
+              player.setPlaybackRate(rate);
+          }
+          document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+          // Find button with matching onclick
+          // Simpler: just loop and check text or ID if assigned.
+          // Let's just highlight based on value if we assign IDs, or just find by text
+          Array.from(document.querySelectorAll('.speed-btn')).forEach(b => {
+             if(b.textContent.includes(rate + 'x') || (rate===1 && b.textContent === '1x')) b.classList.add('active');
+          });
+      }
+
+      // FAVORITES & THEME Logic
+      let favorites = JSON.parse(localStorage.getItem('duaFavorites') || '[]');
+      let isFavFilterActive = false;
+
+      function toggleFav(id, btn) {
+          if (favorites.includes(id)) {
+              favorites = favorites.filter(fid => fid !== id);
+              btn.classList.remove('active');
+          } else {
+              favorites.push(id);
+              btn.classList.add('active');
+          }
+          localStorage.setItem('duaFavorites', JSON.stringify(favorites));
+          if(isFavFilterActive) applyFavFilter(); 
+      }
+
+      function toggleFavFilter() {
+          isFavFilterActive = !isFavFilterActive;
+          document.getElementById('favFilterBtn').classList.toggle('active');
+          applyFavFilter();
+      }
+
+      function applyFavFilter() {
+           const btn = document.getElementById('favFilterBtn');
+           btn.textContent = isFavFilterActive ? "❤️ Show All" : "❤️ Show Favorites Only";
+           
+           document.querySelectorAll('.video-item').forEach(item => {
+               // Subcategories should be hidden in fav mode unless they have visible children? 
+               // For simplicity, hide subcategories in fav mode or keep them if we want structure.
+               // Let's just filter selectable items.
+               if (item.querySelector('.fav-btn')) {
+                   const isFav = item.querySelector('.fav-btn').classList.contains('active');
+                   if (isFavFilterActive && !isFav) {
+                       item.style.display = 'none';
+                   } else {
+                       // Restore display if search is not active (we should combine logic really)
+                       // Simple approach: remove style display none if it matches search
+                       // But search also hides things. Ideally we re-run comprehensive filter.
+                       // For now, let's just reset and let search handle it if search has input.
+                       item.style.display = 'flex';
+                   }
+               }
+           });
+           
+           // If we have a Search query, we should respect it too.
+           const searchVal = document.querySelector('.search-input').value;
+           if(searchVal) handleSearch(searchVal); // This re-applies search filter on top
+           else {
+               // Re-check section visibility
+               document.querySelectorAll('.section-item').forEach(sec => {
+                  if(isFavFilterActive) {
+                      // Show section only if it has visible favorites
+                      const visible = Array.from(sec.querySelectorAll('.video-item')).some(i => i.style.display !== 'none' && !i.style.fontWeight /* skip subheaders */);
+                      sec.style.display = visible ? 'block' : 'none';
+                      // Auto open
+                      if(visible) { sec.querySelector('.video-list').classList.add('open'); sec.querySelector('.section-header').classList.add('active'); }
+                  } else {
+                      sec.style.display = 'block';
+                  }
+               });
+           }
+      }
+
+      function setTheme(color) {
+          document.documentElement.style.setProperty('--accent', color);
+          document.documentElement.style.setProperty('--accent-glow', color + '33'); // 0.2 alpha approx
+          localStorage.setItem('duaTheme', color);
+      }
+      
+      // Load Theme
+      const savedTheme = localStorage.getItem('duaTheme');
+      if(savedTheme) setTheme(savedTheme);
+
+      // SLEEP TIMER & SAVER
+      let sleepTimer = null;
+      let sleepMinutes = 0;
+      
+      function toggleSleepTimer() {
+          const options = [0, 15, 30, 60];
+          // Determine current step based on previous selection logic or just cycle
+          // We can't rely on sleepMinutes if we decrement it. Check button text or keep 'selectedDuration' state?
+          // Simpler: use a separate tracker for 'selectedSleepIndex'.
+          
+          if (typeof window.sleepIndex === 'undefined') window.sleepIndex = 0;
+          window.sleepIndex = (window.sleepIndex + 1) % options.length;
+          const mins = options[window.sleepIndex];
+          
+          if(sleepTimer) clearInterval(sleepTimer);
+          
+          const btn = document.getElementById('sleepBtn');
+          
+          if (mins > 0) {
+              const endTime = Date.now() + (mins * 60 * 1000);
+              btn.classList.add('active');
+              
+              // Update immediately
+              updateSleepCountdown(endTime, btn);
+              
+              sleepTimer = setInterval(() => {
+                  updateSleepCountdown(endTime, btn);
+              }, 1000);
+          } else {
+              btn.textContent = `🌙 Sleep`;
+              btn.classList.remove('active');
+          }
+      }
+      
+      function updateSleepCountdown(endTime, btn) {
+          const left = endTime - Date.now();
+          if (left <= 0) {
+              clearInterval(sleepTimer);
+              btn.textContent = `🌙 Sleep`;
+              btn.classList.remove('active');
+              window.sleepIndex = 0; // Reset cycle
+              stop();
+              // alert("Sleep Timer: Playback stopped."); // Removed alert to not block if user fell asleep
+          } else {
+              const m = Math.floor(left / 60000);
+              const s = Math.floor((left % 60000) / 1000);
+              btn.textContent = `🌙 ${m}:${s < 10 ? '0'+s : s}`;
+          }
+      }
+
+      function toggleSidebar() {
+          const sidebar = document.getElementById('sidebar');
+          const backdrop = document.getElementById('sidebarBackdrop');
+          sidebar.classList.toggle('active');
+          backdrop.classList.toggle('active');
+      }
+
+      // HABIT TRACKER
+      function updateHabitStreak() {
+          const today = new Date().toDateString();
+          const lastVisit = localStorage.getItem('duaLastVisit');
+          let streak = parseInt(localStorage.getItem('duaStreak') || '0');
+          
+          if (lastVisit !== today) {
+              const yesterday = new Date();
+              yesterday.setDate(yesterday.getDate() - 1);
+              if (lastVisit === yesterday.toDateString()) {
+                  streak++;
+              } else {
+                  streak = 1; // Reset or Start
+              }
+              localStorage.setItem('duaLastVisit', today);
+              localStorage.setItem('duaStreak', streak);
+          }
+          
+          let badges = "";
+          if(streak >= 3) badges += `<span class='streak-badge' title='3 Day Streak'>🏅</span>`;
+          if(streak >= 7) badges += `<span class='streak-badge' title='7 Day Streak'>🎖</span>`;
+          if(streak >= 30) badges += `<span class='streak-badge' title='30 Day Streak'>🎗</span>`;
+          
+          document.getElementById('habitStreakDisplay').innerHTML = `🔥 ${streak} Day Streak ${badges}`;
+      }
+      updateHabitStreak();
+
+      // BACKUP & RESTORE
+      function backupData() {
+          const data = {
+              videoSections: videoSections,
+              favorites: favorites,
+              theme: localStorage.getItem('duaTheme'),
+              streak: localStorage.getItem('duaStreak'),
+              lastVisit: localStorage.getItem('duaLastVisit'),
+              notes: JSON.parse(localStorage.getItem('duaNotes') || '{}')
+          };
+          const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `dua_player_backup_${new Date().toISOString().slice(0,10)}.json`;
+          a.click();
+      }
+
+      function restoreData(input) {
+          const file = input.files[0];
+          if(!file) return;
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              try {
+                  const data = JSON.parse(e.target.result);
+                  if(data.favorites) { favorites = data.favorites; localStorage.setItem('duaFavorites', JSON.stringify(favorites)); }
+                  if(data.theme) { setTheme(data.theme); }
+                  if(data.videoSections) { localStorage.setItem('duaDarudVideoSections', JSON.stringify(data.videoSections)); } // For Admin changes
+                  if(data.streak) { localStorage.setItem('duaStreak', data.streak); }
+                  if(data.lastVisit) { localStorage.setItem('duaLastVisit', data.lastVisit); }
+                  if(data.notes) { localStorage.setItem('duaNotes', JSON.stringify(data.notes)); }
+                  
+                  alert("Data Restored! Reloading...");
+                  location.reload();
+              } catch(err) {
+                  alert("Invalid Backup File");
+              }
+          };
+          reader.readAsText(file);
+      }
+
+      // PERSONAL NOTES
+      function toggleNote() {
+          const area = document.getElementById('personalNote');
+          if(area.style.display === 'block') area.style.display = 'none';
+          else { area.style.display = 'block'; area.focus(); }
+      }
+      
+      function saveNote() {
+          const vid = videoSections[currentState.sectionIndex].videos[currentState.videoIndex];
+          if(!vid) return;
+          const notes = JSON.parse(localStorage.getItem('duaNotes') || '{}');
+          const val = document.getElementById('personalNote').value;
+          if(val.trim() === "") delete notes[vid.id];
+          else notes[vid.id] = val;
+          localStorage.setItem('duaNotes', JSON.stringify(notes));
+      }
+      
+      function loadNote(vidId) {
+          const notes = JSON.parse(localStorage.getItem('duaNotes') || '{}');
+          const area = document.getElementById('personalNote');
+          if (notes[vidId]) {
+              area.value = notes[vidId];
+              area.style.display = 'block'; // Auto show if note exists? Or keep hidden? Let's keep hidden unless user toggles, OR show if exists.
+              // Let's show a small indicator instead? For now, simpler: Just load value.
+              // If we want to auto-show:
+              // area.style.display = 'block'; 
+          } else {
+              area.value = "";
+              area.style.display = 'none';
+          }
+      }
+
+      // BACKGROUNDS
+      function setBg(type) {
+          if (type === 'none') {
+             document.body.style.background = 'var(--bg-main)';
+          } else if (type === 'ocean') {
+             document.body.style.background = 'linear-gradient(to bottom, #1e3c72, #2a5298)';
+          } else if (type === 'forest') {
+             document.body.style.background = 'linear-gradient(to bottom, #11998e, #38ef7d)';
+          } else if (type === 'sunset') {
+             document.body.style.background = 'linear-gradient(to bottom, #200122, #6f0000)';
+          }
+          localStorage.setItem('duaBg', type);
+      }
+      const savedBg = localStorage.getItem('duaBg');
+      if(savedBg) setBg(savedBg);
+
+      // CHECKLIST FEATURE
+      let checklistItems = JSON.parse(localStorage.getItem('duaChecklist') || '[]');
+      let checklistLastReset = Number(localStorage.getItem('duaChecklistLastReset'));
+      if (!Number.isFinite(checklistLastReset) || checklistLastReset <= 0) checklistLastReset = Date.now();
+      
+      function renderChecklist() {
+          const container = document.getElementById('checklistContainer');
+          if (!container) return;
+          container.innerHTML = '';
+          
+          if (checklistItems.length === 0) {
+              container.innerHTML = '<div style="text-align: center; color: var(--text-sec); padding: 12px; font-size: 0.9rem;">No tasks yet. Add one above!</div>';
+              return;
+          }
+          
+          checklistItems.forEach((item, index) => {
+              const itemDiv = document.createElement('div');
+              itemDiv.style.cssText = 'display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 6px; margin-bottom: 6px; transition: background 0.2s;';
+              itemDiv.onmouseover = () => itemDiv.style.background = 'rgba(255,255,255,0.06)';
+              itemDiv.onmouseout = () => itemDiv.style.background = 'rgba(255,255,255,0.03)';
+              
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.checked = item.completed;
+              checkbox.style.cssText = 'width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);';
+              checkbox.onchange = () => toggleChecklistItem(index);
+              
+              const label = document.createElement('span');
+              label.textContent = item.text;
+              label.style.cssText = `flex: 1; color: var(--text-main); ${item.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}`;
+              
+              const deleteBtn = document.createElement('button');
+              deleteBtn.textContent = '🗑️';
+              deleteBtn.style.cssText = 'background: none; border: none; cursor: pointer; opacity: 0.5; font-size: 1rem; padding: 4px;';
+              deleteBtn.onmouseover = () => deleteBtn.style.opacity = '1';
+              deleteBtn.onmouseout = () => deleteBtn.style.opacity = '0.5';
+              deleteBtn.onclick = () => deleteChecklistItem(index);
+              
+              itemDiv.appendChild(checkbox);
+              itemDiv.appendChild(label);
+              itemDiv.appendChild(deleteBtn);
+              container.appendChild(itemDiv);
+          });
+      }
+      
+      function addChecklistItem() {
+          const input = document.getElementById('checklistInput');
+          if (!input) return;
+          const text = input.value.trim();
+          
+          if (text === '') return;
+          
+          checklistItems.push({ text: text, completed: false });
+          localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+          input.value = '';
+          renderChecklist();
+      }
+      
+      function toggleChecklistItem(index) {
+          checklistItems[index].completed = !checklistItems[index].completed;
+          localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+          renderChecklist();
+      }
+      
+      function deleteChecklistItem(index) {
+          if (confirm('Delete this task?')) {
+              checklistItems.splice(index, 1);
+              localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+              renderChecklist();
+          }
+      }
+      
+      function checkAutoReset() {
+          const now = Date.now();
+          const threeHours = 3 * 60 * 60 * 1000; // Changed from 12 hours to 3 hours
+          let timeSinceReset = now - checklistLastReset;
+          
+          if (timeSinceReset >= threeHours) {
+              // Auto-reset: DELETE all items (force completion within 3 hours)
+              checklistItems = [];
+              checklistLastReset = now;
+              localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+              localStorage.setItem('duaChecklistLastReset', checklistLastReset.toString());
+              renderChecklist();
+              timeSinceReset = 0;
+          }
+          
+          // Update countdown timer
+          const timeUntilReset = Math.max(0, threeHours - timeSinceReset);
+          const hours = Math.floor(timeUntilReset / (60 * 60 * 1000));
+          const minutes = Math.floor((timeUntilReset % (60 * 60 * 1000)) / (60 * 1000));
+          const seconds = Math.floor((timeUntilReset % (60 * 1000)) / 1000);
+          
+          const timerDisplay = document.getElementById('checklistResetTimer');
+          if (timerDisplay) {
+              timerDisplay.textContent = `Resets in: ${hours}h ${minutes}m ${seconds}s`;
+          }
+      }
+      
+      // Initialize checklist
+      renderChecklist();
+      checkAutoReset();
+      
+      // Check for auto-reset every 30 seconds
+      setInterval(checkAutoReset, 30000);
+
+
+
+
+
+
+
+      // SHORTCUTS
+      function showShortcuts() { document.getElementById('shortcutsModal').style.display='flex'; }
+      
+      document.addEventListener('keydown', function(e) {
+         if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; 
+
+         if (e.code === 'Space') {
+             if (!playerReady || !player) return;
+             e.preventDefault();
+             if(player.getPlayerState()===1) player.pauseVideo(); else player.playVideo();
+         }
+         else if (e.code === 'ArrowRight') {
+             if (!playerReady || !player) return;
+             e.preventDefault();
+             nextVideo();
+         }
+         else if (e.code === 'ArrowLeft') { 
+             if (!playerReady || !player) return;
+             e.preventDefault(); 
+             player.seekTo(0);
+         }
+
+         else if (e.code === 'KeyF') { 
+              const iframe = document.getElementById('player');
+              if (iframe.requestFullscreen) iframe.requestFullscreen();
+              else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
+              else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+              else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+         }
+         else if (e.code === 'KeyS') { toggleSleepTimer(); }
+      });
+
+      // AUTO PLAY & CUSTOM LOOP
+      let isAutoPlayActive = false;
+      function toggleAutoPlay() {
+          isAutoPlayActive = !isAutoPlayActive;
+          const btn = document.getElementById('autoPlayBtn');
+          if(isAutoPlayActive) btn.classList.add('active');
+          else btn.classList.remove('active');
+      }
+      
+      function updateCustomLoop() {
+          const input = document.getElementById('customLoopInput');
+          if (!input) return;
+
+          const currentVideo = videoSections[currentState.sectionIndex]?.videos?.[currentState.videoIndex];
+          const defaultLoops = Math.max(1, parseInt(currentVideo?.loop, 10) || 1);
+          const customLoops = Math.max(1, parseInt(input.value, 10) || 0);
+          const activeLoops = customLoops > 0 ? customLoops : defaultLoops;
+
+          currentState.maxLoops = activeLoops;
+
+          if (currentState.loopCount >= activeLoops) {
+              currentState.loopCount = Math.max(0, activeLoops - 1);
+          }
+
+          createProgressSegments(activeLoops);
+          updateStats();
+      }
+
+    </script>
+    
+    <!-- Shortcuts Modal -->
+    <div class="modal" id="shortcutsModal" onclick="this.style.display='none'">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>Keyboard Shortcuts</h3>
+            <ul class="shortcuts-list">
+                <li><span class="key-badge">Space</span> Play/Pause</li>
+                <li><span class="key-badge">→</span> Next Video</li>
+                <li><span class="key-badge">←</span> Previous Video</li>
+                <li><span class="key-badge">S</span> Toggle Sleep Timer</li>
+                <li><span class="key-badge">F</span> Toggle Fullscreen</li>
+            </ul>
+            <button class="btn btn-primary" onclick="document.getElementById('shortcutsModal').style.display='none'">Close</button>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+</body>
+</html>
+
+

@@ -1,0 +1,432 @@
+/* DUA AND DARUD PLAYER - Styles */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root {
+  --color-primary: #0d5c3d;
+  --color-primary-hover: #0a4a30;
+  --color-accent: #1a7f54;
+  --color-text: #1a1a1a;
+  --color-text-muted: #555;
+  --color-bg: #f8faf8;
+  --color-card: #ffffff;
+  --color-border: #e2e8e4;
+  --color-current: #e8f5ee;
+  --color-timer: #c24141;
+  --shadow: 0 4px 12px rgba(13, 92, 61, 0.08);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Source Sans 3', 'Amiri', sans-serif;
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  background: var(--color-bg);
+  margin: 0;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+h1 {
+  font-family: 'Amiri', serif;
+  font-size: 2rem;
+  color: var(--color-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+h6 {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1.5rem 0;
+  font-weight: 400;
+}
+
+.main-row {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin: 0 auto 10px auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 360px;
+  max-width: 400px;
+  height: 600px;
+  max-height: 90vh;
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  padding: 0 0 10px 0;
+  border: 1px solid var(--color-border);
+}
+
+.controls-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 16px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.play-all-btn {
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  width: 46%;
+  min-width: 120px;
+  max-width: 220px;
+  transition: background 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.play-all-btn:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.play-all-btn:active {
+  transform: translateY(0);
+}
+
+#allSectionsTimer {
+  font-size: 16px;
+  color: var(--color-timer);
+  font-weight: bold;
+  margin-left: 0;
+  min-width: 100px;
+  text-align: left;
+  background: var(--color-bg);
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  display: inline-block;
+}
+
+.controls-scroll {
+  overflow-y: auto;
+  width: 100%;
+  padding: 0 20px;
+  flex: 1 1 auto;
+}
+
+.controls-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.controls-scroll::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+.controls-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 3px;
+}
+
+.section-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  margin: 18px 0 6px 0;
+  text-align: center;
+  width: 100%;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 8px;
+}
+
+.section-btn {
+  font-size: 14px;
+  padding: 10px 24px;
+  margin: 12px 0;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  width: 70%;
+  transition: background 0.2s, transform 0.1s;
+  font-weight: 600;
+}
+
+.section-btn:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.video-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+  margin-left: 16px;
+  width: 92%;
+  text-align: left;
+}
+
+.subcategory-serial {
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-right: 8px;
+  min-width: 28px;
+  text-align: right;
+  display: inline-block;
+}
+
+.video-list li {
+  font-size: 14px;
+  margin: 4px 0;
+  padding: 8px 10px;
+  border-bottom: 1px dotted var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+  border-radius: 6px;
+}
+
+.video-list li:hover {
+  background-color: rgba(26, 127, 84, 0.05);
+}
+
+.video-list li.current-video {
+  background-color: var(--color-current);
+  font-weight: bold;
+  border-left: 4px solid var(--color-primary);
+  padding-left: 12px;
+}
+
+.video-list li.subcategory {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--color-primary);
+  text-align: left;
+  background-color: rgba(26, 127, 84, 0.08);
+  border-left: none;
+  padding: 10px 0;
+  margin: 12px 0;
+  border-radius: 8px;
+  border-bottom: none;
+  justify-content: center;
+}
+
+.video-serial {
+  font-weight: bold;
+  color: var(--color-text-muted);
+  margin-right: 8px;
+  min-width: 28px;
+  text-align: right;
+  display: inline-block;
+}
+
+.video-label {
+  flex: 1;
+}
+
+.video-loop {
+  color: var(--color-accent);
+  font-size: 14px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.player-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 360px;
+  max-width: 640px;
+  height: 600px;
+  max-height: 90vh;
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0 0 10px 0;
+  border: 1px solid var(--color-border);
+}
+
+#player {
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+  min-height: 360px;
+  aspect-ratio: 16 / 9;
+  background: #0a0a0a;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+#tooltipText {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  max-width: 640px;
+  margin: 15px auto 10px auto;
+  min-height: 24px;
+  text-align: center;
+  padding: 0 10px;
+  line-height: 1.4;
+}
+
+.player-stats {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#currentLoop,
+#remainingLoop {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+#sectionTimer {
+  font-size: 16px;
+  color: var(--color-timer);
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.skip-btn {
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s, transform 0.1s;
+  font-weight: 600;
+}
+
+.skip-btn:hover {
+  background: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.section-select {
+  font-size: 18px;
+  padding: 10px 14px;
+  margin: 18px 0 10px 0;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  width: 92%;
+  max-width: 340px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.section-select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1100px) {
+  .main-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  .controls,
+  .player-col,
+  #player {
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+  }
+  .controls,
+  .player-col {
+    height: auto;
+    min-width: 0;
+  }
+  .controls-top-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-row {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .controls,
+  .player-col,
+  #player {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .controls {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .player-col {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  #tooltipText {
+    font-size: 14px;
+  }
+  #sectionTimer,
+  #allSectionsTimer {
+    display: block;
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  .skip-btn {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  body {
+    padding: 10px;
+    font-size: 16px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  .video-list li {
+    font-size: 15px;
+  }
+  .section-header {
+    font-size: 1.1rem;
+  }
+  .play-all-btn {
+    font-size: 16px;
+  }
+  .section-select {
+    font-size: 16px;
+  }
+}

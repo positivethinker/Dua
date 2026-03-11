@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Admin Dashboard - DUA AND DARUD PLAYER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0d5c3d;
+      --primary-hover: #0a4a30;
+      --danger: #c24141;
+      --danger-hover: #a03535;
+      --bg: #f0f4f2;
+      --card: #fff;
+      --border: #d1d9d4;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', sans-serif; margin: 0; padding: 20px; background: var(--bg); color: #1a1a1a; }
+    .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+    .header h1 { margin: 0; color: var(--primary); font-size: 1.5rem; }
+    .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: var(--danger-hover); }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: rgba(13,92,61,0.1); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; min-height: calc(100vh - 140px); }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+    .sidebar { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); height: fit-content; }
+    .sidebar h3 { margin: 0 0 12px 0; font-size: 14px; color: #666; text-transform: uppercase; }
+    .topic-list { list-style: none; padding: 0; margin: 0; }
+    .topic-item { padding: 12px 14px; margin: 4px 0; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+    .topic-item:hover { background: rgba(13,92,61,0.08); }
+    .topic-item.active { background: rgba(13,92,61,0.15); font-weight: 600; }
+    .topic-item .count { font-size: 11px; color: #888; }
+    .main { background: var(--card); border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .main h2 { margin: 0 0 20px 0; font-size: 1.25rem; color: var(--primary); }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .item-list { list-style: none; padding: 0; margin: 0; }
+    .item { padding: 14px 16px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .item.subcategory { background: rgba(13,92,61,0.06); border-color: rgba(13,92,61,0.2); }
+    .item-info { flex: 1; min-width: 0; }
+    .item-label { font-weight: 600; margin-bottom: 4px; }
+    .item-meta { font-size: 12px; color: #666; }
+    .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal.show { display: flex; }
+    .modal-content { background: var(--card); border-radius: 12px; padding: 24px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal h3 { margin: 0 0 16px 0; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .empty-state { text-align: center; padding: 60px 20px; color: #888; }
+    .empty-state p { margin: 0 0 16px 0; }
+    .import-export { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; background: var(--primary); color: #fff; border-radius: 8px; font-weight: 500; z-index: 1100; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #e0e0e0; }
+    .badge-sub { background: rgba(13,92,61,0.2); color: var(--primary); }
+    .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .info-banner { background:#e8f5ee; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px; }
+    .sidebar-add-btn { width: 100%; margin-bottom: 12px; }
+    .topic-content-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
+    .topic-title { margin:0; }
+    .topic-actions { display:flex; gap:8px; }
+    .import-info { font-size: 13px; color: #666; margin-bottom: 12px; }
+    .import-textarea { min-height: 200px; font-family: monospace; font-size: 12px; }
+    .password-modal-content { max-width: 400px; }
+    .password-header { text-align: center; margin-bottom: 8px; }
+    .password-subtext { font-size: 13px; color: #666; text-align: center; margin-bottom: 20px; }
+    .password-error { color: var(--danger); font-size: 12px; margin-top: 6px; display: none; }
+    .password-submit-btn { width: 100%; }
+    .password-footer { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; }
+    .hidden { display: none; }
+    .glass-modal { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .item-actions { gap: 4px; }
+    .btn-icon { padding: 6px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; min-width: 32px; }
+    .topic-select-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+    .topic-select-item { padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+    .topic-select-item:hover { background: rgba(13,92,61,0.05); border-color: var(--primary); }
+    .topic-select-item.current { opacity: 0.5; cursor: not-allowed; background: #f8f8f8; }
+    
+    .item { cursor: default; transition: transform 0.2s, box-shadow 0.2s, background 0.2s; position: relative; }
+    .item.dragging { opacity: 0.4; background: #f0f0f0; border: 2px dashed var(--primary); transform: scale(0.98); }
+    .item.drag-over { border-top: 3px solid var(--primary); background: rgba(13,92,61,0.05); }
+    .drag-handle { cursor: grab; color: #aaa; padding: 10px 8px; font-size: 18px; display: flex; align-items: center; -webkit-user-select: none; user-select: none; }
+    .drag-handle:active { cursor: grabbing; }
+    .drag-handle:hover { color: var(--primary); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="header">
+    <h1>🛠️ Admin Dashboard – DUA AND DARUD PLAYER</h1>
+    <div class="header-actions">
+      <a href="index.html" class="btn btn-outline">← Back to Player</a>
+      <button class="btn btn-primary" onclick="showImportModal()">📥 Import JSON</button>
+      <button class="btn btn-primary" onclick="exportData()">📤 Export JSON</button>
+      <button class="btn btn-outline" onclick="pushToSupabase()" title="Push local data to Supabase">☁️ Sync to Supabase</button>
+    </div>
+  </div>
+
+  <div class="info-banner">
+    💡 To load existing data: Open the <a href="index.html">player</a>, click <strong>Copy data for Admin</strong>, then use Import JSON above and paste.
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h3>Topics (Sections)</h3>
+      <button class="btn btn-primary btn-sm sidebar-add-btn" onclick="addTopic()">+ Add Topic</button>
+      <ul class="topic-list" id="topicList"></ul>
+    </aside>
+
+    <main class="main">
+      <div id="noTopic" class="empty-state">
+        <p>Select a topic from the left or add a new one.</p>
+      </div>
+      <div id="topicContent" class="hidden">
+        <div class="topic-content-header">
+          <h2 id="topicTitle" class="topic-title"></h2>
+          <div class="topic-actions">
+            <button class="btn btn-outline btn-sm" onclick="editCurrentTopic()">Edit topic</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCurrentTopic()">Delete topic</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-primary" onclick="addVideo()">+ Add Video</button>
+          <button class="btn btn-outline" onclick="addSubcategory()">+ Add Subcategory</button>
+        </div>
+        <ul class="item-list" id="itemList"></ul>
+      </div>
+    </main>
+  </div>
+
+  <!-- Topic Modal -->
+  <div class="modal" id="topicModal">
+    <div class="modal-content">
+      <h3 id="topicModalTitle">Add Topic</h3>
+      <div class="form-group">
+        <label>Topic Name</label>
+        <input type="text" id="topicNameInput" placeholder="e.g. প্রতিদিন" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveTopic()">Save</button>
+        <button class="btn btn-outline" onclick="closeModal('topicModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal" id="videoModal">
+    <div class="modal-content">
+      <h3 id="videoModalTitle">Add Video</h3>
+      <div class="form-group">
+        <label>YouTube Video ID</label>
+        <input type="text" id="videoIdInput" placeholder="e.g. OE7kKmmINhQ (from youtube.com/watch?v=OE7kKmmINhQ)" />
+      </div>
+      <div class="form-group">
+        <label>Start (seconds)</label>
+        <input type="number" id="videoStartInput" value="0" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label>End (seconds)</label>
+        <input type="number" id="videoEndInput" value="60" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label>Label</label>
+        <input type="text" id="videoLabelInput" placeholder="e.g. দরুদ শরীফ" />
+      </div>
+      <div class="form-group">
+        <label>Tooltip / Description</label>
+        <textarea id="videoTooltipInput" placeholder="e.g. প্রতিদিন ১০০ বার"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Loop Count</label>
+        <input type="number" id="videoLoopInput" value="1" min="1" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveVideo()">Save</button>
+        <button class="btn btn-outline" onclick="closeModal('videoModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subcategory Modal -->
+  <div class="modal" id="subModal">
+    <div class="modal-content">
+      <h3>Add Subcategory</h3>
+      <div class="form-group">
+        <label>Subcategory Label</label>
+        <input type="text" id="subLabelInput" placeholder="e.g. নামাজের আগে আমল" />
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveSubcategory()">Save</button>
+        <button class="btn btn-outline" onclick="closeModal('subModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="importModal">
+    <div class="modal-content">
+      <h3>Import Data</h3>
+      <p class="import-info">Paste the exported JSON from the player, or use "Copy data for Admin" on the player page.</p>
+      <div class="form-group">
+        <label>JSON Data</label>
+        <textarea id="importJsonInput" class="import-textarea" placeholder='[{"name":"Topic","videos":[...]}]'></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="doImport()">Import</button>
+        <button class="btn btn-outline" onclick="closeModal('importModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Move Item Modal -->
+  <div class="modal" id="moveModal">
+    <div class="modal-content">
+      <h3>Move to Topic</h3>
+      <p class="import-info">Select the destination topic for this item.</p>
+      <ul class="topic-select-list" id="topicSelectList"></ul>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="closeModal('moveModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Protection Modal -->
+  <div class="modal show glass-modal" id="passwordModal">
+    <div class="modal-content password-modal-content">
+      <h3 class="password-header">🔒 Admin Access</h3>
+      <p class="password-subtext">Enter password to access admin dashboard</p>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter admin password" autocomplete="current-password" />
+        <div id="passwordError" class="password-error">Incorrect password. Please try again.</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary password-submit-btn" onclick="checkPassword()">Unlock Dashboard</button>
+      </div>
+      <div class="password-footer">
+        <a href="index.html" class="btn btn-outline btn-sm">← Back to Player</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/data.js"></script>
+  <script>
+    // Password Protection System
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://behfqjrslzptquvyftes.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_oTCRST7zxpY9ylk3I2xbOA_asKWH3nB';
+    const _supabase = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    const ADMIN_PASSWORD_KEY = 'duaAdminPassword';
+    const ADMIN_SESSION_KEY = 'duaAdminSession';
+    const DEFAULT_PASSWORD = 'admin123'; // Change this to your desired password
+    let isAuthenticated = false;
+
+    // Initialize password on first load
+    function initPassword() {
+      const storedPassword = localStorage.getItem(ADMIN_PASSWORD_KEY);
+      if (!storedPassword) {
+        localStorage.setItem(ADMIN_PASSWORD_KEY, DEFAULT_PASSWORD);
+      }
+    }
+
+    // Check if user has valid session
+    function checkSession() {
+      const session = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      if (session === 'authenticated') {
+        isAuthenticated = true;
+        unlockDashboard();
+      }
+    }
+
+    // Verify password
+    function checkPassword() {
+      const inputPassword = document.getElementById('passwordInput').value;
+      const storedPassword = localStorage.getItem(ADMIN_PASSWORD_KEY) || DEFAULT_PASSWORD;
+      
+      if (inputPassword === storedPassword) {
+        isAuthenticated = true;
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'authenticated');
+        document.getElementById('passwordError').style.display = 'none';
+        unlockDashboard();
+      } else {
+        document.getElementById('passwordError').style.display = 'block';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
+      }
+    }
+
+    // Unlock dashboard
+    function unlockDashboard() {
+      document.getElementById('passwordModal').classList.remove('show');
+      document.getElementById('passwordModal').style.display = 'none';
+      loadData();
+      if (data.length && currentTopicIndex < 0) selectTopic(0);
+    }
+
+    // Allow Enter key to submit password
+    document.addEventListener('DOMContentLoaded', () => {
+      initPassword();
+      checkSession();
+      
+      const passwordInput = document.getElementById('passwordInput');
+      if (passwordInput) {
+        passwordInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            checkPassword();
+          }
+        });
+        passwordInput.focus();
+      }
+    });
+
+    // Require authentication for all admin functions
+    function requireAuth() {
+      if (!isAuthenticated) {
+        showToast('Please authenticate first');
+        return false;
+      }
+      return true;
+    }
+
+    const STORAGE_KEY = 'duaDarudVideoSections';
+    let data = [];
+    let currentTopicIndex = -1;
+    let editingItemIndex = -1;
+    let editingTopicIndex = -1;
+
+    async function loadData() {
+      if (!isAuthenticated) return;
+      
+      // 1. Try Supabase
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+          try {
+              const { data: sections, error: sError } = await _supabase
+                  .from('sections')
+                  .select('*')
+                  .order('order_index');
+              
+              if (!sError && sections && sections.length > 0) {
+                  const { data: videos, error: vError } = await _supabase
+                      .from('videos')
+                      .select('*')
+                      .order('order_index');
+                  
+                  if (!vError && videos) {
+                      data = sections.map(s => ({
+                          id: s.id,
+                          name: s.name,
+                          order_index: s.order_index,
+                          videos: (videos || [])
+                              .filter(v => v.section_id === s.id)
+                              .sort((a, b) => (a.order_index || 0) - (b.order_index || 0))
+                              .map(v => ({
+                                  db_id: v.id,
+                                  section_id: v.section_id,
+                                  id: v.youtube_id,
+                                  start: v.start_time,
+                                  end: v.end_time,
+                                  label: v.label,
+                                  tooltip: v.tooltip,
+                                  loop: v.loop_count,
+                                  isSubcategory: v.is_subcategory,
+                                  order_index: v.order_index
+                              }))
+                      }));
+                      renderTopicList();
+                      if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
+                        renderTopicContent(currentTopicIndex);
+                      } else if (data.length > 0) {
+                        selectTopic(0);
+                      }
+                      return;
+                  }
+              }
+          } catch (e) {
+              console.error("Supabase load failed", e);
+          }
+      }
+
+      // 2. Fallback to LocalStorage
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          data = JSON.parse(stored);
+        } else {
+          data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+          saveData();
+        }
+      } catch (e) {
+        data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+        saveData();
+      }
+      renderTopicList();
+      if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
+        renderTopicContent(currentTopicIndex);
+      } else {
+        document.getElementById('noTopic').style.display = 'block';
+        document.getElementById('topicContent').style.display = 'none';
+      }
+    }
+
+    function setupRealtime() {
+        if (!_supabase || SUPABASE_URL === 'https://behfqjrslzptquvyftes.supabase.co') return;
+
+        _supabase
+            .channel('admin-db-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'sections' }, () => {
+                // Only reload if not currently editing in a modal to avoid losing input
+                const anyModalOpen = document.querySelector('.modal.show');
+                if (!anyModalOpen) loadData();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, () => {
+                const anyModalOpen = document.querySelector('.modal.show');
+                if (!anyModalOpen) loadData();
+            })
+            .subscribe();
+    }
+
+    function saveData() {
+      if (!requireAuth()) return;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      showToast('Saved to player');
+    }
+
+    function renderTopicList() {
+      const ul = document.getElementById('topicList');
+      ul.innerHTML = data.map((t, i) => {
+        const videoCount = (t.videos || []).filter(v => !v.isSubcategory).length;
+        return `<li class="topic-item ${i === currentTopicIndex ? 'active' : ''}" onclick="selectTopic(${i})">
+          <span>${escapeHtml(t.name)}</span>
+          <span class="count">${videoCount} videos</span>
+        </li>`;
+      }).join('');
+    }
+
+    function selectTopic(i) {
+      currentTopicIndex = i;
+      renderTopicList();
+      renderTopicContent(i);
+    }
+
+    function renderTopicContent(i) {
+      document.getElementById('noTopic').style.display = 'none';
+      document.getElementById('topicContent').style.display = 'block';
+      const topic = data[i];
+      document.getElementById('topicTitle').textContent = topic.name;
+      const ul = document.getElementById('itemList');
+      const videos = topic.videos || [];
+      ul.innerHTML = videos.map((item, idx) => {
+        const isFirst = idx === 0;
+        const isLast = idx === videos.length - 1;
+        
+        let labelHtml = '';
+        if (item.isSubcategory) {
+          labelHtml = `<div class="item-label"><span class="badge badge-sub">Subcategory</span> ${escapeHtml(item.label)}</div>`;
+        } else {
+          labelHtml = `<div class="item-label">${escapeHtml(item.label)}</div>
+                       <div class="item-meta">ID: ${item.id} | ${item.start}s–${item.end}s | Loop: ${item.loop}x</div>`;
+        }
+
+        return `<li class="item ${item.isSubcategory ? 'subcategory' : ''}" 
+                    draggable="true" 
+                    ondragstart="handleDragStart(event, ${idx})"
+                    ondragover="handleDragOver(event, ${idx})"
+                    ondragleave="handleDragLeave(event)"
+                    ondrop="handleDrop(event, ${idx})"
+                    ondragend="handleDragEnd(event)">
+          <div class="drag-handle" title="Drag to reorder">⠿</div>
+          <div class="item-info">
+            ${labelHtml}
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-outline btn-icon" onclick="showMoveModal(${idx})" title="Move to Topic">↗</button>
+            <button class="btn btn-outline btn-sm" onclick="${item.isSubcategory ? 'editSubcategory' : 'editVideo'}(${idx})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem(${idx})">Delete</button>
+          </div>
+        </li>`;
+      }).join('');
+    }
+
+    function addTopic() {
+      if (!requireAuth()) return;
+      document.getElementById('topicModalTitle').textContent = 'Add Topic';
+      document.getElementById('topicNameInput').value = '';
+      editingTopicIndex = -1;
+      document.getElementById('topicModal').classList.add('show');
+    }
+
+    function editCurrentTopic() {
+      if (!requireAuth()) return;
+      if (currentTopicIndex < 0) return;
+      document.getElementById('topicModalTitle').textContent = 'Edit Topic';
+      document.getElementById('topicNameInput').value = data[currentTopicIndex].name || '';
+      editingTopicIndex = currentTopicIndex;
+      document.getElementById('topicModal').classList.add('show');
+    }
+
+    async function saveTopic() {
+      if (!requireAuth()) return;
+      const name = document.getElementById('topicNameInput').value.trim();
+      if (!name) { showToast('Enter topic name'); return; }
+      
+      let topicId = null;
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+          try {
+              if (editingTopicIndex >= 0) {
+                  const topic = data[editingTopicIndex];
+                  const { error } = await _supabase.from('sections').update({ name }).eq('id', topic.id);
+                  if (error) throw error;
+              } else {
+                  const { data: newTopic, error } = await _supabase.from('sections').insert([{ name, order_index: data.length }]).select();
+                  if (error) throw error;
+                  topicId = newTopic[0].id;
+              }
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      if (editingTopicIndex >= 0) {
+        data[editingTopicIndex].name = name;
+        editingTopicIndex = -1;
+      } else {
+        data.push({ id: topicId, name, videos: [] });
+        currentTopicIndex = data.length - 1;
+      }
+      saveData();
+      renderTopicList();
+      renderTopicContent(currentTopicIndex);
+      closeModal('topicModal');
+    }
+
+    function addVideo() {
+      if (!requireAuth()) return;
+      if (currentTopicIndex < 0) return;
+      document.getElementById('videoModalTitle').textContent = 'Add Video';
+      document.getElementById('videoIdInput').value = '';
+      document.getElementById('videoStartInput').value = '0';
+      document.getElementById('videoEndInput').value = '60';
+      document.getElementById('videoLabelInput').value = '';
+      document.getElementById('videoTooltipInput').value = '';
+      document.getElementById('videoLoopInput').value = '1';
+      editingItemIndex = -1;
+      document.getElementById('videoModal').classList.add('show');
+    }
+
+    function editVideo(idx) {
+      if (!requireAuth()) return;
+      const item = data[currentTopicIndex].videos[idx];
+      if (item.isSubcategory) return;
+      document.getElementById('videoModalTitle').textContent = 'Edit Video';
+      document.getElementById('videoIdInput').value = item.id || '';
+      document.getElementById('videoStartInput').value = item.start ?? 0;
+      document.getElementById('videoEndInput').value = item.end ?? 60;
+      document.getElementById('videoLabelInput').value = item.label || '';
+      document.getElementById('videoTooltipInput').value = item.tooltip || '';
+      document.getElementById('videoLoopInput').value = item.loop ?? 1;
+      editingItemIndex = idx;
+      document.getElementById('videoModal').classList.add('show');
+    }
+
+    async function saveVideo() {
+      if (!requireAuth()) return;
+      const youtube_id = document.getElementById('videoIdInput').value.trim();
+      const label = document.getElementById('videoLabelInput').value.trim();
+      if (!youtube_id || !label) { showToast('Enter Video ID and Label'); return; }
+      
+      const topic = data[currentTopicIndex];
+      const videoData = {
+        section_id: topic.id,
+        youtube_id,
+        start_time: parseFloat(document.getElementById('videoStartInput').value) || 0,
+        end_time: parseFloat(document.getElementById('videoEndInput').value) || 60,
+        label,
+        tooltip: document.getElementById('videoTooltipInput').value.trim(),
+        loop_count: parseInt(document.getElementById('videoLoopInput').value, 10) || 1,
+        is_subcategory: false
+      };
+
+      let dbId = null;
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
+          try {
+              if (editingItemIndex >= 0) {
+                  const item = topic.videos[editingItemIndex];
+                  const { error } = await _supabase.from('videos').update(videoData).eq('id', item.db_id);
+                  if (error) throw error;
+              } else {
+                  videoData.order_index = topic.videos.length;
+                  const { data: newVid, error } = await _supabase.from('videos').insert([videoData]).select();
+                  if (error) throw error;
+                  dbId = newVid[0].id;
+              }
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      const item = {
+        db_id: dbId || (editingItemIndex >= 0 ? topic.videos[editingItemIndex].db_id : null),
+        id: youtube_id,
+        start: videoData.start_time,
+        end: videoData.end_time,
+        label,
+        tooltip: videoData.tooltip,
+        loop: videoData.loop_count,
+        isSubcategory: false
+      };
+
+      if (!topic.videos) topic.videos = [];
+      if (editingItemIndex >= 0) {
+        topic.videos[editingItemIndex] = item;
+      } else {
+        topic.videos.push(item);
+      }
+      saveData();
+      renderTopicContent(currentTopicIndex);
+      closeModal('videoModal');
+    }
+
+    function addSubcategory() {
+      if (!requireAuth()) return;
+      if (currentTopicIndex < 0) return;
+      document.getElementById('subLabelInput').value = '';
+      editingItemIndex = -1;
+      document.getElementById('subModal').classList.add('show');
+    }
+
+    function editSubcategory(idx) {
+      if (!requireAuth()) return;
+      const item = data[currentTopicIndex].videos[idx];
+      if (!item.isSubcategory) return;
+      document.getElementById('subLabelInput').value = item.label || '';
+      editingItemIndex = idx;
+      document.getElementById('subModal').classList.add('show');
+    }
+
+    async function saveSubcategory() {
+      if (!requireAuth()) return;
+      const label = document.getElementById('subLabelInput').value.trim();
+      if (!label) { showToast('Enter subcategory label'); return; }
+      
+      const topic = data[currentTopicIndex];
+      const subData = {
+          section_id: topic.id,
+          label,
+          is_subcategory: true
+      };
+
+      let dbId = null;
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
+          try {
+              if (editingItemIndex >= 0) {
+                  const item = topic.videos[editingItemIndex];
+                  const { error } = await _supabase.from('videos').update(subData).eq('id', item.db_id);
+                  if (error) throw error;
+              } else {
+                  subData.order_index = topic.videos.length;
+                  const { data: newSub, error } = await _supabase.from('videos').insert([subData]).select();
+                  if (error) throw error;
+                  dbId = newSub[0].id;
+              }
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      const item = { db_id: dbId || (editingItemIndex >= 0 ? topic.videos[editingItemIndex].db_id : null), isSubcategory: true, label };
+      if (!topic.videos) topic.videos = [];
+      if (editingItemIndex >= 0) {
+        topic.videos[editingItemIndex] = item;
+      } else {
+        topic.videos.push(item);
+      }
+      saveData();
+      renderTopicContent(currentTopicIndex);
+      closeModal('subModal');
+    }
+
+    async function deleteCurrentTopic() {
+      if (!requireAuth()) return;
+      if (currentTopicIndex < 0 || !confirm('Delete this entire topic and all its videos?')) return;
+      
+      const topic = data[currentTopicIndex];
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && topic.id) {
+          try {
+              const { error } = await _supabase.from('sections').delete().eq('id', topic.id);
+              if (error) throw error;
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      data.splice(currentTopicIndex, 1);
+      currentTopicIndex = data.length > 0 ? 0 : -1;
+      saveData();
+      loadData();
+    }
+
+    let draggedItemIndex = -1;
+
+    function handleDragStart(e, index) {
+      draggedItemIndex = index;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e, index) {
+      e.preventDefault();
+      const target = e.target.closest('.item');
+      if (target && index !== draggedItemIndex) {
+        target.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(e) {
+      const target = e.target.closest('.item');
+      if (target) {
+        target.classList.remove('drag-over');
+      }
+    }
+
+    async function handleDrop(e, index) {
+      e.preventDefault();
+      const target = e.target.closest('.item');
+      if (target) {
+        target.classList.remove('drag-over');
+      }
+
+      if (draggedItemIndex === index) return;
+
+      const items = data[currentTopicIndex].videos;
+      const draggedItem = items.splice(draggedItemIndex, 1)[0];
+      items.splice(index, 0, draggedItem);
+
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && data[currentTopicIndex].id) {
+        try {
+          // Re-index all items in this section for consistency
+          for (let i = 0; i < items.length; i++) {
+            const v = items[i];
+            if (v.db_id) {
+              await _supabase.from('videos').update({ order_index: i }).eq('id', v.db_id);
+            }
+          }
+        } catch (err) {
+          showToast('Supabase Error: ' + err.message);
+        }
+      }
+
+      saveData();
+      renderTopicContent(currentTopicIndex);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.item').forEach(el => el.classList.remove('drag-over'));
+      draggedItemIndex = -1;
+    }
+
+    let itemToMoveIndex = -1;
+    function showMoveModal(idx) {
+      if (!requireAuth()) return;
+      itemToMoveIndex = idx;
+      const list = document.getElementById('topicSelectList');
+      list.innerHTML = data.map((t, i) => {
+        const isCurrent = i === currentTopicIndex;
+        return `<li class="topic-select-item ${isCurrent ? 'current' : ''}" onclick="${isCurrent ? '' : `moveItemToTopic(${i})`}">
+          ${escapeHtml(t.name)} ${isCurrent ? '(Current)' : ''}
+        </li>`;
+      }).join('');
+      document.getElementById('moveModal').classList.add('show');
+    }
+
+    async function moveItemToTopic(targetTopicIndex) {
+      if (!requireAuth() || itemToMoveIndex < 0) return;
+      
+      const sourceTopic = data[currentTopicIndex];
+      const targetTopic = data[targetTopicIndex];
+      const item = sourceTopic.videos.splice(itemToMoveIndex, 1)[0];
+      
+      // Add to target
+      if (!targetTopic.videos) targetTopic.videos = [];
+      targetTopic.videos.push(item);
+      
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && item.db_id && targetTopic.id) {
+        try {
+          // Update section_id and order_index
+          await _supabase.from('videos').update({ 
+            section_id: targetTopic.id, 
+            order_index: targetTopic.videos.length - 1 
+          }).eq('id', item.db_id);
+          
+          // Re-index source topic videos
+          for (let i = 0; i < sourceTopic.videos.length; i++) {
+            const v = sourceTopic.videos[i];
+            if (v.db_id) await _supabase.from('videos').update({ order_index: i }).eq('id', v.db_id);
+          }
+        } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+      
+      itemToMoveIndex = -1;
+      saveData();
+      closeModal('moveModal');
+      renderTopicContent(currentTopicIndex);
+      renderTopicList();
+      showToast(`Moved to ${targetTopic.name}`);
+    }
+
+    async function deleteItem(idx) {
+      if (!requireAuth()) return;
+      if (!confirm('Delete this item?')) return;
+      
+      const item = data[currentTopicIndex].videos[idx];
+      if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL' && item.db_id) {
+          try {
+              const { error } = await _supabase.from('videos').delete().eq('id', item.db_id);
+              if (error) throw error;
+          } catch (e) { showToast('Supabase Error: ' + e.message); }
+      }
+
+      data[currentTopicIndex].videos.splice(idx, 1);
+      saveData();
+      renderTopicContent(currentTopicIndex);
+      renderTopicList();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    function showImportModal() {
+      document.getElementById('importJsonInput').value = '';
+      document.getElementById('importModal').classList.add('show');
+    }
+
+    function doImport() {
+      if (!requireAuth()) return;
+      const raw = document.getElementById('importJsonInput').value.trim();
+      if (!raw) { showToast('Paste JSON first'); return; }
+      try {
+        data = JSON.parse(raw);
+        if (!Array.isArray(data)) throw new Error('Expected array');
+        data.forEach(t => { if (!t.videos) t.videos = []; });
+        saveData();
+        loadData();
+        currentTopicIndex = 0;
+        selectTopic(0);
+        closeModal('importModal');
+        showToast('Imported successfully');
+      } catch (e) {
+        showToast('Invalid JSON: ' + e.message);
+      }
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'dua-darud-data.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('Exported');
+    }
+
+    async function pushToSupabase() {
+        if (!requireAuth()) return;
+        if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+            showToast('Supabase not configured');
+            return;
+        }
+
+        if (!confirm('This will OVERWRITE all data in Supabase with your current local data. Continue?')) return;
+
+        showToast('Syncing...');
+
+        try {
+            // Delete all sections (cascade delete should handle videos)
+            const { error: delError } = await _supabase.from('sections').delete().filter('name', 'neq', 'DOES_NOT_EXIST_XYZ_123');
+            if (delError) throw delError;
+
+            for (let i = 0; i < data.length; i++) {
+                const topic = data[i];
+                const { data: newSec, error: secError } = await _supabase
+                    .from('sections')
+                    .insert([{ name: topic.name, order_index: i }])
+                    .select();
+                
+                if (secError) throw secError;
+                const sectionId = newSec[0].id;
+                topic.id = sectionId;
+
+                if (topic.videos && topic.videos.length > 0) {
+                    const videosToInsert = topic.videos.map((v, vIdx) => ({
+                        section_id: sectionId,
+                        youtube_id: v.id || '',
+                        start_time: v.start || 0,
+                        end_time: v.end || 0,
+                        label: v.label || '',
+                        tooltip: v.tooltip || '',
+                        loop_count: v.loop || 1,
+                        is_subcategory: !!v.isSubcategory,
+                        order_index: vIdx
+                    }));
+
+                    const { error: vidError } = await _supabase.from('videos').insert(videosToInsert);
+                    if (vidError) throw vidError;
+                }
+            }
+
+            saveData();
+            showToast('Successfully pushed to Supabase!');
+            loadData();
+        } catch (e) {
+            console.error(e);
+            showToast('Sync failed: ' + e.message);
+        }
+    }
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      if (data.length && currentTopicIndex < 0) selectTopic(0);
+      setupRealtime();
+    });
+  </script>
+</body>
+</html>
