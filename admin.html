@@ -70,6 +70,7 @@
     <h1>🛠️ Admin Dashboard – DUA AND DARUD PLAYER</h1>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
       <a href="index.html" class="btn btn-outline">← Back to Player</a>
+      <button class="btn btn-outline" onclick="restoreBackup()" title="Restore from last backup">📋 Restore Backup</button>
       <button class="btn btn-primary" onclick="showImportModal()">📥 Import JSON</button>
       <button class="btn btn-primary" onclick="exportData()">📤 Export JSON</button>
     </div>
@@ -178,6 +179,13 @@
       <h3>Import Data</h3>
       <p style="font-size: 13px; color: #666; margin-bottom: 12px;">Paste the exported JSON from the player, or use "Copy data for Admin" on the player page.</p>
       <div class="form-group">
+        <label>Import mode</label>
+        <div style="display: flex; gap: 16px; margin-bottom: 8px;">
+          <label><input type="radio" name="importMode" value="replace" checked /> Replace all</label>
+          <label><input type="radio" name="importMode" value="merge" /> Merge (add new topics/videos)</label>
+        </div>
+      </div>
+      <div class="form-group">
         <label>JSON Data</label>
         <textarea id="importJsonInput" placeholder='[{"name":"Topic","videos":[...]}]' style="min-height: 200px; font-family: monospace; font-size: 12px;"></textarea>
       </div>
@@ -203,11 +211,11 @@
           data = JSON.parse(stored);
         } else {
           data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
-          saveData();
+          // Don't auto-save when empty - prevents overwriting player data
         }
       } catch (e) {
         data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
-        saveData();
+        // Don't auto-save - let user explicitly add/save
       }
       renderTopicList();
       if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
@@ -384,8 +392,29 @@
       closeModal('subModal');
     }
 
+    function backupBeforeDestructive() {
+      try {
+        localStorage.setItem(STORAGE_KEY + '_backup', JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function restoreBackup() {
+      try {
+        const backup = localStorage.getItem(STORAGE_KEY + '_backup');
+        if (!backup) { showToast('No backup found'); return; }
+        if (!confirm('Restore from last backup? Current data will be replaced.')) return;
+        data = JSON.parse(backup);
+        saveData();
+        loadData();
+        currentTopicIndex = 0;
+        selectTopic(0);
+        showToast('Restored from backup');
+      } catch (e) { showToast('Restore failed'); }
+    }
+
     function deleteCurrentTopic() {
       if (currentTopicIndex < 0 || !confirm('Delete this entire topic and all its videos?')) return;
+      backupBeforeDestructive();
       data.splice(currentTopicIndex, 1);
       currentTopicIndex = data.length > 0 ? 0 : -1;
       saveData();
@@ -394,6 +423,7 @@
 
     function deleteItem(idx) {
       if (!confirm('Delete this item?')) return;
+      backupBeforeDestructive();
       data[currentTopicIndex].videos.splice(idx, 1);
       saveData();
       renderTopicContent(currentTopicIndex);
@@ -412,10 +442,37 @@
     function doImport() {
       const raw = document.getElementById('importJsonInput').value.trim();
       if (!raw) { showToast('Paste JSON first'); return; }
+      const mode = document.querySelector('input[name="importMode"]:checked')?.value || 'replace';
       try {
-        data = JSON.parse(raw);
-        if (!Array.isArray(data)) throw new Error('Expected array');
-        data.forEach(t => { if (!t.videos) t.videos = []; });
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) throw new Error('Expected array');
+        parsed.forEach(t => { if (!t.videos) t.videos = []; });
+        if (mode === 'replace') {
+          if (!confirm('Replace ALL current data? A backup will be saved.')) return;
+          backupBeforeDestructive();
+          data = parsed;
+        } else {
+          const existingNames = new Set((data || []).map(s => (s.name || '').trim()).filter(Boolean));
+          parsed.forEach(section => {
+            if (!section || !section.name) return;
+            const name = section.name.trim();
+            if (existingNames.has(name)) {
+              const idx = data.findIndex(d => (d.name || '').trim() === name);
+              if (idx >= 0) {
+                const existingVideos = data[idx].videos || [];
+                const existingLabels = new Set(existingVideos.map(v => v.isSubcategory ? 'sub:' + (v.label || '') : (v.id || '') + ':' + (v.label || '')));
+                (section.videos || []).forEach(v => {
+                  const key = v.isSubcategory ? 'sub:' + (v.label || '') : (v.id || '') + ':' + (v.label || '');
+                  if (!existingLabels.has(key)) { existingVideos.push(v); existingLabels.add(key); }
+                });
+                data[idx].videos = existingVideos;
+              }
+            } else {
+              data.push(section);
+              existingNames.add(name);
+            }
+          });
+        }
         saveData();
         loadData();
         currentTopicIndex = 0;

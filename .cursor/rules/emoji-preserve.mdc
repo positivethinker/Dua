@@ -1,0 +1,13 @@
+---
+description: Never change or remove emojis in the codebase
+alwaysApply: true
+---
+
+# Emoji Preservation
+
+**Never change, remove, or replace emojis** when editing code, HTML, labels, buttons, or UI text.
+
+- Keep existing emojis exactly as they are (e.g., 🔄, 🌙, ❤️, 🔒, 📋, 🛠️, etc.)
+- Do not substitute emojis with other emojis
+- Do not replace emojis with text or icons
+- When adding new UI elements, emojis may be used if consistent with existing style
