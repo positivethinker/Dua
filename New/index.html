@@ -58,15 +58,42 @@
             width: 102px;
             height: 102px;
             border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.14), rgba(0,0,0,0.28));
             border: 1px solid rgba(255,255,255,0.15);
             text-align: center;
             -webkit-backdrop-filter: blur(6px);
             backdrop-filter: blur(6px);
+            perspective: 800px;
+        }
+        .radial-progress-center-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .radial-progress-center.is-flipped .radial-progress-center-inner { transform: rotateY(180deg); }
+        .radial-progress-face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .radial-progress-face-back { transform: rotateY(180deg); padding: 8px; box-sizing: border-box; }
+        .radial-progress-face-back .radial-progress-label,
+        .radial-progress-face-back .radial-progress-value,
+        .radial-progress-face-back .radial-progress-percent {
+            font-size: 8px;
+            line-height: 1.1;
+            max-width: 84px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .radial-progress-label { font-size: 0.7rem; color: var(--text-sec); letter-spacing: 0.06em; text-transform: uppercase; }
         .radial-progress-value { font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1; margin-top: 3px; }
@@ -166,7 +193,6 @@
         .progress-side-card .stat-badge { width: 100%; justify-content: space-between; padding: 8px 10px; flex-wrap: wrap; row-gap: 6px; }
         .progress-side-card #customLoopInput { width: 56px; margin-left: 0; text-align: center; }
         .progress-side-card .stat-value { margin-left: auto; }
-        #remainingBadge { margin-bottom: 10px; }
         .progress-caption {
             margin-top: 10px;
             text-align: left;
@@ -180,7 +206,7 @@
         .progress-caption span {
             display: inline-block;
             padding-left: 100%;
-            animation: progressCaptionMarquee 40s linear infinite;
+            animation: progressCaptionMarquee 25s linear infinite;
         }
         @keyframes progressCaptionMarquee {
             0% { transform: translateX(0); }
@@ -647,23 +673,15 @@
                     <div class="panel-title">Session Progress</div>
                     <div class="panel-chip">Live</div>
                 </div>
-                <div class="progress-container" id="progressContainer">
-                    <!-- Circular progress will be dynamically generated -->
-                </div>
                 <div class="stats-row">
                     <div class="stat-badge">
                         <span>Repeat</span>
                         <span class="stat-value"><span id="currentLoop">0</span>/<span id="maxLoop">-</span></span>
                         <input type="number" id="customLoopInput" class="custom-loop-input" min="1" placeholder="Set" title="Custom Loop Count" onchange="updateCustomLoop()">
                     </div>
-                    <div class="stat-badge" id="remainingBadge">
-                        <span>Remaining</span>
-                        <span class="stat-value" id="remainingTime">--:--</span>
-                    </div>
-                    <div class="stat-badge hidden" id="allTimerBadge">
-                        <span>Total</span>
-                        <span class="stat-value" id="allTimer">--:--</span>
-                    </div>
+                </div>
+                <div class="progress-container" id="progressContainer">
+                    <!-- Circular progress will be dynamically generated -->
                 </div>
                 <div class="progress-caption" id="progressCaption"><span id="progressCaptionText">Select a section from the playlist to begin</span></div>
             </div>
@@ -2028,6 +2046,19 @@
       ];
 
       let videoSections;
+      function mergeMissingDefaultSections(sections) {
+          if (!Array.isArray(sections)) return JSON.parse(JSON.stringify(defaultVideoSections));
+          const existing = new Set(
+              sections
+                  .map(s => (s && typeof s.name === "string" ? s.name.trim() : ""))
+                  .filter(Boolean)
+          );
+          const merged = Array.isArray(sections) ? sections.slice() : [];
+          defaultVideoSections.forEach(def => {
+              if (!existing.has(def.name)) merged.push(JSON.parse(JSON.stringify(def)));
+          });
+          return merged;
+      }
 
       async function initializeData() {
           // 1. Try Supabase
@@ -2070,19 +2101,22 @@
                   const stored = localStorage.getItem("duaDarudVideoSections");
                   if (stored) {
                       const parsed = JSON.parse(stored);
-                      if (Array.isArray(parsed) && parsed.length > 0) videoSections = parsed;
+                      if (Array.isArray(parsed) && parsed.length > 0) {
+                          videoSections = mergeMissingDefaultSections(parsed);
+                      }
                   }
               } catch (e) {}
           }
 
           // 3. Fallback to default
-          if (!videoSections) videoSections = defaultVideoSections;
+          if (!videoSections) videoSections = JSON.parse(JSON.stringify(defaultVideoSections));
+          videoSections = mergeMissingDefaultSections(videoSections);
 
           renderPlaylist();
       }
 
       function setupRealtime() {
-          if (!_supabase || SUPABASE_URL === 'https://behfqjrslzptquvyftes.supabase.co') return;
+          if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
 
           _supabase
               .channel('schema-db-changes')
@@ -2091,17 +2125,26 @@
               .subscribe();
       }
 
+      function setupLocalStorageSync() {
+          window.addEventListener('storage', (e) => {
+              if (e.key !== 'duaDarudVideoSections') return;
+              try {
+                  const parsed = JSON.parse(e.newValue || '[]');
+                  if (!Array.isArray(parsed)) return;
+                  videoSections = mergeMissingDefaultSections(parsed);
+                  renderPlaylist();
+              } catch (err) {
+                  console.error('LocalStorage sync failed', err);
+              }
+          });
+      }
+
       let player, playerReady = false;
       let currentState = { sectionIndex: -1, videoIndex: -1, loopCount: 0, maxLoops: 0, isPlaying: false, isAllMode: false, allSectionIndex: 0 };
-      let timers = { section: null, all: null, loopCheck: null };
-      const PRE_END_GUARD_SECONDS = 0.6;
+      let timers = { section: null, all: null, loopCheck: null, radialRotate: null };
+      const LOOP_CHECK_INTERVAL_MS = 250;
       let isHandlingVideoEnd = false;
-
-      function setRemainingBadgeVisible(isVisible) {
-          const remainingBadge = document.getElementById("remainingBadge");
-          if (!remainingBadge) return;
-          remainingBadge.style.display = isVisible ? "flex" : "none";
-      }
+      let radialCenterFace = 'front';
 
       function setNowPlayingPanelTitle(text) {
           const titleEl = document.getElementById("nowPlayingPanelTitleText");
@@ -2110,11 +2153,29 @@
           titleEl.textContent = `${label}   ${label}`;
       }
 
+      function clearRadialRotateTimer() {
+          clearInterval(timers.radialRotate);
+          timers.radialRotate = null;
+          radialCenterFace = 'front';
+          const center = document.getElementById('radialProgressCenter');
+          if (center) center.classList.remove('is-flipped');
+      }
+
+      function startRadialRotateTimer() {
+          clearRadialRotateTimer();
+          const center = document.getElementById('radialProgressCenter');
+          if (!center) return;
+          timers.radialRotate = setInterval(() => {
+              radialCenterFace = radialCenterFace === 'front' ? 'back' : 'front';
+              center.classList.toggle('is-flipped', radialCenterFace === 'back');
+          }, 5000);
+      }
+
       function onYouTubeIframeAPIReady() {
           player = new YT.Player("player", {
               height: "100%", width: "100%", videoId: "",
               playerVars: { modestbranding: 1, rel: 0, autoplay: 0, playsinline: 1, iv_load_policy: 3, origin: window.location.origin },
-              events: { onReady: () => { playerReady = true; initializeData(); setupRealtime(); }, onStateChange: onPlayerStateChange }
+              events: { onReady: () => { playerReady = true; initializeData(); setupRealtime(); setupLocalStorageSync(); }, onStateChange: onPlayerStateChange }
           });
       }
 
@@ -2313,7 +2374,6 @@
       function playAllSections() {
           currentState.isAllMode = true; currentState.allSectionIndex = 0;
           playSingleSection(0, 0);
-          document.getElementById("allTimerBadge").style.display = "flex";
       }
 
       function startVideo(sIdx, vIdx) {
@@ -2321,7 +2381,6 @@
           currentState.sectionIndex = sIdx; currentState.videoIndex = vIdx;
           currentState.loopCount = 0; currentState.maxLoops = video.loop || 1;
           isHandlingVideoEnd = false;
-          setRemainingBadgeVisible(false);
           
           // Reset custom loop input when video changes
           document.getElementById('customLoopInput').value = '';
@@ -2402,15 +2461,51 @@
 
           const centerInfo = document.createElement('div');
           centerInfo.className = 'radial-progress-center';
+          centerInfo.id = 'radialProgressCenter';
           centerInfo.innerHTML = `
-              <div class="radial-progress-label">Loop</div>
-              <div class="radial-progress-value" id="radialLoopValue">1/${loops}</div>
-              <div class="radial-progress-percent" id="radialLoopPercent">--:--</div>
+              <div class="radial-progress-center-inner">
+                  <div class="radial-progress-face radial-progress-face-front">
+                      <div class="radial-progress-label">Loop</div>
+                      <div class="radial-progress-value" id="radialLoopValue">1/${loops}</div>
+                      <div class="radial-progress-percent" id="radialLoopPercent">--:--</div>
+                  </div>
+                  <div class="radial-progress-face radial-progress-face-back">
+                      <div class="radial-progress-label">Section Left</div>
+                      <div class="radial-progress-value" id="radialSectionRemain">--:--</div>
+                      <div class="radial-progress-percent">Total remaining</div>
+                  </div>
+              </div>
           `;
 
           container.appendChild(svg);
           container.appendChild(centerInfo);
           updateRadialProgress(0);
+          startRadialRotateTimer();
+      }
+
+      function getCurrentSectionRemainingSeconds() {
+          let totalSeconds = 0;
+          const currentSection = videoSections[currentState.sectionIndex];
+          if (!currentSection || currentState.videoIndex < 0) return 0;
+
+          const currentVid = currentSection.videos[currentState.videoIndex];
+          if (currentVid && !currentVid.isSubcategory) {
+              const curTime = player.getCurrentTime ? player.getCurrentTime() : currentVid.start;
+              const segDuration = currentVid.end - currentVid.start;
+              let currentLoopRem = 0;
+              if (curTime < currentVid.end) currentLoopRem = currentVid.end - curTime;
+              const loopsLeft = Math.max(0, currentState.maxLoops - currentState.loopCount - 1);
+              totalSeconds += currentLoopRem + (loopsLeft * segDuration);
+          }
+
+          for (let i = currentState.videoIndex + 1; i < currentSection.videos.length; i++) {
+              const vid = currentSection.videos[i];
+              if (vid.isSubcategory) continue;
+              const dur = vid.end - vid.start;
+              const loops = vid.loop || 1;
+              totalSeconds += (dur * loops);
+          }
+          return Math.max(0, totalSeconds);
       }
 
       function updateRadialProgress(currentPct, remainingSeconds = null) {
@@ -2427,6 +2522,7 @@
 
           const valueEl = document.getElementById('radialLoopValue');
           const pctEl = document.getElementById('radialLoopPercent');
+          const sectionEl = document.getElementById('radialSectionRemain');
           if (valueEl) {
               const currentLoop = Math.min(currentState.loopCount + 1, Math.max(1, currentState.maxLoops));
               valueEl.textContent = `${currentLoop}/${Math.max(1, currentState.maxLoops)}`;
@@ -2434,15 +2530,16 @@
           if (pctEl) {
               pctEl.textContent = remainingSeconds === null ? '--:--' : formatTime(Math.max(0, remainingSeconds));
           }
+          if (sectionEl) {
+              sectionEl.textContent = formatTime(getCurrentSectionRemainingSeconds());
+          }
       }
       
       function onPlayerStateChange(event) {
           if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.BUFFERING) {
               startLoopCheck();
-              setRemainingBadgeVisible(false);
           } else {
               clearInterval(timers.loopCheck);
-              if (event.data !== YT.PlayerState.ENDED) setRemainingBadgeVisible(true);
           }
           if (event.data === YT.PlayerState.ENDED) handleVideoEnd();
       }
@@ -2453,10 +2550,8 @@
               if(!player || !player.getCurrentTime) return;
               const cur = player.getCurrentTime();
               const v = videoSections[currentState.sectionIndex].videos[currentState.videoIndex];
-              const guardedEnd = Math.max(v.start, v.end - PRE_END_GUARD_SECONDS);
-              if (cur >= guardedEnd) { handleVideoEnd(); return; }
+              if (cur >= v.end) { handleVideoEnd(); return; }
               const remaining = Math.max(0, v.end - cur);
-              document.getElementById("remainingTime").textContent = formatTime(remaining);
               
               // Update radial loop progress
               const duration = v.end - v.start;
@@ -2465,7 +2560,7 @@
               updateRadialProgress(pct, remaining);
 
               updateTotalTimer();
-          }, 500);
+          }, LOOP_CHECK_INTERVAL_MS);
       }
 
       function updateTotalTimer() {
@@ -2521,7 +2616,6 @@
               }
           }
 
-          document.getElementById("allTimer").textContent = formatTime(totalSeconds);
       }
 
       function handleVideoEnd() {
@@ -2675,7 +2769,7 @@
           const progressCaptionText = document.getElementById("progressCaptionText");
           if (progressCaptionText) progressCaptionText.textContent = "Playback completed";
           clearInterval(timers.loopCheck);
-          setRemainingBadgeVisible(true);
+          clearRadialRotateTimer();
       }
       function updateStats() {
           const displayLoop = Math.min(currentState.loopCount + 1, Math.max(1, currentState.maxLoops));
@@ -3210,8 +3304,22 @@
       }
       
       function updateCustomLoop() {
-          const val = document.getElementById('customLoopInput').value;
-          // Visual feedback if needed
+          const input = document.getElementById('customLoopInput');
+          if (!input) return;
+
+          const currentVideo = videoSections[currentState.sectionIndex]?.videos?.[currentState.videoIndex];
+          const defaultLoops = Math.max(1, parseInt(currentVideo?.loop, 10) || 1);
+          const customLoops = Math.max(1, parseInt(input.value, 10) || 0);
+          const activeLoops = customLoops > 0 ? customLoops : defaultLoops;
+
+          currentState.maxLoops = activeLoops;
+
+          if (currentState.loopCount >= activeLoops) {
+              currentState.loopCount = Math.max(0, activeLoops - 1);
+          }
+
+          createProgressSegments(activeLoops);
+          updateStats();
       }
 
     </script>

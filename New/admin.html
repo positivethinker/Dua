@@ -334,6 +334,30 @@
     let currentTopicIndex = -1;
     let editingItemIndex = -1;
     let editingTopicIndex = -1;
+    function mergeMissingDefaultSections(sections) {
+      const defaults = (typeof defaultVideoSections !== "undefined")
+        ? JSON.parse(JSON.stringify(defaultVideoSections))
+        : [{ name: "নতুন টপিক", videos: [] }];
+      if (!Array.isArray(sections)) return defaults;
+      const existing = new Set(
+        sections
+          .map(s => (s && typeof s.name === 'string' ? s.name.trim() : ''))
+          .filter(Boolean)
+      );
+      const merged = sections.slice();
+      defaults.forEach(def => {
+        if (!existing.has(def.name)) merged.push(def);
+      });
+      return merged;
+    }
+
+    function parseNameLines(raw) {
+      const lines = raw.match(/name\s*:\s*"([^"]+)"/g) || [];
+      return lines.map(line => {
+        const m = line.match(/name\s*:\s*"([^"]+)"/);
+        return m ? { name: m[1], videos: [] } : null;
+      }).filter(Boolean);
+    }
 
     async function loadData() {
       if (!isAuthenticated) return;
@@ -373,6 +397,7 @@
                                   order_index: v.order_index
                               }))
                       }));
+                      data = mergeMissingDefaultSections(data);
                       renderTopicList();
                       if (currentTopicIndex >= 0 && currentTopicIndex < data.length) {
                         renderTopicContent(currentTopicIndex);
@@ -391,13 +416,13 @@
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
-          data = JSON.parse(stored);
+          data = mergeMissingDefaultSections(JSON.parse(stored));
         } else {
-          data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+          data = mergeMissingDefaultSections([]);
           saveData();
         }
       } catch (e) {
-        data = (typeof defaultVideoSections !== "undefined") ? JSON.parse(JSON.stringify(defaultVideoSections)) : [{ name: "নতুন টপিক", videos: [] }];
+        data = mergeMissingDefaultSections([]);
         saveData();
       }
       renderTopicList();
@@ -410,7 +435,7 @@
     }
 
     function setupRealtime() {
-        if (!_supabase || SUPABASE_URL === 'https://behfqjrslzptquvyftes.supabase.co') return;
+        if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
 
         _supabase
             .channel('admin-db-changes')
@@ -424,6 +449,16 @@
                 if (!anyModalOpen) loadData();
             })
             .subscribe();
+    }
+
+    function setupLocalStorageSync() {
+      window.addEventListener('storage', (e) => {
+        if (e.key !== STORAGE_KEY) return;
+        if (!isAuthenticated) return;
+        const anyModalOpen = document.querySelector('.modal.show');
+        if (anyModalOpen) return;
+        loadData();
+      });
     }
 
     function saveData() {
@@ -842,6 +877,7 @@
         data = JSON.parse(raw);
         if (!Array.isArray(data)) throw new Error('Expected array');
         data.forEach(t => { if (!t.videos) t.videos = []; });
+        data = mergeMissingDefaultSections(data);
         saveData();
         loadData();
         currentTopicIndex = 0;
@@ -849,6 +885,17 @@
         closeModal('importModal');
         showToast('Imported successfully');
       } catch (e) {
+        const parsedByLines = parseNameLines(raw);
+        if (parsedByLines.length > 0) {
+          data = mergeMissingDefaultSections(parsedByLines);
+          saveData();
+          loadData();
+          currentTopicIndex = 0;
+          selectTopic(0);
+          closeModal('importModal');
+          showToast('Imported from name lines');
+          return;
+        }
         showToast('Invalid JSON: ' + e.message);
       }
     }
@@ -935,6 +982,7 @@
       loadData();
       if (data.length && currentTopicIndex < 0) selectTopic(0);
       setupRealtime();
+      setupLocalStorageSync();
     });
   </script>
 </body>
