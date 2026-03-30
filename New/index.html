@@ -220,6 +220,14 @@
         .info-row { text-align: center; }
         .video-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px 0; color: var(--text-main); }
         .tooltip { font-size: 0.95rem; color: var(--text-sec); font-style: italic; min-height: 1.4rem; }
+        .source-link-wrap { margin-top: 10px; min-height: 1.2rem; }
+        .source-link {
+            color: var(--accent);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            word-break: break-word;
+        }
+        .source-link:hover { opacity: 0.9; }
         .stats-row { display: flex; justify-content: center; gap: 30px; margin-top: 10px; flex-wrap: wrap; }
         .stat-badge { background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); }
         .stat-value { font-weight: 700; color: var(--accent); font-size: 1.1rem; }
@@ -645,6 +653,7 @@
                     <div class="info-row">
                         <h2 class="video-title" id="videoTitle">Ready to Play</h2>
                         <div class="tooltip" id="tooltip">Select a section from the playlist to begin</div>
+                        <div class="source-link-wrap" id="sourceLinkWrap"></div>
                     </div>
                     
                     <!-- Water Drop Timer Removed -->
@@ -2086,6 +2095,7 @@
                                       end: v.end_time,
                                       label: v.label,
                                       tooltip: v.tooltip,
+                                      source: v.source_url || '',
                                       loop: v.loop_count,
                                       isSubcategory: v.is_subcategory
                                   }))
@@ -2095,23 +2105,14 @@
               } catch (e) { console.error("Supabase load failed", e); }
           }
 
-          // 2. Try LocalStorage if Supabase failed or not configured
-          if (!videoSections) {
-              try {
-                  const stored = localStorage.getItem("duaDarudVideoSections");
-                  if (stored) {
-                      const parsed = JSON.parse(stored);
-                      if (Array.isArray(parsed) && parsed.length > 0) {
-                          videoSections = mergeMissingDefaultSections(parsed);
-                      }
-                  }
-              } catch (e) {}
-          }
+          // 2. Fallback removed - we purely rely on Supabase or defaults now
+
 
           // 3. Fallback to default
           if (!videoSections) videoSections = JSON.parse(JSON.stringify(defaultVideoSections));
           videoSections = mergeMissingDefaultSections(videoSections);
 
+          fetchUserSettings();
           renderPlaylist();
       }
 
@@ -2125,18 +2126,52 @@
               .subscribe();
       }
 
-      function setupLocalStorageSync() {
-          window.addEventListener('storage', (e) => {
-              if (e.key !== 'duaDarudVideoSections') return;
-              try {
-                  const parsed = JSON.parse(e.newValue || '[]');
-                  if (!Array.isArray(parsed)) return;
-                  videoSections = mergeMissingDefaultSections(parsed);
-                  renderPlaylist();
-              } catch (err) {
-                  console.error('LocalStorage sync failed', err);
+      // --- USER SETTINGS SYNC ---
+      let userSettings = {
+          theme: null, bg: null, favorites: [], history: [], streak: 0, lastVisit: null, notes: {}, checklist: [], checklistLastReset: null, sectionLocks: {}
+      };
+
+      async function fetchUserSettings() {
+          if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+          try {
+              const { data, error } = await _supabase.from('user_settings').select('*').eq('id', 1).single();
+              if (data && !error) {
+                  userSettings.theme = data.theme;
+                  userSettings.bg = data.bg;
+                  userSettings.favorites = data.favorites || [];
+                  userSettings.history = data.history || [];
+                  userSettings.streak = data.streak || 0;
+                  userSettings.lastVisit = data.last_visit;
+                  userSettings.notes = data.notes || {};
+                  userSettings.checklist = data.checklist || [];
+                  userSettings.checklistLastReset = data.checklist_last_reset;
+                  userSettings.sectionLocks = data.section_locks || {};
+                  
+                  // Apply loaded settings
+                  favorites = userSettings.favorites;
+                  playHistory = userSettings.history;
+                  checklistItems = userSettings.checklist;
+                  checklistLastReset = parseInt(userSettings.checklistLastReset || Date.now());
+                  
+                  if (userSettings.theme) setTheme(userSettings.theme, false);
+                  if (userSettings.bg) setBg(userSettings.bg, false);
+                  updateHabitStreak(false); // don't sync back immediately
+                  renderChecklist();
               }
-          });
+          } catch(e) { console.error("Failed to fetch user settings", e); }
+      }
+
+      async function syncUserSetting(key, value) {
+          if (!_supabase || SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+          try {
+              const payload = {};
+              payload[key] = value;
+              await _supabase.from('user_settings').update(payload).eq('id', 1);
+          } catch(e) { console.error("Failed to sync setting", key, e); }
+      }
+
+      function setupLocalStorageSync() {
+          // Intentionally left empty. Data is now solely managed via Supabase realtime.
       }
 
       let player, playerReady = false;
@@ -2356,6 +2391,31 @@
 
       function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
 
+      function getSafeSourceUrl(url) {
+          if (!url || typeof url !== 'string') return '';
+          try {
+              const parsed = new URL(url, window.location.href);
+              if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
+          } catch (e) {}
+          return '';
+      }
+
+      function renderSourceLink(source) {
+          const wrap = document.getElementById("sourceLinkWrap");
+          if (!wrap) return;
+          wrap.innerHTML = "";
+          const safeUrl = getSafeSourceUrl(source);
+          if (!safeUrl) return;
+
+          const link = document.createElement("a");
+          link.className = "source-link";
+          link.href = safeUrl;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = "Do Follow Link";
+          wrap.appendChild(link);
+      }
+
       function playSingleSection(sIdx, vIdx = 0) {
           // Check lock
           if (isSectionLocked(sIdx)) {
@@ -2399,6 +2459,7 @@
           document.getElementById("videoTitle").textContent = video.label;
           setNowPlayingPanelTitle(video.label);
           document.getElementById("tooltip").textContent = video.tooltip || "";
+          renderSourceLink(video.source);
           const progressCaptionText = document.getElementById("progressCaptionText");
           if (progressCaptionText) progressCaptionText.textContent = video.tooltip || "Loop completion for the current dua";
           updateStats();
@@ -2639,13 +2700,12 @@
 
       // --- SECTION LOCK FEATURE ---
       function getSectionLocks() {
-          try {
-              return JSON.parse(localStorage.getItem('duaSectionLocks') || '{}');
-          } catch (e) { return {}; }
+          return userSettings.sectionLocks || {};
       }
 
       function saveSectionLocks(locks) {
-          localStorage.setItem('duaSectionLocks', JSON.stringify(locks));
+          userSettings.sectionLocks = locks;
+          syncUserSetting('section_locks', locks);
       }
 
       function lockSection(sIdx) {
@@ -2827,14 +2887,14 @@
 
       // HISTORY
       let isHistoryActive = false;
-      let playHistory = JSON.parse(localStorage.getItem('duaHistory') || '[]');
+      let playHistory = [];
 
       function addToHistory(videoId, label) {
           // Remove if exists to push to top
           playHistory = playHistory.filter(h => h.id !== videoId);
           playHistory.unshift({ id: videoId, label: label, date: Date.now() });
           if(playHistory.length > 20) playHistory.pop(); // Keep last 20
-          localStorage.setItem('duaHistory', JSON.stringify(playHistory));
+          syncUserSetting('history', playHistory);
           if(isHistoryActive) renderHistory();
       }
 
@@ -2906,7 +2966,7 @@
       }
 
       // FAVORITES & THEME Logic
-      let favorites = JSON.parse(localStorage.getItem('duaFavorites') || '[]');
+      let favorites = [];
       let isFavFilterActive = false;
 
       function toggleFav(id, btn) {
@@ -2917,7 +2977,7 @@
               favorites.push(id);
               btn.classList.add('active');
           }
-          localStorage.setItem('duaFavorites', JSON.stringify(favorites));
+          syncUserSetting('favorites', favorites);
           if(isFavFilterActive) applyFavFilter(); 
       }
 
@@ -2968,15 +3028,11 @@
            }
       }
 
-      function setTheme(color) {
+      function setTheme(color, sync = true) {
           document.documentElement.style.setProperty('--accent', color);
           document.documentElement.style.setProperty('--accent-glow', color + '33'); // 0.2 alpha approx
-          localStorage.setItem('duaTheme', color);
+          if (sync) syncUserSetting('theme', color);
       }
-      
-      // Load Theme
-      const savedTheme = localStorage.getItem('duaTheme');
-      if(savedTheme) setTheme(savedTheme);
 
       // SLEEP TIMER & SAVER
       let sleepTimer = null;
@@ -3036,10 +3092,10 @@
       }
 
       // HABIT TRACKER
-      function updateHabitStreak() {
+      function updateHabitStreak(sync = true) {
           const today = new Date().toDateString();
-          const lastVisit = localStorage.getItem('duaLastVisit');
-          let streak = parseInt(localStorage.getItem('duaStreak') || '0');
+          const lastVisit = userSettings.lastVisit;
+          let streak = parseInt(userSettings.streak || '0');
           
           if (lastVisit !== today) {
               const yesterday = new Date();
@@ -3049,8 +3105,10 @@
               } else {
                   streak = 1; // Reset or Start
               }
-              localStorage.setItem('duaLastVisit', today);
-              localStorage.setItem('duaStreak', streak);
+              if (sync) {
+                  syncUserSetting('last_visit', today);
+                  syncUserSetting('streak', streak);
+              }
           }
           
           let badges = "";
@@ -3067,10 +3125,10 @@
           const data = {
               videoSections: videoSections,
               favorites: favorites,
-              theme: localStorage.getItem('duaTheme'),
-              streak: localStorage.getItem('duaStreak'),
-              lastVisit: localStorage.getItem('duaLastVisit'),
-              notes: JSON.parse(localStorage.getItem('duaNotes') || '{}')
+              theme: userSettings.theme,
+              streak: userSettings.streak,
+              lastVisit: userSettings.lastVisit,
+              notes: userSettings.notes
           };
           const blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});
           const url = URL.createObjectURL(blob);
@@ -3087,12 +3145,11 @@
           reader.onload = function(e) {
               try {
                   const data = JSON.parse(e.target.result);
-                  if(data.favorites) { favorites = data.favorites; localStorage.setItem('duaFavorites', JSON.stringify(favorites)); }
-                  if(data.theme) { setTheme(data.theme); }
-                  if(data.videoSections) { localStorage.setItem('duaDarudVideoSections', JSON.stringify(data.videoSections)); } // For Admin changes
-                  if(data.streak) { localStorage.setItem('duaStreak', data.streak); }
-                  if(data.lastVisit) { localStorage.setItem('duaLastVisit', data.lastVisit); }
-                  if(data.notes) { localStorage.setItem('duaNotes', JSON.stringify(data.notes)); }
+                  if(data.favorites) syncUserSetting('favorites', data.favorites);
+                  if(data.theme) syncUserSetting('theme', data.theme);
+                  if(data.streak) syncUserSetting('streak', data.streak);
+                  if(data.lastVisit) syncUserSetting('last_visit', data.lastVisit);
+                  if(data.notes) syncUserSetting('notes', data.notes);
                   
                   alert("Data Restored! Reloading...");
                   location.reload();
@@ -3113,15 +3170,16 @@
       function saveNote() {
           const vid = videoSections[currentState.sectionIndex].videos[currentState.videoIndex];
           if(!vid) return;
-          const notes = JSON.parse(localStorage.getItem('duaNotes') || '{}');
+          const notes = userSettings.notes || {};
           const val = document.getElementById('personalNote').value;
           if(val.trim() === "") delete notes[vid.id];
           else notes[vid.id] = val;
-          localStorage.setItem('duaNotes', JSON.stringify(notes));
+          userSettings.notes = notes;
+          syncUserSetting('notes', notes);
       }
       
       function loadNote(vidId) {
-          const notes = JSON.parse(localStorage.getItem('duaNotes') || '{}');
+          const notes = userSettings.notes || {};
           const area = document.getElementById('personalNote');
           if (notes[vidId]) {
               area.value = notes[vidId];
@@ -3136,7 +3194,7 @@
       }
 
       // BACKGROUNDS
-      function setBg(type) {
+      function setBg(type, sync = true) {
           if (type === 'none') {
              document.body.style.background = 'var(--bg-main)';
           } else if (type === 'ocean') {
@@ -3146,14 +3204,12 @@
           } else if (type === 'sunset') {
              document.body.style.background = 'linear-gradient(to bottom, #200122, #6f0000)';
           }
-          localStorage.setItem('duaBg', type);
+          if (sync) syncUserSetting('bg', type);
       }
-      const savedBg = localStorage.getItem('duaBg');
-      if(savedBg) setBg(savedBg);
 
       // CHECKLIST FEATURE
-      let checklistItems = JSON.parse(localStorage.getItem('duaChecklist') || '[]');
-      let checklistLastReset = parseInt(localStorage.getItem('duaChecklistLastReset') || Date.now());
+      let checklistItems = [];
+      let checklistLastReset = Date.now();
       
       function renderChecklist() {
           const container = document.getElementById('checklistContainer');
@@ -3203,21 +3259,21 @@
           if (text === '') return;
           
           checklistItems.push({ text: text, completed: false });
-          localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+          syncUserSetting('checklist', checklistItems);
           input.value = '';
           renderChecklist();
       }
       
       function toggleChecklistItem(index) {
           checklistItems[index].completed = !checklistItems[index].completed;
-          localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+          syncUserSetting('checklist', checklistItems);
           renderChecklist();
       }
       
       function deleteChecklistItem(index) {
           if (confirm('Delete this task?')) {
               checklistItems.splice(index, 1);
-              localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
+              syncUserSetting('checklist', checklistItems);
               renderChecklist();
           }
       }
@@ -3231,8 +3287,8 @@
               // Auto-reset: DELETE all items (force completion within 3 hours)
               checklistItems = [];
               checklistLastReset = now;
-              localStorage.setItem('duaChecklist', JSON.stringify(checklistItems));
-              localStorage.setItem('duaChecklistLastReset', checklistLastReset.toString());
+              syncUserSetting('checklist', checklistItems);
+              syncUserSetting('checklist_last_reset', checklistLastReset.toString());
               renderChecklist();
               timeSinceReset = 0;
           }
